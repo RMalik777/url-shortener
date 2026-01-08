@@ -15,7 +15,13 @@ const config = defineConfig({
 			projects: ["./tsconfig.json"],
 		}),
 		tailwindcss(),
-		tanstackStart(),
+		tanstackStart({
+			prerender: {
+				enabled: true,
+				autoStaticPathsDiscovery: true,
+				failOnError: true,
+			},
+		}),
 		viteReact({
 			babel: {
 				plugins: ["babel-plugin-react-compiler"],
