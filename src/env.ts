@@ -3,7 +3,15 @@ import { z } from "zod";
 
 export const env = createEnv({
 	server: {
-		SERVER_URL: z.string().url().optional(),
+		CLOUDFLARE_ACCOUNT_ID: z.string().min(1),
+		CLOUDFLARE_DATABASE_ID: z.string().min(1),
+		CLOUDFLARE_D1_TOKEN: z.string().min(1),
+		BETTER_AUTH_URL: z.string().min(1),
+		BETTER_AUTH_SECRET: z.string().min(1),
+		GOOGLE_CLIENT_ID: z.string().min(1),
+		GOOGLE_CLIENT_SECRET: z.string().min(1),
+		GITHUB_CLIENT_ID: z.string().min(1),
+		GITHUB_CLIENT_SECRET: z.string().min(1),
 	},
 
 	/**
@@ -13,15 +21,17 @@ export const env = createEnv({
 	clientPrefix: "VITE_",
 
 	client: {
-		VITE_APP_TITLE: z.string().min(1).optional(),
+		VITE_APP_URL: z.url().min(1),
 	},
 
 	/**
 	 * What object holds the environment variables at runtime. This is usually
 	 * `process.env` or `import.meta.env`.
 	 */
-	runtimeEnv: import.meta.env,
-
+	runtimeEnv: {
+		...process.env,
+		...import.meta.env,
+	},
 	/**
 	 * By default, this library will feed the environment variables directly to
 	 * the Zod validator.

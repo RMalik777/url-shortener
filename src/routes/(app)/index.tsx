@@ -1,8 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { NotFound } from "@/components/not-found";
-
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/(app)/")({
 	component: App,
 	head: () => ({
 		title: "TanStack React Start Demo App",
@@ -14,7 +12,6 @@ export const Route = createFileRoute("/")({
 			},
 		],
 	}),
-	notFoundComponent: NotFound,
 });
 
 function App() {

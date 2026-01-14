@@ -1,7 +1,20 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+
+import { ChevronDown } from "lucide-react";
 
 import type { User } from "@/db/schema";
 
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,50 +24,72 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
 import { signOut } from "@/lib/auth/auth-client";
 import { navRoutes } from "@/lib/const/nav";
-import { acronym } from "@/lib/utils";
+import { acronym, cn } from "@/lib/utils";
 
 export function Header({ user }: Readonly<{ user: User }>) {
+	const [openDropdown, setOpenDropdown] = useState(false);
+	const [openAlert, setOpenAlert] = useState(false);
 	return (
-		<header className="fixed inset-0 flex h-fit w-full items-center justify-between bg-background p-2">
-			<nav>
-				<ul>
-					{navRoutes.map((route) => (
-						<li key={route.href}>
-							<Link to={route.href}>{route.label}</Link>
-						</li>
-					))}
-				</ul>
-			</nav>
+		<>
+			<header className="fixed inset-0 flex h-fit w-full items-center justify-between bg-background p-2">
+				<nav>
+					<ul>
+						{navRoutes.map((route) => (
+							<li key={route.href}>
+								<Link to={route.href}>{route.label}</Link>
+							</li>
+						))}
+					</ul>
+				</nav>
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="outline" size="default" className="h-fit px-3 py-1">
-						<Avatar>
-							<AvatarImage src={user.image ?? ""} alt="" />
-							<AvatarFallback className="">{acronym(user.name)}</AvatarFallback>
-						</Avatar>
-						<span>{user.name}</span>
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent>
-					<DropdownMenuLabel>My Account</DropdownMenuLabel>
-					<DropdownMenuGroup>
-						<DropdownMenuItem asChild>
-							<Link to="/profile">Profile</Link>
+				<DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
+					<DropdownMenuTrigger asChild>
+						<Button variant="outline" size="default" className="h-fit px-3 py-1">
+							<Avatar>
+								<AvatarImage src={user.image ?? ""} alt="" />
+								<AvatarFallback className="">{acronym(user.name)}</AvatarFallback>
+							</Avatar>
+							<span>{user.name}</span>
+							<ChevronDown
+								className={cn(openDropdown ? "rotate-180" : "", "transition duration-200 ease-out")}
+							/>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuLabel>My Account</DropdownMenuLabel>
+						<DropdownMenuGroup>
+							<DropdownMenuItem asChild>
+								<Link to="/profile">Profile</Link>
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem variant="destructive" onClick={() => setOpenAlert(true)}>
+							Sign Out
 						</DropdownMenuItem>
-					</DropdownMenuGroup>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem variant="destructive" onClick={() => signOut()}>
-						Sign Out
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</header>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</header>
+
+			<AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Are you sure you want to sign out?</AlertDialogTitle>
+						<AlertDialogDescription>
+							You will be signed out of your account and will need to sign in again to access your
+							data.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel onClick={() => setOpenAlert(false)}>Cancel</AlertDialogCancel>
+						<AlertDialogAction onClick={() => signOut()}>Continue</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+		</>
 	);
 }

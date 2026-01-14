@@ -16,6 +16,9 @@ const config = defineConfig({
 		}),
 		tailwindcss(),
 		tanstackStart({
+			sitemap: {
+				enabled: true,
+			},
 			prerender: {
 				enabled: true,
 				autoStaticPathsDiscovery: true,
