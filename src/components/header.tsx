@@ -29,7 +29,7 @@ import {
 
 import { signOut } from "@/lib/auth/auth-client";
 import { navRoutes } from "@/lib/const/nav";
-import { acronym, cn } from "@/lib/utils";
+import { acronym, cn } from "@/lib/functions/utils";
 
 export function Header({ user }: Readonly<{ user: User }>) {
 	const [openDropdown, setOpenDropdown] = useState(false);
