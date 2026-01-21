@@ -1,7 +1,20 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+
+import { eq } from "drizzle-orm";
+
+import type { User } from "@/db/schema";
 import { getSessionFn } from "@/lib/services/session";
+import { db } from "@/db";
+import { urls } from "@/db/schema";
 
 import { Header } from "@/components/header";
+
+export const getUrlsFn = createServerFn({ method: "GET" })
+	.inputValidator((data: User) => data)
+	.handler(async ({ data }) => {
+		return await db.select().from(urls).where(eq(urls.createdBy, data.id));
+	});
 
 export const Route = createFileRoute("/(app)")({
 	beforeLoad: async () => {
@@ -9,7 +22,8 @@ export const Route = createFileRoute("/(app)")({
 		if (!session?.user) {
 			throw redirect({ to: "/signin" });
 		}
-		return { user: session.user };
+		const urlList = await getUrlsFn({ data: session.user });
+		return { user: session.user, urlList: urlList };
 	},
 	component: RouteComponent,
 });
@@ -19,7 +33,7 @@ function RouteComponent() {
 	return (
 		<>
 			<Header user={user} />
-			<main className="pt-16">
+			<main className="">
 				<Outlet />
 			</main>
 		</>

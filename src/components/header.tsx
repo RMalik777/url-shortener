@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChevronDown } from "lucide-react";
+import { useWindowScroll } from "@uidotdev/usehooks";
 
 import type { User } from "@/db/schema";
 
@@ -34,9 +35,18 @@ import { acronym, cn } from "@/lib/functions/utils";
 export function Header({ user }: Readonly<{ user: User }>) {
 	const [openDropdown, setOpenDropdown] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
+	const [window] = useWindowScroll();
+
 	return (
 		<>
-			<header className="fixed inset-0 flex h-fit w-full items-center justify-between bg-background p-2">
+			<header
+				className={cn(
+					"fixed inset-0 flex h-fit w-full items-center justify-between border-b bg-background/80 p-2 backdrop-blur-sm transition duration-200 ease-out",
+					window.y !== null && window.y > 10
+						? "shadow-xs"
+						: "-translate-y-full shadow-none blur-xs",
+				)}
+			>
 				<nav>
 					<ul>
 						{navRoutes.map((route) => (
@@ -49,12 +59,12 @@ export function Header({ user }: Readonly<{ user: User }>) {
 
 				<DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
 					<DropdownMenuTrigger asChild>
-						<Button variant="outline" size="default" className="h-fit px-3 py-1">
-							<Avatar>
+						<Button variant="outline" size="default" className="h-fit w-fit px-2 py-1">
+							<Avatar className="size-7">
 								<AvatarImage src={user.image ?? ""} alt="" />
-								<AvatarFallback className="">{acronym(user.name)}</AvatarFallback>
+								<AvatarFallback className="text-xs">{acronym(user.name)}</AvatarFallback>
 							</Avatar>
-							<span>{user.name}</span>
+							<span className="text-sm">{user.name}</span>
 							<ChevronDown
 								className={cn(openDropdown ? "rotate-180" : "", "transition duration-200 ease-out")}
 							/>

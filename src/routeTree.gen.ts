@@ -138,11 +138,11 @@ export interface FileRoutesByFullPath {
   '/demo/form/simple': typeof DemoFormSimpleRoute
   '/demo/start/api-request': typeof DemoStartApiRequestRoute
   '/demo/start/server-funcs': typeof DemoStartServerFuncsRoute
-  '/profile': typeof appProfileIndexRoute
+  '/profile/': typeof appProfileIndexRoute
   '/demo/start/ssr/data-only': typeof DemoStartSsrDataOnlyRoute
   '/demo/start/ssr/full-ssr': typeof DemoStartSsrFullSsrRoute
   '/demo/start/ssr/spa-mode': typeof DemoStartSsrSpaModeRoute
-  '/demo/start/ssr': typeof DemoStartSsrIndexRoute
+  '/demo/start/ssr/': typeof DemoStartSsrIndexRoute
 }
 export interface FileRoutesByTo {
   '/signin': typeof authSigninRoute
@@ -202,11 +202,11 @@ export interface FileRouteTypes {
     | '/demo/form/simple'
     | '/demo/start/api-request'
     | '/demo/start/server-funcs'
-    | '/profile'
+    | '/profile/'
     | '/demo/start/ssr/data-only'
     | '/demo/start/ssr/full-ssr'
     | '/demo/start/ssr/spa-mode'
-    | '/demo/start/ssr'
+    | '/demo/start/ssr/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/signin'
@@ -324,7 +324,7 @@ declare module '@tanstack/react-router' {
     '/(app)/profile/': {
       id: '/(app)/profile/'
       path: '/profile'
-      fullPath: '/profile'
+      fullPath: '/profile/'
       preLoaderRoute: typeof appProfileIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
@@ -380,7 +380,7 @@ declare module '@tanstack/react-router' {
     '/demo/start/ssr/': {
       id: '/demo/start/ssr/'
       path: '/demo/start/ssr'
-      fullPath: '/demo/start/ssr'
+      fullPath: '/demo/start/ssr/'
       preLoaderRoute: typeof DemoStartSsrIndexRouteImport
       parentRoute: typeof rootRouteImport
     }

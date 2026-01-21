@@ -4,6 +4,7 @@
 
 @import "@fontsource-variable/inter/opsz.css";
 @import "@fontsource-variable/inter/opsz-italic.css";
+@import "@fontsource-variable/outfit";
 @import "@fontsource-variable/google-sans-code";
 
 @custom-variant dark (&:is(.dark *));
@@ -15,6 +16,9 @@ body {
 }
 
 @theme {
+	--font-display:
+		"Outfit Variable", "Inter Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+		"Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--font-sans:
 		"Inter Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
 		"Segoe UI Symbol", "Noto Color Emoji";
