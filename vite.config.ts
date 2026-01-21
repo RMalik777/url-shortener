@@ -7,13 +7,16 @@ import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 const config = defineConfig({
+	server: {
+		port: 3001,
+	},
 	plugins: [
-		devtools(),
 		cloudflare({ viteEnvironment: { name: "ssr" } }),
 		// this is the plugin that enables path aliases
 		viteTsConfigPaths({
 			projects: ["./tsconfig.json"],
 		}),
+		devtools(),
 		tailwindcss(),
 		tanstackStart({
 			sitemap: {

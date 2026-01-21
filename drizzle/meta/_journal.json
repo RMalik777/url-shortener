@@ -15,6 +15,13 @@
 			"when": 1768356755790,
 			"tag": "0001_mushy_zarda",
 			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1768897728122,
+			"tag": "0002_shallow_bedlam",
+			"breakpoints": true
 		}
 	]
 }

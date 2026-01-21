@@ -1,12 +1,16 @@
 import { sql } from "drizzle-orm";
 import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+import { v4 as uuidv4 } from "uuid";
+
 import { user } from "./auth-schema";
 
 export const urls = sqliteTable(
 	"urls",
 	{
-		id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+		id: text("id")
+			.primaryKey()
+			.$defaultFn(() => uuidv4()),
 		urlFull: text("url_full").notNull(),
 		urlShort: text("url_short").notNull().unique(),
 		clicked: integer("clicked").notNull().default(0),
