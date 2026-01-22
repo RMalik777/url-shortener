@@ -6,7 +6,7 @@ const config = {
 	useTabs: true,
 	printWidth: 100,
 	plugins: ["prettier-plugin-tailwindcss"],
-	tailwindStylesheet: "./src/styles.css",
+	tailwindStylesheet: "./packages/ui/src/styles/globals.css",
 	tailwindFunctions: ["clsx", "cn", "cva", "twMerge", "tv"],
 };
 

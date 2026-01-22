@@ -1,0 +1,13 @@
+{
+	"extends": "@repo/typescript-config/base.json",
+	"compilerOptions": {
+		"types": ["./worker-configuration.d.ts", "node", "vite/client"],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@repo/ui/*": ["../../packages/ui/src/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.tsx"],
+	"exclude": ["node_modules"]
+}

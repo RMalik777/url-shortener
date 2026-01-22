@@ -1,0 +1,13 @@
+{
+	"name": "@repo/eslint-config",
+	"version": "0.0.0",
+	"type": "module",
+	"private": true,
+	"exports": {
+		".": "./index.js",
+		"./react-internal": "./react-internal.js"
+	},
+	"devDependencies": {
+		"@tanstack/eslint-config": "catalog:"
+	}
+}
