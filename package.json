@@ -1,12 +1,14 @@
 {
 	"name": "monorepo-url-shortener",
+	"type": "module",
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",
 		"clean": "turbo run clean",
 		"dev": "turbo run dev",
-		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+		"format": "prettier --write .",
 		"lint": "turbo run lint",
+		"lint:fix": "turbo run lint -- --fix",
 		"test": "turbo run test",
 		"check-types": "turbo run check-types"
 	},

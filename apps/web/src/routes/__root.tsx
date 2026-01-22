@@ -3,13 +3,12 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import appCss from "@repo/ui/globals.css?url";
 import type { QueryClient } from "@tanstack/react-query";
 
 import TanStackQueryDevtools from "@/integrations/tanstack-query/devtools";
 import TanstackFormDevtools from "@/integrations/tanstack-form/devtools";
 import { NotFound } from "@/components/not-found";
-
-import appCss from "@repo/ui/globals.css?url";
 
 interface MyRouterContext {
 	queryClient: QueryClient;

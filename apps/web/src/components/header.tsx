@@ -28,7 +28,7 @@ import {
 
 import { cn } from "@repo/ui/lib/utils";
 
-import type { User } from "@/db/schema";
+import type { User } from "@repo/db/schema";
 
 import { signOut } from "@/lib/auth/auth-client";
 import { navRoutes } from "@/lib/const/nav";

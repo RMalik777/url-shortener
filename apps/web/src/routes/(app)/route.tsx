@@ -3,10 +3,10 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { eq } from "drizzle-orm";
 
-import type { User } from "@/db/schema";
+import { urls } from "@repo/db/schema";
+import type { User } from "@repo/db/schema";
 import { getSessionFn } from "@/lib/services/session";
 import { db } from "@/db";
-import { urls } from "@/db/schema";
 
 import { Header } from "@/components/header";
 

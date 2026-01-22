@@ -1,0 +1,35 @@
+{
+	"name": "@repo/db",
+	"version": "0.1.0",
+	"type": "module",
+	"description": "",
+	"license": "AGPL-3.0-only",
+	"scripts": {
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"db:better-auth:generate": "better-auth/cli generate --output ./src/db/auth-schema.ts --config ./src/lib/auth/index.ts",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:pull": "drizzle-kit pull",
+		"db:studio": "drizzle-kit studio"
+	},
+	"dependencies": {
+		"drizzle-kit": "^0.31.8",
+		"drizzle-orm": "^0.45.1",
+		"uuid": "catalog:"
+	},
+	"exports": {
+		".": "./db/index.ts",
+		"./schema": "./db/schema.ts"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "catalog:",
+		"@repo/eslint-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"@types/node": "catalog:",
+		"dotenv": "catalog:",
+		"eslint": "catalog:",
+		"vite": "catalog:"
+	}
+}
