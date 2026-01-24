@@ -13,8 +13,8 @@
 		"lint": {
 			"dependsOn": ["^format", "^lint"]
 		},
-		"lint:fix": {
-			"dependsOn": ["^lint:fix"]
+		"fix": {
+			"dependsOn": ["^fix"]
 		},
 		"check-types": {
 			"dependsOn": ["^check-types"]
@@ -23,6 +23,27 @@
 			"dependsOn": ["^dev"],
 			"cache": false,
 			"persistent": true
+		},
+		"db:auth:cli": {
+			"dependsOn": ["^db:auth:cli"]
+		},
+		"db:check": {
+			"dependsOn": ["^db:check"]
+		},
+		"db:generate": {
+			"dependsOn": ["^db:generate"]
+		},
+		"db:migrate": {
+			"dependsOn": ["^db:migrate"]
+		},
+		"db:push": {
+			"dependsOn": ["^db:push"]
+		},
+		"db:pull": {
+			"dependsOn": ["^db:pull"]
+		},
+		"db:studio": {
+			"dependsOn": ["^db:studio"]
 		}
 	}
 }

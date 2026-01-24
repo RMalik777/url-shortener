@@ -6,15 +6,15 @@ import { AlertOctagon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Alert, AlertTitle } from "@repo/ui/components/alert";
+import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Card, CardContent } from "@repo/ui/components/card";
 import { Field, FieldDescription, FieldGroup, FieldSeparator } from "@repo/ui/components/field";
 
-import G from "@/assets/g_logo.svg";
-import GH from "@/assets/github-mark.svg";
 import Decorations from "@/assets/pattern.jpg";
 
-import { signIn } from "@/lib/auth/auth-client";
+import { getLastUsedLoginMethod } from "@/lib/auth/auth-client";
+import { signInMethods } from "@/lib/auth/method";
 
 export const Route = createFileRoute("/(auth)/signin")({
 	component: RouteComponent,
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/(auth)/signin")({
 
 function RouteComponent() {
 	const [errorMessage, setErrorMessage] = useState<string | undefined>();
+	const lastUsedLoginMethod = getLastUsedLoginMethod();
 	return (
 		<div className="flex h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
 			<div className="w-full max-w-sm md:max-w-4xl">
@@ -45,53 +46,47 @@ function RouteComponent() {
 											<FieldSeparator />
 										</>
 									)}
+									<FieldSeparator>Sign in with</FieldSeparator>
 									<Field className="grid grid-cols-1 gap-2">
-										<Button
-											variant="outline"
-											type="button"
-											onClick={async () => {
-												const { error } = await signIn.social({
-													provider: "google",
-												});
-												if (error) {
-													setErrorMessage(error.message);
-												} else {
-													toast.success("Successfully signed in!");
-												}
-											}}
-										>
-											<Image
-												src={G}
-												alt="Google Logo"
-												width={256}
-												height={256}
-												className="h-full w-auto"
-											/>
-											<span className="">Sign In with Google</span>
-										</Button>
-										<Button
-											variant="outline"
-											type="button"
-											onClick={async () => {
-												const { error } = await signIn.social({
-													provider: "github",
-												});
-												if (error) {
-													setErrorMessage(error.message);
-												} else {
-													toast.success("Successfully signed in!");
-												}
-											}}
-										>
-											<Image
-												src={GH}
-												alt="Github Logo"
-												width={256}
-												height={256}
-												className="h-full w-auto"
-											/>
-											<span className="">Sign In with Github</span>
-										</Button>
+										{signInMethods.map((method) => {
+											return (
+												<Button
+													key={method.id}
+													variant="outline"
+													type="button"
+													className="relative"
+													onClick={async () => {
+														const { error } = await method.onclick();
+														if (error) {
+															setErrorMessage(error.message);
+														} else {
+															toast.success("Successfully signed in!");
+														}
+													}}
+												>
+													{typeof method.logo === "string" ? (
+														<Image
+															src={method.logo}
+															alt={`${method.name} Logo`}
+															width={256}
+															height={256}
+															className="h-full w-auto"
+														/>
+													) : (
+														<method.logo className="h-5 w-5" />
+													)}
+													<span>{method.name}</span>
+													{method.id === lastUsedLoginMethod && (
+														<Badge
+															variant="secondary"
+															className="absolute right-1.5 rounded-sm text-xs tracking-tight"
+														>
+															Last Used
+														</Badge>
+													)}
+												</Button>
+											);
+										})}
 									</Field>
 								</FieldGroup>
 							</div>

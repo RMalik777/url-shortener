@@ -1,6 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { lastLoginMethod } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { passkey } from "@better-auth/passkey";
 
 import { db } from "@/db";
 import { env } from "@/env";
@@ -25,5 +27,5 @@ export const auth = betterAuth({
 			clientSecret: env.GITHUB_CLIENT_SECRET,
 		},
 	},
-	plugins: [tanstackStartCookies()], // make sure this is the last plugin in the array
+	plugins: [lastLoginMethod(), passkey(), tanstackStartCookies()],
 });

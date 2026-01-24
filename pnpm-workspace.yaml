@@ -5,8 +5,9 @@ packages:
 catalog:
   '@better-auth/cli': ^1.4.17
   '@cloudflare/vite-plugin': ^1.21.1
-  '@cloudflare/workers-types': ^4.20260120.0
-  '@t3-oss/env-core': ^0.13.8
+  '@cloudflare/workers-types': ^4.20260122.0
+  '@t3-oss/env-core': ^0.13.10
+  '@tailwindcss/vite': ^4.1.18
   '@tanstack/devtools-vite': ^0.4.1
   '@tanstack/eslint-config': ^0.3.0
   '@tanstack/react-devtools': ^0.9.2
@@ -30,11 +31,12 @@ catalog:
   '@unpic/react': ^1.0.2
   '@vitejs/plugin-react': ^5.0.4
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.4.16
+  better-auth: ^1.4.17
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   dompurify: ^3.3.1
   dotenv: ^17.2.3
+  drizzle-orm: ^0.45.1
   drizzle-zod: ^0.8.3
   eslint: ^9.39.2
   jsdom: ^27.0.0
@@ -48,11 +50,11 @@ catalog:
   tsx: ^4.0.0
   typescript: ^5.9.3
   uuid: ^13.0.0
-  vite: npm:rolldown-vite
+  vite: npm:rolldown-vite@^7.3.1
   vite-tsconfig-paths: ^6.0.4
   vitest: ^4.0.17
   web-vitals: ^5.1.0
   wrangler: ^4.59.3
-  zod: ^4.1.11
+  zod: ^4.3.5
 
 cleanupUnusedCatalogs: true

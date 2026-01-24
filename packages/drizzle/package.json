@@ -7,7 +7,8 @@
 	"scripts": {
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"db:better-auth:generate": "better-auth/cli generate --output ./src/db/auth-schema.ts --config ./src/lib/auth/index.ts",
+		"db:auth:cli": "better-auth/cli generate --output ./src/db/auth-schema.ts --config ",
+		"db:check": "drizzle-kit check",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
 		"db:push": "drizzle-kit push",
@@ -16,7 +17,7 @@
 	},
 	"dependencies": {
 		"drizzle-kit": "^0.31.8",
-		"drizzle-orm": "^0.45.1",
+		"drizzle-orm": "catalog:",
 		"uuid": "catalog:"
 	},
 	"exports": {
