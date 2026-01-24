@@ -1,29 +1,28 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { ChevronDown } from "lucide-react";
-import { useWindowScroll } from "@uidotdev/usehooks";
 
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
 } from "@repo/ui/components/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar";
 import { Button } from "@repo/ui/components/button";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 
 import { cn } from "@repo/ui/lib/utils";
@@ -35,20 +34,13 @@ import { navRoutes } from "@/lib/const/nav";
 import { acronym } from "@/lib/functions/utils";
 
 export function Header({ user }: Readonly<{ user: User }>) {
+	const navigate = useNavigate();
 	const [openDropdown, setOpenDropdown] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
-	const [window] = useWindowScroll();
 
 	return (
 		<>
-			<header
-				className={cn(
-					"fixed inset-0 flex h-fit w-full items-center justify-between border-b bg-background/80 p-2 backdrop-blur-sm transition duration-200 ease-out",
-					window.y !== null && window.y > 10
-						? "shadow-xs"
-						: "-translate-y-full shadow-none blur-xs",
-				)}
-			>
+			<header className="fixed bottom-0 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md border border-b bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out sm:inset-0 sm:m-0 sm:w-full sm:rounded-none">
 				<nav>
 					<ul>
 						{navRoutes.map((route) => (
@@ -59,14 +51,18 @@ export function Header({ user }: Readonly<{ user: User }>) {
 					</ul>
 				</nav>
 
-				<DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
+				<DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown} modal={false}>
 					<DropdownMenuTrigger asChild>
-						<Button variant="outline" size="default" className="h-fit w-fit px-2 py-1">
-							<Avatar className="size-7">
+						<Button
+							variant="outline"
+							size="sm"
+							className="h-fit w-fit px-2! py-1 transition duration-200 ease-out"
+						>
+							<Avatar className="size-6">
 								<AvatarImage src={user.image ?? ""} alt="" />
 								<AvatarFallback className="text-xs">{acronym(user.name)}</AvatarFallback>
 							</Avatar>
-							<span className="text-sm">{user.name}</span>
+							<span className="text-sm max-sm:hidden">{user.name}</span>
 							<ChevronDown
 								className={cn(openDropdown ? "rotate-180" : "", "transition duration-200 ease-out")}
 							/>
@@ -98,7 +94,19 @@ export function Header({ user }: Readonly<{ user: User }>) {
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel onClick={() => setOpenAlert(false)}>Cancel</AlertDialogCancel>
-						<AlertDialogAction onClick={() => signOut()}>Continue</AlertDialogAction>
+						<AlertDialogAction
+							onClick={() =>
+								signOut({
+									fetchOptions: {
+										onSuccess: () => {
+											navigate({ to: "/signin" });
+										},
+									},
+								})
+							}
+						>
+							Continue
+						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>
