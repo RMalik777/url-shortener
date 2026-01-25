@@ -1,0 +1,1 @@
+ALTER TABLE `urls` ADD `intermediary_screen` integer DEFAULT false NOT NULL;

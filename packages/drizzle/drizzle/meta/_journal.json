@@ -1,1 +1,34 @@
-{ "version": "7", "dialect": "sqlite", "entries": [] }
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "6",
+			"when": 1768204889305,
+			"tag": "0000_high_leo",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "6",
+			"when": 1768356755790,
+			"tag": "0001_mushy_zarda",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1768897728122,
+			"tag": "0002_shallow_bedlam",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "6",
+			"when": 1769319823422,
+			"tag": "0003_glossy_solo",
+			"breakpoints": true
+		}
+	]
+}

@@ -14,6 +14,9 @@ export const urls = sqliteTable(
 		urlFull: text("url_full").notNull(),
 		urlShort: text("url_short").notNull().unique(),
 		clicked: integer("clicked").notNull().default(0),
+		intermediaryScreen: integer("intermediary_screen", { mode: "boolean" })
+			.notNull()
+			.default(false),
 		createdAt: integer("created_at", { mode: "timestamp_ms" })
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
