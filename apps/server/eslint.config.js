@@ -1,5 +1,5 @@
 // @ts-check
 
-import { eslintconfig } from '@repo/eslint-config'
+import { eslintconfig } from "@repo/eslint-config";
 
-export default eslintconfig
+export default eslintconfig;
