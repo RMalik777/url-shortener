@@ -22,9 +22,12 @@ export function NotFound() {
 				</p>
 
 				<div className="flex items-center justify-center">
-					<Button variant="outline" className="peer z-1" asChild>
-						<Link to="/">Take me home</Link>
-					</Button>
+					<Button
+						variant="outline"
+						className="peer z-1"
+						render={<Link to="/">Take me home</Link>}
+						nativeButton={false}
+					/>
 				</div>
 			</div>
 		</main>

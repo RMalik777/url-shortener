@@ -25,6 +25,7 @@
 		"@tanstack/react-router-ssr-query": "catalog:",
 		"@tanstack/react-start": "catalog:",
 		"@tanstack/router-plugin": "catalog:",
+		"@unpic/react": "catalog:",
 		"drizzle-orm": "catalog:",
 		"lucide-react": "catalog:",
 		"react": "catalog:",

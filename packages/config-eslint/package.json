@@ -4,10 +4,11 @@
 	"type": "module",
 	"private": true,
 	"exports": {
-		".": "./index.js",
-		"./react-internal": "./react-internal.js"
+		".": "./index.ts"
 	},
 	"devDependencies": {
-		"@tanstack/eslint-config": "catalog:"
+		"@repo/typescript-config": "workspace:*",
+		"@tanstack/eslint-config": "catalog:",
+		"typescript": "catalog:"
 	}
 }

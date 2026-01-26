@@ -1,4 +1,4 @@
-import { eslintconfig } from "@repo/eslint-config";
+// @ts-check
 
-/** @type {import("eslint").Linter.Config} */
+import { eslintconfig } from "@repo/eslint-config";
 export default eslintconfig;

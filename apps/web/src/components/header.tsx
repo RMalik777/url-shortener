@@ -52,33 +52,38 @@ export function Header({ user }: Readonly<{ user: User }>) {
 				</nav>
 
 				<DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown} modal={false}>
-					<DropdownMenuTrigger asChild>
-						<Button
-							variant="outline"
-							size="sm"
-							className="h-fit w-fit px-2! py-1 transition duration-200 ease-out"
-						>
-							<Avatar className="size-6">
-								<AvatarImage src={user.image ?? ""} alt="" />
-								<AvatarFallback className="text-xs">{acronym(user.name)}</AvatarFallback>
-							</Avatar>
-							<span className="text-sm max-sm:hidden">{user.name}</span>
-							<ChevronDown
-								className={cn(openDropdown ? "rotate-180" : "", "transition duration-200 ease-out")}
-							/>
-						</Button>
-					</DropdownMenuTrigger>
+					<DropdownMenuTrigger
+						render={
+							<Button
+								variant="outline"
+								size="sm"
+								className="h-fit w-fit px-2! py-1 transition duration-200 ease-out"
+							>
+								<Avatar className="size-6">
+									<AvatarImage src={user.image ?? ""} alt="" />
+									<AvatarFallback className="text-xs">{acronym(user.name)}</AvatarFallback>
+								</Avatar>
+								<span className="text-sm max-sm:hidden">{user.name}</span>
+								<ChevronDown
+									className={cn(
+										openDropdown ? "rotate-180" : "",
+										"transition duration-200 ease-out",
+									)}
+								/>
+							</Button>
+						}
+					/>
 					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>My Account</DropdownMenuLabel>
 						<DropdownMenuGroup>
-							<DropdownMenuItem asChild>
-								<Link to="/profile">Profile</Link>
+							<DropdownMenuLabel>My Account</DropdownMenuLabel>
+							<DropdownMenuGroup>
+								<DropdownMenuItem render={<Link to="/profile">Profile</Link>} />
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem variant="destructive" onClick={() => setOpenAlert(true)}>
+								Sign Out
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem variant="destructive" onClick={() => setOpenAlert(true)}>
-							Sign Out
-						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
