@@ -54,7 +54,7 @@ function RouteComponent() {
 													key={method.id}
 													variant="outline"
 													type="button"
-													className="relative"
+													className="relative py-2"
 													onClick={async () => {
 														const { error } = await method.onclick();
 														if (error) {
