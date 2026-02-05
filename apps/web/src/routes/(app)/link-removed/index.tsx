@@ -1,9 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
+
+import { Button } from "@repo/ui/components/button";
+import { LinkRemovedTemplate } from "@repo/ui/template/link-removed";
 
 export const Route = createFileRoute("/(app)/link-removed/")({
 	component: RouteComponent,
 });
 
 function RouteComponent() {
-	return <div>Hello "/(app)/link-removed/"!</div>;
+	return (
+		<LinkRemovedTemplate>
+			<Button variant="default" render={<Link to="/">Go to Homepage</Link>} nativeButton={false} />
+		</LinkRemovedTemplate>
+	);
 }

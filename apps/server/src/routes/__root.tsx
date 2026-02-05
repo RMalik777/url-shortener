@@ -5,6 +5,7 @@ import { env } from "@/env";
 
 import appCss from "@repo/ui/globals.css?url";
 import { NotFound } from "@/components/not-found";
+import { ErrorComponent } from "@repo/ui/template/error";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -32,6 +33,7 @@ export const Route = createRootRoute({
 	},
 	shellComponent: RootDocument,
 	notFoundComponent: NotFound,
+	errorComponent: ErrorComponent,
 });
 
 function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
