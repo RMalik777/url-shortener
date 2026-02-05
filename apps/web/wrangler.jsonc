@@ -11,7 +11,12 @@
 	"observability": {
 		"enabled": true,
 	},
-	"vars": { "BETTER_AUTH_URL": "https://url.raflimalik.com" },
+	"vars": {
+		"BETTER_AUTH_URL": "https://url.raflimalik.com",
+		"VITE_APP_URL": "https://url.raflimalik.com",
+		"VITE_LONG_URL": "https://url.raflimalik.com",
+		"VITE_SHORT_URL": "https://raf.li",
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",

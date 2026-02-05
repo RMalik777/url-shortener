@@ -11,6 +11,10 @@
 	"observability": {
 		"enabled": true,
 	},
+	"vars": {
+		"VITE_SHORT_URL": "https://raf.li",
+		"VITE_LONG_URL": "https://url.raflimalik.com",
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",
