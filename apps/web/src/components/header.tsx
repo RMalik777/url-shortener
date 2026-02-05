@@ -40,7 +40,7 @@ export function Header({ user }: Readonly<{ user: User }>) {
 
 	return (
 		<>
-			<header className="fixed bottom-0 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md border border-b bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out sm:inset-0 sm:m-0 sm:w-full sm:rounded-none">
+			<header className="fixed bottom-0 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:inset-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b">
 				<nav>
 					<ul>
 						{navRoutes.map((route) => (
@@ -57,7 +57,7 @@ export function Header({ user }: Readonly<{ user: User }>) {
 							<Button
 								variant="outline"
 								size="sm"
-								className="h-fit w-fit px-2! py-1 transition duration-200 ease-out"
+								className="h-fit w-fit px-2 py-2 transition duration-200 ease-out"
 							>
 								<Avatar className="size-6">
 									<AvatarImage src={user.image ?? ""} alt="" />
