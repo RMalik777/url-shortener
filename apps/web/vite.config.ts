@@ -24,8 +24,12 @@ const config = defineConfig({
 			},
 			prerender: {
 				enabled: true,
+				crawlLinks: true,
 				autoStaticPathsDiscovery: true,
 				failOnError: true,
+				filter: (route) => {
+					return !route.path.startsWith("/$code");
+				},
 			},
 		}),
 		viteReact({
