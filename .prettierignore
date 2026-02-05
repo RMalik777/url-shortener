@@ -3,3 +3,4 @@ pnpm-lock.yaml
 pnpm-workspace.yaml
 yarn.lock
 .turbo
+routeTree.gen.ts

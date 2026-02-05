@@ -16,7 +16,7 @@
 		"fix": "prettier --write . && eslint --fix ."
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.4.17",
+		"@better-auth/passkey": "^1.4.18",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@radix-ui/react-slot": "^1.2.4",
 		"@repo/db": "workspace:*",

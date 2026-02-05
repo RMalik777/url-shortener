@@ -11,7 +11,7 @@ const config = defineConfig({
 		port: 5173,
 	},
 	plugins: [
-		cloudflare({ viteEnvironment: { name: "ssr" }, inspectorPort: 9232 }),
+		cloudflare({ viteEnvironment: { name: "ssr" }, inspectorPort: 9231 }),
 		// this is the plugin that enables path aliases
 		viteTsConfigPaths({
 			projects: ["./tsconfig.json"],

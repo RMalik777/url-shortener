@@ -8,7 +8,7 @@ import { eq } from "drizzle-orm";
 import { urls } from "@repo/db/schema";
 
 import { Button } from "@repo/ui/components/button";
-import { Card, CardContent } from "@repo/ui/components/card";
+import { Card, CardContent, CardFooter } from "@repo/ui/components/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
 import type { FormSchemaServer } from "@/lib/schema/url";
@@ -99,14 +99,14 @@ function App() {
 						<p className="text-lg text-slate-600">Enter a URL to shorten it.</p>
 					</div>
 					<Card>
-						<CardContent>
-							<form
-								onSubmit={(e) => {
-									e.preventDefault();
-									form.handleSubmit();
-								}}
-								className="contents"
-							>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								form.handleSubmit();
+							}}
+							className="contents"
+						>
+							<CardContent>
 								<FieldGroup className="flex flex-col gap-4">
 									<form.Field name="url">
 										{(field) => {
@@ -136,14 +136,14 @@ function App() {
 											);
 										}}
 									</form.Field>
-									<Field>
-										<Button type="submit" className="w-full">
-											Shorten URL
-										</Button>
-									</Field>
 								</FieldGroup>
-							</form>
-						</CardContent>
+							</CardContent>
+							<CardFooter className="flex-col gap-2">
+								<Button type="submit" className="w-full">
+									Shorten URL
+								</Button>
+							</CardFooter>
+						</form>
 					</Card>
 				</div>
 			</section>
