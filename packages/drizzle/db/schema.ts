@@ -17,6 +17,8 @@ export const urls = sqliteTable(
 		intermediaryScreen: integer("intermediary_screen", { mode: "boolean" })
 			.notNull()
 			.default(false),
+		isDeleted: integer("is_deleted", { mode: "boolean" }).notNull().default(false),
+		deletedAt: integer("deleted_at", { mode: "timestamp_ms" }),
 		createdAt: integer("created_at", { mode: "timestamp_ms" })
 			.default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
 			.notNull(),
@@ -28,7 +30,10 @@ export const urls = sqliteTable(
 			.notNull()
 			.references(() => user.id),
 	},
-	(table) => [index("urls_createdBy_idx").on(table.createdBy)],
+	(table) => [
+		index("urls_createdBy_idx").on(table.createdBy),
+		index("urls_isDeleted_idx").on(table.isDeleted),
+	],
 );
 
 export { account, session, user, verification } from "./auth-schema";

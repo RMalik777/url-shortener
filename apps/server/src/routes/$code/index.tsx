@@ -1,19 +1,22 @@
-import { createFileRoute, notFound, Link, redirect, rootRouteId } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+
 import { Image } from "@unpic/react";
 
 import { ArrowRightFromLine, ExternalLink, Shield } from "lucide-react";
 
-import { env } from "@/env";
 import { db } from "@/db";
+import { env } from "@/env";
 
+import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Card } from "@repo/ui/components/card";
-import { Badge } from "@repo/ui/components/badge";
 import { Separator } from "@repo/ui/components/separator";
 
-import { eq } from "drizzle-orm";
+import { UrlNotFound } from "@/components/url-not-found";
+
 import { urls } from "@repo/db/schema";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 const schema = z.object({
@@ -27,36 +30,39 @@ const fetchData = createServerFn({ method: "GET" })
 		const result = await db.select().from(urls).where(eq(urls.urlShort, data.code)).get();
 		return result;
 	});
+
 export const Route = createFileRoute("/$code/")({
-	component: RouteComponent,
 	headers: () => ({
 		"Cache-Control": "private, max-age=1, stale-while-revalidate=5",
 	}),
 	beforeLoad: async ({ params }) => {
 		const result = await fetchData({ data: params.code });
-		if (result) {
-			if (!result.intermediaryScreen) {
-				return { result };
-			}
-			// throw redirect({
-			// 	href: result.urlFull,
-			// 	statusCode: 307,
-			// });
-		}
-		throw notFound();
-		// return redirect({
-		//   href: `${env.VITE_LONG_URL}/link-removed`,
-		//   statusCode: 307,
-		// })
+		return result;
 	},
 	loader: async ({ context }) => {
-		return context;
+		if (context && context.id) {
+			if (context.isDeleted) {
+				throw redirect({
+					href: `${env.VITE_LONG_URL}/link-removed`,
+				});
+			}
+			if (context.intermediaryScreen) {
+				return context;
+			}
+			throw redirect({
+				href: context.urlFull,
+				statusCode: 307,
+			});
+		}
+		throw notFound();
 	},
+	component: RouteComponent,
+	notFoundComponent: UrlNotFound,
 });
 
 function RouteComponent() {
 	const data = Route.useLoaderData();
-	const thumbnailUrl = `https://image.thum.io/get/width/1200/crop/800/noanimate/${data.result.urlFull}`;
+	const thumbnailUrl = `https://image.thum.io/get/width/1200/crop/800/noanimate/${data.urlFull}`;
 
 	return (
 		<main className="flex min-h-svh items-center justify-center bg-linear-to-b/oklch from-background to-muted/20 p-4">
@@ -98,7 +104,7 @@ function RouteComponent() {
 								</Badge>
 							</div>
 							<p className="rounded-md bg-muted px-3 py-2 text-sm font-medium break-all">
-								{data.result.urlFull}
+								{data.urlFull}
 							</p>
 						</div>
 
@@ -108,7 +114,7 @@ function RouteComponent() {
 								className="flex-1"
 								size="lg"
 								render={
-									<Link to={data.result.urlFull}>
+									<Link to={data.urlFull}>
 										Continue to Destination
 										<ArrowRightFromLine className="ml-2 h-4 w-4" />
 									</Link>
