@@ -33,7 +33,7 @@ function RouteComponent() {
 	return (
 		<>
 			<Header user={user} />
-			<main className="">
+			<main className="px-4 sm:px-8">
 				<Outlet />
 			</main>
 		</>

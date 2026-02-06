@@ -15,6 +15,7 @@ import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authSignoutRouteImport } from './routes/(auth)/signout'
 import { Route as authSigninRouteImport } from './routes/(auth)/signin'
 import { Route as appProfileIndexRouteImport } from './routes/(app)/profile/index'
+import { Route as appListIndexRouteImport } from './routes/(app)/list/index'
 import { Route as appLinkRemovedIndexRouteImport } from './routes/(app)/link-removed/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -47,6 +48,11 @@ const appProfileIndexRoute = appProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => appRouteRoute,
 } as any)
+const appListIndexRoute = appListIndexRouteImport.update({
+  id: '/list/',
+  path: '/list/',
+  getParentRoute: () => appRouteRoute,
+} as any)
 const appLinkRemovedIndexRoute = appLinkRemovedIndexRouteImport.update({
   id: '/link-removed/',
   path: '/link-removed/',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/link-removed/': typeof appLinkRemovedIndexRoute
+  '/list/': typeof appListIndexRoute
   '/profile/': typeof appProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/link-removed': typeof appLinkRemovedIndexRoute
+  '/list': typeof appListIndexRoute
   '/profile': typeof appProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/(app)/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(app)/link-removed/': typeof appLinkRemovedIndexRoute
+  '/(app)/list/': typeof appListIndexRoute
   '/(app)/profile/': typeof appProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/api/auth/$'
     | '/link-removed/'
+    | '/list/'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
     | '/'
     | '/api/auth/$'
     | '/link-removed'
+    | '/list'
     | '/profile'
   id:
     | '__root__'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '/(app)/'
     | '/api/auth/$'
     | '/(app)/link-removed/'
+    | '/(app)/list/'
     | '/(app)/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -170,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appProfileIndexRouteImport
       parentRoute: typeof appRouteRoute
     }
+    '/(app)/list/': {
+      id: '/(app)/list/'
+      path: '/list'
+      fullPath: '/list/'
+      preLoaderRoute: typeof appListIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
     '/(app)/link-removed/': {
       id: '/(app)/link-removed/'
       path: '/link-removed'
@@ -190,12 +209,14 @@ declare module '@tanstack/react-router' {
 interface appRouteRouteChildren {
   appIndexRoute: typeof appIndexRoute
   appLinkRemovedIndexRoute: typeof appLinkRemovedIndexRoute
+  appListIndexRoute: typeof appListIndexRoute
   appProfileIndexRoute: typeof appProfileIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
   appIndexRoute: appIndexRoute,
   appLinkRemovedIndexRoute: appLinkRemovedIndexRoute,
+  appListIndexRoute: appListIndexRoute,
   appProfileIndexRoute: appProfileIndexRoute,
 }
 

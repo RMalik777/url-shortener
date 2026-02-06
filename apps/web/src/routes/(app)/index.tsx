@@ -1,22 +1,26 @@
+import { urls } from "@repo/db/schema";
 import { useForm } from "@tanstack/react-form-start";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { ArrowRightSquare } from "lucide-react";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
-
-import { urls } from "@repo/db/schema";
 
 import { Button } from "@repo/ui/components/button";
 import { Card, CardContent, CardFooter } from "@repo/ui/components/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
+
 import type { FormSchemaServer } from "@/lib/schema/url";
-import { env } from "@/env";
-import { db } from "@/db";
-import { formOpts, formSchema, formSchemaServer } from "@/lib/schema/url";
 import { generateRandomString } from "@/lib/functions/generator";
 import { authMiddleware } from "@/lib/middleware/auth";
+import { formOpts, formSchema, formSchemaServer } from "@/lib/schema/url";
+
+import { db } from "@/db";
+import { env } from "@/env";
+
+import { DataTable } from "@/components/table/data-table";
+import { urlColumn } from "@/lib/data/table/url";
 
 export const Route = createFileRoute("/(app)/")({
 	head: () => ({
@@ -52,6 +56,7 @@ const handleForm = createServerFn({ method: "POST" })
 	});
 
 function App() {
+	const context = Route.useRouteContext();
 	const mutation = useMutation({
 		mutationFn: handleForm,
 	});
@@ -147,7 +152,21 @@ function App() {
 					</Card>
 				</div>
 			</section>
-			<section className="h-dvh"></section>
+			<section className="h-svh">
+				<div className="flex flex-row justify-between">
+					<h2 className="text-xl font-medium">Shortened URLs</h2>
+					<Button
+						variant="link"
+						nativeButton={false}
+						render={
+							<Link to="/list">
+								See All <ArrowRightSquare />
+							</Link>
+						}
+					/>
+				</div>
+				<DataTable columns={urlColumn} data={context.urlList} />
+			</section>
 		</>
 	);
 }
