@@ -21,6 +21,7 @@
 		"@radix-ui/react-slot": "^1.2.4",
 		"@repo/db": "workspace:*",
 		"@t3-oss/env-core": "catalog:",
+		"@tanstack/match-sorter-utils": "catalog:",
 		"@tanstack/react-devtools": "catalog:",
 		"@tanstack/react-form": "catalog:",
 		"@tanstack/react-form-devtools": "catalog:",

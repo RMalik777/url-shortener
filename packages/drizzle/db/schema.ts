@@ -38,3 +38,4 @@ export const urls = sqliteTable(
 
 export { account, session, user, verification } from "./auth-schema";
 export type { User, Session, Account, Verification } from "./auth-schema";
+export type Url = typeof urls.$inferSelect;
