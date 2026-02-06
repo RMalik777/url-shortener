@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 
 import appCss from "@repo/ui/globals.css?url";
 import { ErrorComponent } from "@repo/ui/template/error";
+import { Toaster } from "@repo/ui/components/sonner";
 
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
@@ -51,6 +52,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 			<body>
 				<StrictMode>
 					{children}
+					<Toaster />
 					<TanStackDevtools
 						config={{
 							position: "bottom-right",
