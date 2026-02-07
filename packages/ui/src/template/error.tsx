@@ -33,33 +33,28 @@ export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
 					Error Occurred
 				</h1>
 
-				<p className="mb-4 max-w-prose text-sm text-muted-foreground">
+				<p className="mb-4 max-w-prose text-base text-muted-foreground">
 					An unexpected error has occurred. Please refresh the page and try again.
 				</p>
 
 				<div className="max-w-prose space-y-2">
-					<section className="text-lg">
+					<section className="text-base">
 						<h2 className="font-semibold">Error Message</h2>
-						<pre className="bg-muted p-4 text-left font-medium break-all whitespace-pre-wrap">
+						<pre className="bg-muted p-4 text-left font-medium tracking-tight break-all whitespace-pre-wrap">
 							{error.message}
 						</pre>
 					</section>
 					<section>
 						<h2>Stack Trace</h2>
-						<pre className="relative bg-muted p-4 text-left break-all whitespace-pre-wrap">
+						<pre className="relative bg-muted p-4 text-left text-sm break-all whitespace-pre-wrap">
 							<CopyButton text={error.stack ?? ""} desc="Copy stack trace" />
-							<code>
-								{error.stack} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum
-								veniam modi excepturi porro, saepe obcaecati eius temporibus quaerat sint hic,
-								tenetur pariatur exercitationem, esse ipsum! Officia culpa repellendus voluptatum
-								molestias.
-							</code>
+							<code>{error.stack}</code>
 						</pre>
 					</section>
 					{info && (
 						<section>
 							<h2>Component Stack</h2>
-							<pre className="relative bg-muted p-4 text-left break-all whitespace-pre-wrap">
+							<pre className="relative bg-muted p-4 text-left text-sm break-all whitespace-pre-wrap">
 								<CopyButton text={info.componentStack} desc="Copy component stack" />
 								<code>{info.componentStack}</code>
 							</pre>
