@@ -40,7 +40,7 @@ export function Header({ user }: Readonly<{ user: User }>) {
 
 	return (
 		<>
-			<header className="fixed bottom-0 z-1 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:inset-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b">
+			<header className="fixed bottom-0 z-1 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:inset-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b sm:px-4 lg:px-8">
 				<nav>
 					<ul>
 						{navRoutes.map((route) => (

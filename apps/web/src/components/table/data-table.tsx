@@ -168,8 +168,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 					{table.getFilteredSelectedRowModel().rows.length} of{" "}
 					{table.getFilteredRowModel().rows.length} row(s) selected.
 				</div>
-				<div className="flex items-center justify-between space-x-6 lg:space-x-8">
-					<div className="flex items-center space-x-2">
+				<div className="flex flex-col items-start justify-between gap-2 space-x-6 sm:flex-row sm:items-center lg:space-x-8">
+					<div className="flex w-full items-center justify-between space-x-2 sm:w-auto">
 						<p className="text-sm font-medium">Rows per page</p>
 						<Select
 							value={`${table.getState().pagination.pageSize}`}
@@ -189,8 +189,8 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 							</SelectContent>
 						</Select>
 					</div>
-					<div className="flex">
-						<div className="flex w-25 items-center justify-center text-sm font-medium">
+					<div className="flex w-full flex-row items-center justify-between gap-2 sm:w-fit sm:gap-4">
+						<div className="flex w-auto items-center justify-center text-sm font-medium">
 							Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
 						</div>
 						<div className="flex items-center space-x-2">
