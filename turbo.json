@@ -31,13 +31,19 @@
 			"dependsOn": ["^db:check"]
 		},
 		"db:generate": {
-			"dependsOn": ["^db:generate"]
+			"dependsOn": ["^db:generate"],
+			"interactive": true,
+			"cache": false
 		},
 		"db:migrate": {
-			"dependsOn": ["^db:migrate"]
+			"dependsOn": ["^db:migrate"],
+			"interactive": true,
+			"cache": false
 		},
 		"db:push": {
-			"dependsOn": ["^db:push"]
+			"dependsOn": ["^db:push"],
+			"interactive": true,
+			"cache": false
 		},
 		"db:pull": {
 			"dependsOn": ["^db:pull"]
