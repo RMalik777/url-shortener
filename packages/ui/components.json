@@ -1,6 +1,6 @@
 {
 	"$schema": "https://ui.shadcn.com/schema.json",
-	"style": "base-lyra",
+	"style": "base-vega",
 	"rsc": false,
 	"tsx": true,
 	"tailwind": {
@@ -11,6 +11,10 @@
 		"prefix": ""
 	},
 	"iconLibrary": "lucide",
+	"rtl": false,
+	"menuColor": "default",
+	"menuAccent": "subtle",
+	"registries": {},
 	"aliases": {
 		"components": "@repo/ui/components",
 		"utils": "@repo/ui/lib/utils",
