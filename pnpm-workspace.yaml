@@ -3,67 +3,73 @@ packages:
   - packages/*
 
 catalog:
-  '@better-auth/cli': ^1.4.18
-  '@cloudflare/vite-plugin': ^1.25.0
-  '@cloudflare/workers-types': ^4.20260213.0
+  '@better-auth/cli': ^1.4.21
+  '@cloudflare/vite-plugin': ^1.25.6
+  '@cloudflare/workers-types': ^4.20260305.0
   '@t3-oss/env-core': ^0.13.10
-  '@tailwindcss/vite': ^4.1.18
-  '@tanstack/devtools-vite': ^0.5.1
-  '@tanstack/eslint-config': ^0.3.0
+  '@tailwindcss/vite': ^4.2.1
+  '@tanstack/devtools-vite': ^0.5.2
+  '@tanstack/eslint-config': ^0.4.0
   '@tanstack/match-sorter-utils': ^8.19.4
-  '@tanstack/react-devtools': ^0.9.5
-  '@tanstack/react-form': ^1.28.1
-  '@tanstack/react-form-devtools': ^0.2.14
-  '@tanstack/react-form-start': ^1.28.1
+  '@tanstack/react-devtools': ^0.9.6
+  '@tanstack/react-form': ^1.28.3
+  '@tanstack/react-form-devtools': ^0.2.16
+  '@tanstack/react-form-start': ^1.28.3
   '@tanstack/react-query': ^5.90.21
   '@tanstack/react-query-devtools': ^5.91.3
-  '@tanstack/react-router': ^1.159.5
-  '@tanstack/react-router-devtools': ^1.159.5
-  '@tanstack/react-router-ssr-query': ^1.159.5
-  '@tanstack/react-start': ^1.159.5
+  '@tanstack/react-router': ^1.163.3
+  '@tanstack/react-router-devtools': ^1.163.3
+  '@tanstack/react-router-ssr-query': ^1.163.3
+  '@tanstack/react-start': ^1.166.1
   '@tanstack/react-table': ^8.21.3
-  '@tanstack/router-plugin': ^1.159.5
-  '@testing-library/dom': ^10.4.0
+  '@tanstack/router-plugin': ^1.164.0
+  '@testing-library/dom': ^10.4.1
   '@testing-library/react': ^16.3.2
-  '@types/node': ^25.2.3
+  '@types/node': ^25.3.3
   '@types/react': ^19.2.14
-  '@types/react-dom': ^19.2.0
+  '@types/react-dom': ^19.2.3
   '@uidotdev/usehooks': ^2.4.1
   '@unpic/react': ^1.0.2
   '@vitejs/plugin-react': ^5.1.4
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.4.18
+  better-auth: ^1.5.1
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   dompurify: ^3.3.1
   dotenv: ^17.3.1
   drizzle-orm: ^0.45.1
   drizzle-zod: ^0.8.3
-  eslint: ^9.0.0
-  jsdom: ^28.0.0
-  lucide-react: ^0.564.0
+  eslint: ^10.0.2
+  jsdom: ^28.1.0
+  lucide-react: ^0.576.0
   prettier-plugin-tailwindcss: ^0.7.2
   react: ^19.2.4
   react-dom: ^19.2.4
-  simple-icons: ^16.8.0
+  simple-icons: ^16.10.0
   solid-js: ^1.9.11
   sonner: ^2.0.7
-  tailwindcss: ^4.1.18
-  tsx: ^4.0.0
+  tailwindcss: ^4.2.1
+  tsx: ^4.21.0
   typescript: ^5.9.3
   uuid: ^13.0.0
   vite: npm:rolldown-vite@latest
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.0.18
   web-vitals: ^5.1.0
-  wrangler: ^4.65.0
+  wrangler: ^4.69.0
   zod: ^4.3.6
 
 cleanupUnusedCatalogs: true
 
+ignoredBuiltDependencies:
+  - '@prisma/client'
+  - better-sqlite3
+  - core-js-pure
+
 onlyBuiltDependencies:
-  - esbuild
-  - sharp
-  - workerd
-  - unrs-resolver
   - '@swc/core'
+  - esbuild
+  - msw
+  - sharp
+  - unrs-resolver
+  - workerd
