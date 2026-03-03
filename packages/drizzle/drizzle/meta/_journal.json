@@ -29,6 +29,13 @@
 			"when": 1769319823422,
 			"tag": "0003_glossy_solo",
 			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "6",
+			"when": 1771158602511,
+			"tag": "0004_lively_wendigo",
+			"breakpoints": true
 		}
 	]
 }

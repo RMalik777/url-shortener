@@ -13,7 +13,6 @@ export const urls = sqliteTable(
 			.$defaultFn(() => uuidv4()),
 		urlFull: text("url_full").notNull(),
 		urlShort: text("url_short").notNull().unique(),
-		clicked: integer("clicked").notNull().default(0),
 		intermediaryScreen: integer("intermediary_screen", { mode: "boolean" })
 			.notNull()
 			.default(false),
