@@ -10,23 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
-import { Route as appIndexRouteImport } from './routes/(app)/index'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as authSignoutRouteImport } from './routes/(auth)/signout'
 import { Route as authSigninRouteImport } from './routes/(auth)/signin'
-import { Route as appProfileIndexRouteImport } from './routes/(app)/profile/index'
-import { Route as appListIndexRouteImport } from './routes/(app)/list/index'
-import { Route as appLinkRemovedIndexRouteImport } from './routes/(app)/link-removed/index'
+import { Route as apppagesRouteRouteImport } from './routes/(app)/(pages)/route'
+import { Route as apppagesIndexRouteImport } from './routes/(app)/(pages)/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as appsplashLinkRemovedIndexRouteImport } from './routes/(app)/(splash)/link-removed/index'
+import { Route as apppagesProfileIndexRouteImport } from './routes/(app)/(pages)/profile/index'
+import { Route as apppagesListIndexRouteImport } from './routes/(app)/(pages)/list/index'
+import { Route as apppagesListIdRouteImport } from './routes/(app)/(pages)/list/$id'
 
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
-} as any)
-const appIndexRoute = appIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => appRouteRoute,
 } as any)
 const authSignupRoute = authSignupRouteImport.update({
   id: '/(auth)/signup',
@@ -43,58 +40,77 @@ const authSigninRoute = authSigninRouteImport.update({
   path: '/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const appProfileIndexRoute = appProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
+const apppagesRouteRoute = apppagesRouteRouteImport.update({
+  id: '/(pages)',
   getParentRoute: () => appRouteRoute,
 } as any)
-const appListIndexRoute = appListIndexRouteImport.update({
-  id: '/list/',
-  path: '/list/',
-  getParentRoute: () => appRouteRoute,
-} as any)
-const appLinkRemovedIndexRoute = appLinkRemovedIndexRouteImport.update({
-  id: '/link-removed/',
-  path: '/link-removed/',
-  getParentRoute: () => appRouteRoute,
+const apppagesIndexRoute = apppagesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => apppagesRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appsplashLinkRemovedIndexRoute =
+  appsplashLinkRemovedIndexRouteImport.update({
+    id: '/(splash)/link-removed/',
+    path: '/link-removed/',
+    getParentRoute: () => appRouteRoute,
+  } as any)
+const apppagesProfileIndexRoute = apppagesProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => apppagesRouteRoute,
+} as any)
+const apppagesListIndexRoute = apppagesListIndexRouteImport.update({
+  id: '/list/',
+  path: '/list/',
+  getParentRoute: () => apppagesRouteRoute,
+} as any)
+const apppagesListIdRoute = apppagesListIdRouteImport.update({
+  id: '/list/$id',
+  path: '/list/$id',
+  getParentRoute: () => apppagesRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/signin': typeof authSigninRoute
   '/signout': typeof authSignoutRoute
   '/signup': typeof authSignupRoute
-  '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/link-removed/': typeof appLinkRemovedIndexRoute
-  '/list/': typeof appListIndexRoute
-  '/profile/': typeof appProfileIndexRoute
+  '/': typeof apppagesIndexRoute
+  '/list/$id': typeof apppagesListIdRoute
+  '/list/': typeof apppagesListIndexRoute
+  '/profile/': typeof apppagesProfileIndexRoute
+  '/link-removed/': typeof appsplashLinkRemovedIndexRoute
 }
 export interface FileRoutesByTo {
   '/signin': typeof authSigninRoute
   '/signout': typeof authSignoutRoute
   '/signup': typeof authSignupRoute
-  '/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/link-removed': typeof appLinkRemovedIndexRoute
-  '/list': typeof appListIndexRoute
-  '/profile': typeof appProfileIndexRoute
+  '/': typeof apppagesIndexRoute
+  '/list/$id': typeof apppagesListIdRoute
+  '/list': typeof apppagesListIndexRoute
+  '/profile': typeof apppagesProfileIndexRoute
+  '/link-removed': typeof appsplashLinkRemovedIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(app)': typeof appRouteRouteWithChildren
+  '/(app)/(pages)': typeof apppagesRouteRouteWithChildren
   '/(auth)/signin': typeof authSigninRoute
   '/(auth)/signout': typeof authSignoutRoute
   '/(auth)/signup': typeof authSignupRoute
-  '/(app)/': typeof appIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/(app)/link-removed/': typeof appLinkRemovedIndexRoute
-  '/(app)/list/': typeof appListIndexRoute
-  '/(app)/profile/': typeof appProfileIndexRoute
+  '/(app)/(pages)/': typeof apppagesIndexRoute
+  '/(app)/(pages)/list/$id': typeof apppagesListIdRoute
+  '/(app)/(pages)/list/': typeof apppagesListIndexRoute
+  '/(app)/(pages)/profile/': typeof apppagesProfileIndexRoute
+  '/(app)/(splash)/link-removed/': typeof appsplashLinkRemovedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,32 +118,36 @@ export interface FileRouteTypes {
     | '/signin'
     | '/signout'
     | '/signup'
-    | '/'
     | '/api/auth/$'
-    | '/link-removed/'
+    | '/'
+    | '/list/$id'
     | '/list/'
     | '/profile/'
+    | '/link-removed/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/signin'
     | '/signout'
     | '/signup'
-    | '/'
     | '/api/auth/$'
-    | '/link-removed'
+    | '/'
+    | '/list/$id'
     | '/list'
     | '/profile'
+    | '/link-removed'
   id:
     | '__root__'
     | '/(app)'
+    | '/(app)/(pages)'
     | '/(auth)/signin'
     | '/(auth)/signout'
     | '/(auth)/signup'
-    | '/(app)/'
     | '/api/auth/$'
-    | '/(app)/link-removed/'
-    | '/(app)/list/'
-    | '/(app)/profile/'
+    | '/(app)/(pages)/'
+    | '/(app)/(pages)/list/$id'
+    | '/(app)/(pages)/list/'
+    | '/(app)/(pages)/profile/'
+    | '/(app)/(splash)/link-removed/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -146,13 +166,6 @@ declare module '@tanstack/react-router' {
       fullPath: ''
       preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/(app)/': {
-      id: '/(app)/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof appIndexRouteImport
-      parentRoute: typeof appRouteRoute
     }
     '/(auth)/signup': {
       id: '/(auth)/signup'
@@ -175,26 +188,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSigninRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(app)/profile/': {
-      id: '/(app)/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof appProfileIndexRouteImport
+    '/(app)/(pages)': {
+      id: '/(app)/(pages)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof apppagesRouteRouteImport
       parentRoute: typeof appRouteRoute
     }
-    '/(app)/list/': {
-      id: '/(app)/list/'
-      path: '/list'
-      fullPath: '/list/'
-      preLoaderRoute: typeof appListIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
-    '/(app)/link-removed/': {
-      id: '/(app)/link-removed/'
-      path: '/link-removed'
-      fullPath: '/link-removed/'
-      preLoaderRoute: typeof appLinkRemovedIndexRouteImport
-      parentRoute: typeof appRouteRoute
+    '/(app)/(pages)/': {
+      id: '/(app)/(pages)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof apppagesIndexRouteImport
+      parentRoute: typeof apppagesRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -203,21 +209,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/(splash)/link-removed/': {
+      id: '/(app)/(splash)/link-removed/'
+      path: '/link-removed'
+      fullPath: '/link-removed/'
+      preLoaderRoute: typeof appsplashLinkRemovedIndexRouteImport
+      parentRoute: typeof appRouteRoute
+    }
+    '/(app)/(pages)/profile/': {
+      id: '/(app)/(pages)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof apppagesProfileIndexRouteImport
+      parentRoute: typeof apppagesRouteRoute
+    }
+    '/(app)/(pages)/list/': {
+      id: '/(app)/(pages)/list/'
+      path: '/list'
+      fullPath: '/list/'
+      preLoaderRoute: typeof apppagesListIndexRouteImport
+      parentRoute: typeof apppagesRouteRoute
+    }
+    '/(app)/(pages)/list/$id': {
+      id: '/(app)/(pages)/list/$id'
+      path: '/list/$id'
+      fullPath: '/list/$id'
+      preLoaderRoute: typeof apppagesListIdRouteImport
+      parentRoute: typeof apppagesRouteRoute
+    }
   }
 }
 
+interface apppagesRouteRouteChildren {
+  apppagesIndexRoute: typeof apppagesIndexRoute
+  apppagesListIdRoute: typeof apppagesListIdRoute
+  apppagesListIndexRoute: typeof apppagesListIndexRoute
+  apppagesProfileIndexRoute: typeof apppagesProfileIndexRoute
+}
+
+const apppagesRouteRouteChildren: apppagesRouteRouteChildren = {
+  apppagesIndexRoute: apppagesIndexRoute,
+  apppagesListIdRoute: apppagesListIdRoute,
+  apppagesListIndexRoute: apppagesListIndexRoute,
+  apppagesProfileIndexRoute: apppagesProfileIndexRoute,
+}
+
+const apppagesRouteRouteWithChildren = apppagesRouteRoute._addFileChildren(
+  apppagesRouteRouteChildren,
+)
+
 interface appRouteRouteChildren {
-  appIndexRoute: typeof appIndexRoute
-  appLinkRemovedIndexRoute: typeof appLinkRemovedIndexRoute
-  appListIndexRoute: typeof appListIndexRoute
-  appProfileIndexRoute: typeof appProfileIndexRoute
+  apppagesRouteRoute: typeof apppagesRouteRouteWithChildren
+  appsplashLinkRemovedIndexRoute: typeof appsplashLinkRemovedIndexRoute
 }
 
 const appRouteRouteChildren: appRouteRouteChildren = {
-  appIndexRoute: appIndexRoute,
-  appLinkRemovedIndexRoute: appLinkRemovedIndexRoute,
-  appListIndexRoute: appListIndexRoute,
-  appProfileIndexRoute: appProfileIndexRoute,
+  apppagesRouteRoute: apppagesRouteRouteWithChildren,
+  appsplashLinkRemovedIndexRoute: appsplashLinkRemovedIndexRoute,
 }
 
 const appRouteRouteWithChildren = appRouteRoute._addFileChildren(

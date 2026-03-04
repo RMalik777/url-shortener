@@ -1,6 +1,6 @@
 import { urls } from "@repo/db/schema";
 import { useForm } from "@tanstack/react-form-start";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRightSquare } from "lucide-react";
@@ -10,11 +10,13 @@ import { Button } from "@repo/ui/components/button";
 import { Card, CardContent, CardFooter } from "@repo/ui/components/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
+import { Separator } from "@repo/ui/components/separator";
 
-import type { FormSchemaServer } from "@/lib/schema/url";
+import type { SmallFormSchemaServer } from "@/lib/schema/url";
 import { generateRandomString } from "@/lib/functions/generator";
 import { authMiddleware } from "@/lib/middleware/auth";
-import { formOpts, formSchema, formSchemaServer } from "@/lib/schema/url";
+import { urlQueryAll } from "@/lib/query/url";
+import { quickFormOpts, quickFormSchema, quickFormSchemaServer } from "@/lib/schema/url";
 
 import { db } from "@/db";
 import { env } from "@/env";
@@ -22,7 +24,7 @@ import { env } from "@/env";
 import { DataTable } from "@/components/table/data-table";
 import { urlColumn } from "@/lib/data/table/url";
 
-export const Route = createFileRoute("/(app)/")({
+export const Route = createFileRoute("/(app)/(pages)/")({
 	head: () => ({
 		title: "URL Shortener",
 		meta: [
@@ -37,13 +39,13 @@ export const Route = createFileRoute("/(app)/")({
 });
 
 const handleForm = createServerFn({ method: "POST" })
-	.inputValidator((data: FormSchemaServer) => data)
+	.inputValidator((data: SmallFormSchemaServer) => data)
 	.middleware([authMiddleware])
 	.handler(async ({ data, context }) => {
 		const randomString = generateRandomString(6);
-		let formattedUrl = data.url;
-		if (!(data.url.startsWith("https") || data.url.startsWith("http"))) {
-			formattedUrl = `https://${data.url}`;
+		let formattedUrl = data.urlFull;
+		if (!(data.urlFull.startsWith("https") || data.urlFull.startsWith("http"))) {
+			formattedUrl = `https://${data.urlFull}`;
 		}
 		await db.insert(urls).values({
 			urlFull: formattedUrl,
@@ -56,20 +58,22 @@ const handleForm = createServerFn({ method: "POST" })
 	});
 
 function App() {
-	const context = Route.useRouteContext();
+	const { user } = Route.useRouteContext();
+	const { data: urlList } = useSuspenseQuery(urlQueryAll({ userId: user.id }));
+
 	const mutation = useMutation({
 		mutationFn: handleForm,
 	});
 	const form = useForm({
-		...formOpts,
+		...quickFormOpts,
 		validators: {
-			onBlur: formSchema,
+			onBlur: quickFormSchema,
 			onSubmit: ({ value }) => {
-				if (value.url.startsWith("https") || value.url.startsWith("http")) {
+				if (value.urlFull.startsWith("https") || value.urlFull.startsWith("http")) {
 					return undefined;
 				}
-				const formatted = `http://${value.url}`;
-				const parsed = formSchemaServer.safeParse(formatted);
+				const formatted = `http://${value.urlFull}`;
+				const parsed = quickFormSchemaServer.safeParse(formatted);
 				if (!parsed.success) {
 					const flattenedErrors = z.flattenError(parsed.error);
 					return {
@@ -88,7 +92,6 @@ function App() {
 			console.log("Submitting form with value:", value);
 			try {
 				const response = await mutation.mutateAsync({ data: value });
-				console.log("Server response:", response);
 			} catch (error) {
 				console.error("Error submitting form:", error);
 			}
@@ -113,7 +116,7 @@ function App() {
 						>
 							<CardContent>
 								<FieldGroup className="flex flex-col gap-4">
-									<form.Field name="url">
+									<form.Field name="urlFull">
 										{(field) => {
 											const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 											return (
@@ -152,9 +155,10 @@ function App() {
 					</Card>
 				</div>
 			</section>
-			<section className="h-svh">
+			<Separator orientation="horizontal" />
+			<section className="py-8">
 				<div className="flex flex-row justify-between">
-					<h2 className="text-xl font-medium">Shortened URLs</h2>
+					<h2 className="text-4xl font-medium">Shortened URLs</h2>
 					<Button
 						variant="link"
 						nativeButton={false}
@@ -165,7 +169,7 @@ function App() {
 						}
 					/>
 				</div>
-				<DataTable columns={urlColumn} data={context.urlList} />
+				<DataTable columns={urlColumn} data={urlList} />
 			</section>
 		</>
 	);

@@ -3,7 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { Button } from "@repo/ui/components/button";
 import { LinkRemovedTemplate } from "@repo/ui/template/link-removed";
 
-export const Route = createFileRoute("/(app)/link-removed/")({
+export const Route = createFileRoute("/(app)/(splash)/link-removed/")({
 	component: RouteComponent,
 });
 
