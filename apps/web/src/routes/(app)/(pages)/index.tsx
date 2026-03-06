@@ -4,6 +4,8 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { ArrowRightSquare } from "lucide-react";
+import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@repo/ui/components/button";
@@ -58,8 +60,12 @@ const handleForm = createServerFn({ method: "POST" })
 	});
 
 function App() {
-	const { user } = Route.useRouteContext();
-	const { data: urlList } = useSuspenseQuery(urlQueryAll({ userId: user.id }));
+	const { user, queryClient } = Route.useRouteContext();
+	const [page, setPage] = useState(0);
+	const [limit, setLimit] = useState(1);
+	const [, startTransition] = useTransition();
+
+	const { data: urlList } = useSuspenseQuery(urlQueryAll({ userId: user.id, page, limit }));
 
 	const mutation = useMutation({
 		mutationFn: handleForm,
@@ -88,15 +94,21 @@ function App() {
 				return undefined;
 			},
 		},
-		onSubmit: async ({ value, formApi }) => {
+		onSubmit: async ({ value }) => {
 			console.log("Submitting form with value:", value);
 			try {
 				const response = await mutation.mutateAsync({ data: value });
+				queryClient.invalidateQueries(urlQueryAll({ userId: user.id, page, limit }));
+				form.reset();
+				navigator.clipboard.writeText(response.shortenedUrl);
+				toast.success(`URL shortened to ${response.shortenedUrl} and copied to clipboard!`);
 			} catch (error) {
 				console.error("Error submitting form:", error);
 			}
 		},
 	});
+
+	const pageCount = Math.ceil(urlList.total / limit);
 
 	return (
 		<>
@@ -156,7 +168,7 @@ function App() {
 				</div>
 			</section>
 			<Separator orientation="horizontal" />
-			<section className="py-8">
+			<section className="py-4">
 				<div className="flex flex-row justify-between">
 					<h2 className="text-4xl font-medium">Shortened URLs</h2>
 					<Button
@@ -169,7 +181,15 @@ function App() {
 						}
 					/>
 				</div>
-				<DataTable columns={urlColumn} data={urlList} />
+				<DataTable
+					columns={urlColumn}
+					data={urlList.rows}
+					pageIndex={page}
+					pageSize={limit}
+					pageCount={pageCount}
+					onPageChange={(newPage) => startTransition(() => setPage(newPage))}
+					onPageSizeChange={(newSize) => startTransition(() => setLimit(newSize))}
+				/>
 			</section>
 		</>
 	);

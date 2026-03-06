@@ -1,10 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
-import { and, eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { createUpdateSchema } from "drizzle-zod";
 
 import { urls } from "@repo/db/schema";
 import type { z } from "zod";
-import type { Url, User } from "@repo/db/schema";
+import type { Url } from "@repo/db/schema";
 
 import type { FullFormSchemaType } from "@/lib/schema/url";
 import { db } from "@/db";
@@ -16,9 +16,21 @@ const updateUrlSchema = createUpdateSchema(urls);
 type UpdateUrlData = z.infer<typeof updateUrlSchema>;
 export const getAllUrls = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.handler(async ({ context }) => {
+	.inputValidator((data: { page: number; limit: number }) => data)
+	.handler(async ({ context, data }) => {
 		try {
-			return await db.select().from(urls).where(eq(urls.createdBy, context.id));
+			const [rows, total] = await Promise.all([
+				db
+					.select()
+					.from(urls)
+					.where(eq(urls.createdBy, context.id))
+					.limit(data.limit)
+					.offset(data.page * data.limit),
+				db.select({ total: count() }).from(urls).where(eq(urls.createdBy, context.id)).get(),
+			]);
+			if (total) {
+				return { rows, total: total.total };
+			}
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
 				location: "getAllUrls",

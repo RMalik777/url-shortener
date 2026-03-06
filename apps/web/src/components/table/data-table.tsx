@@ -33,7 +33,6 @@ import {
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
-	getPaginationRowModel,
 	getSortedRowModel,
 	useReactTable,
 } from "@tanstack/react-table";
@@ -43,9 +42,22 @@ import type { ColumnDef, FilterFn, SortingState, VisibilityState } from "@tansta
 interface DataTableProps<TData, TValue> {
 	columns: Array<ColumnDef<TData, TValue>>;
 	data: Array<TData>;
+	pageIndex: number;
+	pageSize: number;
+	pageCount: number;
+	onPageChange: (page: number) => void;
+	onPageSizeChange: (size: number) => void;
 }
 
-export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({
+	columns,
+	data,
+	pageIndex,
+	pageSize,
+	pageCount,
+	onPageChange,
+	onPageSizeChange,
+}: Readonly<DataTableProps<TData, TValue>>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<any>("");
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -69,16 +81,23 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 		// @ts-expect-error - fuzzy is custom filter function
 		globalFilterFn: "fuzzy",
 		getCoreRowModel: getCoreRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
 		onSortingChange: setSorting,
 		getSortedRowModel: getSortedRowModel(),
 		getFilteredRowModel: getFilteredRowModel(),
 		onGlobalFilterChange: setGlobalFilter,
 		onColumnVisibilityChange: setColumnVisibility,
+		manualPagination: true,
+		pageCount,
+		onPaginationChange: (updater) => {
+			const next = typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
+			if (next.pageIndex !== pageIndex) onPageChange(next.pageIndex);
+			if (next.pageSize !== pageSize) onPageSizeChange(next.pageSize);
+		},
 		state: {
 			sorting,
 			globalFilter,
 			columnVisibility,
+			pagination: { pageIndex, pageSize },
 		},
 	});
 
@@ -107,7 +126,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
 							<DropdownMenuSeparator />
 							{table
 								.getAllColumns()
-								.filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+								.filter((column) => column.accessorFn !== undefined && column.getCanHide())
 								.map((column) => {
 									const isVisible = column.getIsVisible();
 									return (
