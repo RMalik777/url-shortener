@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { env } from "@/env";
 
 export const Route = createFileRoute("/")({
-	component: RouteComponent,
+	server: {
+		handlers: {
+			GET: () => {
+				return redirect({ href: env.VITE_LONG_URL, statusCode: 307 });
+			},
+		},
+	},
 });
-
-function RouteComponent() {
-	return <div>Hello "/"!</div>;
-}

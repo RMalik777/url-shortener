@@ -1,7 +1,6 @@
-import { env } from "@/env";
-
 import { Button } from "@repo/ui/components/button";
 import { NotFoundTemplate } from "@repo/ui/template/notfound";
+import { env } from "@/env";
 
 export function NotFound() {
 	return (

@@ -1,23 +1,21 @@
-import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 
 import { Image } from "@unpic/react";
 
 import { ArrowRightFromLine, ExternalLink, Shield } from "lucide-react";
 
-import { db } from "@/db";
-import { env } from "@/env";
-
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Card } from "@repo/ui/components/card";
 import { Separator } from "@repo/ui/components/separator";
 
-import { UrlNotFound } from "@/components/url-not-found";
-
 import { urls } from "@repo/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { UrlNotFound } from "@/components/url-not-found";
+import { env } from "@/env";
+import { db } from "@/db";
 
 const schema = z.object({
 	code: z.string().min(1),
@@ -39,8 +37,8 @@ export const Route = createFileRoute("/$code/")({
 		const result = await fetchData({ data: params.code });
 		return result;
 	},
-	loader: async ({ context }) => {
-		if (context && context.id) {
+	loader: ({ context }) => {
+		if (context?.id) {
 			if (context.isDeleted) {
 				throw redirect({
 					href: `${env.VITE_LONG_URL}/link-removed`,
@@ -56,6 +54,13 @@ export const Route = createFileRoute("/$code/")({
 		}
 		throw notFound();
 	},
+	head: ({ loaderData }) => ({
+		meta: [
+			{
+				title: `${loaderData?.urlShort} | URL Shortener`,
+			},
+		],
+	}),
 	component: RouteComponent,
 	notFoundComponent: UrlNotFound,
 });
@@ -68,18 +73,16 @@ function RouteComponent() {
 		<main className="flex min-h-svh items-center justify-center bg-linear-to-b/oklch from-background to-muted/20 p-4">
 			<Card className="w-full max-w-6xl overflow-hidden">
 				<div className="flex flex-col lg:flex-row">
-					{/* Preview Thumbnail */}
 					<div className="relative aspect-video w-full overflow-hidden bg-muted lg:aspect-auto lg:w-1/2">
 						<Image
 							src={thumbnailUrl}
 							width={1200}
 							height={800}
-							alt="Destination preview"
+							alt="Preview of the destination website"
 							className="h-full w-full object-cover"
 						/>
 					</div>
 
-					{/* Content */}
 					<div className="flex flex-col justify-center space-y-4 p-6 lg:w-1/2 lg:p-8">
 						<div className="flex items-start gap-3">
 							<div className="rounded-lg bg-primary/10 p-2 text-primary">
@@ -95,7 +98,6 @@ function RouteComponent() {
 
 						<Separator />
 
-						{/* URL Display */}
 						<div className="space-y-2">
 							<div className="flex items-center gap-2">
 								<Badge variant="secondary" className="font-mono text-xs">
@@ -108,7 +110,6 @@ function RouteComponent() {
 							</p>
 						</div>
 
-						{/* Action Buttons */}
 						<div className="flex gap-3 pt-2">
 							<Button
 								className="flex-1"

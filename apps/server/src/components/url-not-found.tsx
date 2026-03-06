@@ -1,6 +1,7 @@
 import { NotFoundTemplate } from "@repo/ui/template/notfound";
-import { env } from "@/env";
 import { Button } from "@repo/ui/components/button";
+import { env } from "@/env";
+
 export function UrlNotFound() {
 	return (
 		<NotFoundTemplate

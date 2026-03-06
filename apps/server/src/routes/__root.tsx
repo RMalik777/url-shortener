@@ -1,11 +1,10 @@
-import { HeadContent, Scripts, createRootRoute, redirect } from "@tanstack/react-router";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { env } from "@/env";
+import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import appCss from "@repo/ui/globals.css?url";
-import { NotFound } from "@/components/not-found";
 import { ErrorComponent } from "@repo/ui/template/error";
+import { NotFound } from "@/components/not-found";
 
 export const Route = createRootRoute({
 	head: () => ({
@@ -18,7 +17,11 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "TanStack Start Starter",
+				title: "URL Shortener",
+			},
+			{
+				name: "description",
+				content: "A simple URL shortener",
 			},
 		],
 		links: [
@@ -28,9 +31,6 @@ export const Route = createRootRoute({
 			},
 		],
 	}),
-	beforeLoad: () => {
-		// throw redirect({ href: env.VITE_LONG_URL, statusCode: 307 })
-	},
 	shellComponent: RootDocument,
 	notFoundComponent: NotFound,
 	errorComponent: ErrorComponent,
