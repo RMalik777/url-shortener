@@ -1,8 +1,6 @@
-import { urls } from "@repo/db/schema";
 import { useForm } from "@tanstack/react-form-start";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { ArrowRightSquare } from "lucide-react";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -14,14 +12,9 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/f
 import { Input } from "@repo/ui/components/input";
 import { Separator } from "@repo/ui/components/separator";
 
-import type { SmallFormSchemaServer } from "@/lib/schema/url";
 import { generateRandomString } from "@/lib/functions/generator";
-import { authMiddleware } from "@/lib/middleware/auth";
-import { urlQueryAll } from "@/lib/query/url";
+import { getAllUrlsOptions, useInsertUrl } from "@/lib/query/url";
 import { quickFormOpts, quickFormSchema, quickFormSchemaServer } from "@/lib/schema/url";
-
-import { db } from "@/db";
-import { env } from "@/env";
 
 import { DataTable } from "@/components/table/data-table";
 import { urlColumn } from "@/lib/data/table/url";
@@ -40,36 +33,15 @@ export const Route = createFileRoute("/(app)/(pages)/")({
 	component: App,
 });
 
-const handleForm = createServerFn({ method: "POST" })
-	.inputValidator((data: SmallFormSchemaServer) => data)
-	.middleware([authMiddleware])
-	.handler(async ({ data, context }) => {
-		const randomString = generateRandomString(6);
-		let formattedUrl = data.urlFull;
-		if (!(data.urlFull.startsWith("https") || data.urlFull.startsWith("http"))) {
-			formattedUrl = `https://${data.urlFull}`;
-		}
-		await db.insert(urls).values({
-			urlFull: formattedUrl,
-			urlShort: randomString,
-			createdBy: context.id,
-		});
-		return {
-			shortenedUrl: env.VITE_SHORT_URL + randomString,
-		};
-	});
-
 function App() {
-	const { user, queryClient } = Route.useRouteContext();
+	const { user } = Route.useRouteContext();
 	const [page, setPage] = useState(0);
-	const [limit, setLimit] = useState(1);
+	const [limit, setLimit] = useState(5);
 	const [, startTransition] = useTransition();
 
-	const { data: urlList } = useSuspenseQuery(urlQueryAll({ userId: user.id, page, limit }));
+	const { data: urlList } = useSuspenseQuery(getAllUrlsOptions({ userId: user.id, page, limit }));
+	const insertUrlMutation = useInsertUrl({ userId: user.id });
 
-	const mutation = useMutation({
-		mutationFn: handleForm,
-	});
 	const form = useForm({
 		...quickFormOpts,
 		validators: {
@@ -95,10 +67,18 @@ function App() {
 			},
 		},
 		onSubmit: async ({ value }) => {
-			console.log("Submitting form with value:", value);
+			const randomString = generateRandomString(6);
+			let formattedUrl = value.urlFull;
+			if (!(value.urlFull.startsWith("https") || value.urlFull.startsWith("http"))) {
+				formattedUrl = `https://${value.urlFull}`;
+			}
+			const data = {
+				urlFull: formattedUrl,
+				urlShort: randomString,
+				intermediaryScreen: false,
+			};
 			try {
-				const response = await mutation.mutateAsync({ data: value });
-				queryClient.invalidateQueries(urlQueryAll({ userId: user.id, page, limit }));
+				const response = await insertUrlMutation.mutateAsync({ data: data });
 				form.reset();
 				navigator.clipboard.writeText(response.shortenedUrl);
 				toast.success(`URL shortened to ${response.shortenedUrl} and copied to clipboard!`);
@@ -108,7 +88,7 @@ function App() {
 		},
 	});
 
-	const pageCount = Math.ceil(urlList.total / limit);
+	const pageCount = urlList ? Math.ceil(urlList.total / limit) : 0;
 
 	return (
 		<>
@@ -183,7 +163,8 @@ function App() {
 				</div>
 				<DataTable
 					columns={urlColumn}
-					data={urlList.rows}
+					data={urlList?.rows ?? []}
+					dataCount={urlList?.total ?? 0}
 					pageIndex={page}
 					pageSize={limit}
 					pageCount={pageCount}

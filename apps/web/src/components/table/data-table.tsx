@@ -1,47 +1,53 @@
+import { rankItem } from "@tanstack/match-sorter-utils";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeftIcon,
+  ChevronsRightIcon,
+  Settings2Icon,
+} from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@repo/ui/components/button";
 import {
-	DropdownMenu,
-	DropdownMenuCheckboxItem,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 import { Input } from "@repo/ui/components/input";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@repo/ui/components/select";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Settings2 } from "lucide-react";
-
-import { useState } from "react";
-
 import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@repo/ui/components/table";
-import { rankItem } from "@tanstack/match-sorter-utils";
-import {
-	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
 
 import type { ColumnDef, FilterFn, SortingState, VisibilityState } from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
 	columns: Array<ColumnDef<TData, TValue>>;
 	data: Array<TData>;
+	dataCount: number;
 	pageIndex: number;
 	pageSize: number;
 	pageCount: number;
@@ -52,6 +58,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
 	columns,
 	data,
+	dataCount,
 	pageIndex,
 	pageSize,
 	pageCount,
@@ -115,7 +122,7 @@ export function DataTable<TData, TValue>({
 					<DropdownMenuTrigger
 						render={
 							<Button variant="outline" size="sm" className="ml-auto h-8 lg:flex">
-								<Settings2 />
+								<Settings2Icon />
 								View
 							</Button>
 						}
@@ -189,29 +196,34 @@ export function DataTable<TData, TValue>({
 				</div>
 				<div className="flex flex-col items-start justify-between gap-2 space-x-6 sm:flex-row sm:items-center lg:space-x-8">
 					<div className="flex w-full items-center justify-between space-x-2 sm:w-auto">
-						<p className="text-sm font-medium">Rows per page</p>
+						<p className="text-sm font-medium">Show</p>
 						<Select
 							value={`${table.getState().pagination.pageSize}`}
 							onValueChange={(value) => {
 								table.setPageSize(Number(value));
 							}}
 						>
-							<SelectTrigger className="h-8 w-17.5">
+							<SelectTrigger className="h-8 w-17.5 font-mono">
 								<SelectValue placeholder={table.getState().pagination.pageSize} />
 							</SelectTrigger>
-							<SelectContent side="top">
-								{[10, 20, 25, 30, 40, 50].map((pageSize) => (
-									<SelectItem key={pageSize} value={`${pageSize}`}>
-										{pageSize}
+							<SelectContent side="top" className="font-mono">
+								{[5, 10, 20, 25, 30, 40, 50, ...(dataCount > 50 ? [dataCount] : [])].map((size) => (
+									<SelectItem key={size} value={`${size}`}>
+										{size}
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
+						<p className="text-sm font-medium">
+							from <span className="font-mono">{dataCount}</span> data
+						</p>
 					</div>
 					<div className="flex w-full flex-row items-center justify-between gap-2 sm:w-fit sm:gap-4">
-						<div className="flex w-auto items-center justify-center text-sm font-medium">
-							Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-						</div>
+						<p className="flex w-auto items-center justify-center gap-1 text-sm font-medium">
+							Page<span className="font-mono">{table.getState().pagination.pageIndex + 1}</span>of
+							{""}
+							<span className="font-mono">{table.getPageCount()}</span>
+						</p>
 						<div className="flex items-center space-x-2">
 							<Button
 								variant="outline"
@@ -221,7 +233,7 @@ export function DataTable<TData, TValue>({
 								disabled={!table.getCanPreviousPage()}
 							>
 								<span className="sr-only">Go to first page</span>
-								<ChevronsLeft />
+								<ChevronsLeftIcon />
 							</Button>
 							<Button
 								variant="outline"
@@ -231,7 +243,7 @@ export function DataTable<TData, TValue>({
 								disabled={!table.getCanPreviousPage()}
 							>
 								<span className="sr-only">Go to previous page</span>
-								<ChevronLeft />
+								<ChevronLeftIcon />
 							</Button>
 							<Button
 								variant="outline"
@@ -241,7 +253,7 @@ export function DataTable<TData, TValue>({
 								disabled={!table.getCanNextPage()}
 							>
 								<span className="sr-only">Go to next page</span>
-								<ChevronRight />
+								<ChevronRightIcon />
 							</Button>
 							<Button
 								variant="outline"
@@ -251,7 +263,7 @@ export function DataTable<TData, TValue>({
 								disabled={!table.getCanNextPage()}
 							>
 								<span className="sr-only">Go to last page</span>
-								<ChevronsRight />
+								<ChevronsRightIcon />
 							</Button>
 						</div>
 					</div>

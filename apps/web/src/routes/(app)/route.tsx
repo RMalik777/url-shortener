@@ -1,6 +1,6 @@
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 
-import { urlQueryAll } from "@/lib/query/url";
+import { getAllUrlsOptions } from "@/lib/query/url";
 import { getSessionFn } from "@/lib/services/session";
 
 import { Footer } from "@/components/footer";
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/(app)")({
 		return { user: session.user };
 	},
 	loader: ({ context }) =>
-		context.queryClient.ensureQueryData(urlQueryAll({ userId: context.user.id })),
+		context.queryClient.ensureQueryData(getAllUrlsOptions({ userId: context.user.id })),
 	component: RouteComponent,
 });
 

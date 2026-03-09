@@ -1,6 +1,5 @@
-import { useRouteContext } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form-start";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouteContext } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import z from "zod";
@@ -26,11 +25,12 @@ import {
 	FieldTitle,
 } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
-import type { Url } from "@repo/db/schema";
 
+import type { Url } from "@repo/db/schema";
 import type { FullFormSchemaType } from "@/lib/schema/url";
+
 import { env } from "@/env";
-import { editUrlById, insertUrlWithCode } from "@/lib/functions/db";
+import { useEditUrlById, useInsertUrl } from "@/lib/query/url";
 import { fullFormOpts, fullFormSchemaServer } from "@/lib/schema/url";
 import { DBError } from "@/lib/types/error";
 
@@ -40,13 +40,11 @@ type EditCreateDialogProps =
 
 export function EditCreateDialog({ children, action = "create", prevData }: EditCreateDialogProps) {
 	const [openDialog, setOpenDialog] = useState(false);
-	const { user, queryClient } = useRouteContext({ from: "/(app)" });
-	const createUrlMutation = useMutation({
-		mutationFn: insertUrlWithCode,
-	});
-	const createEditMutation = useMutation({
-		mutationFn: editUrlById,
-	});
+	const { user } = useRouteContext({ from: "/(app)" });
+
+	const createUrlMutation = useInsertUrl({ userId: user.id });
+	const editUrlMutation = useEditUrlById({ userId: user.id });
+
 	const form = useForm({
 		...(action === "edit" && prevData
 			? {
@@ -69,7 +67,6 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 				const parsed = fullFormSchemaServer.safeParse(formattedValue);
 				if (!parsed.success) {
 					const flattenedErrors = z.flattenError(parsed.error);
-					console.log("Validation errors:", flattenedErrors, parsed.error);
 					return {
 						fields: Object.fromEntries(
 							Object.entries(flattenedErrors.fieldErrors).map(([key, errors]) => [
@@ -85,8 +82,7 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 		onSubmit: async ({ value, formApi }) => {
 			try {
 				if (action === "edit" && prevData) {
-					await createEditMutation.mutateAsync({ data: { id: prevData.id, ...value } });
-					queryClient.invalidateQueries({ queryKey: [user.id, "urls"] });
+					await editUrlMutation.mutateAsync({ data: { id: prevData.id, ...value } });
 					toast.success("URL edited successfully!");
 				} else {
 					await createUrlMutation.mutateAsync({ data: value });

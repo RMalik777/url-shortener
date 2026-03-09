@@ -1,18 +1,12 @@
-/**
- * Generates a random string of the specified length containing uppercase and lowercase letters.
- *
- * @param length - The length of the random string to generate. Defaults to 5.
- * @returns A random string containing only letters (a-z, A-Z).
- *
- * @example
- * ```ts
- * generateRandomString(); // Returns a 5-character random string, e.g., "aBcDe"
- * generateRandomString(10); // Returns a 10-character random string, e.g., "XyZaBcDeFg"
- * ```
- */
-export function generateRandomString(length = 5): string {
-	const letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	const randomValues = globalThis.crypto.getRandomValues(new Uint8Array(length));
+import { createRandomStringGenerator } from "@better-auth/utils/random";
 
-	return Array.from(randomValues, (byte) => letters[byte % letters.length]).join("");
+const _generateRandomString = createRandomStringGenerator("A-Z", "a-z");
+
+/**
+ * Generates a random string composed of uppercase (A-Z) and lowercase (a-z) letters.
+ * @param length - The length of the random string to generate. Defaults to `5`.
+ * @returns A random alphanumeric string of the specified length.
+ */
+export function generateRandomString(length: number = 5) {
+	return _generateRandomString(length);
 }

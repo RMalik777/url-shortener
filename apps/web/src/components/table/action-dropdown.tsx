@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { Link, useRouteContext } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 
+import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -13,7 +13,6 @@ import {
 	AlertDialogMedia,
 	AlertDialogTitle,
 } from "@repo/ui/components/alert-dialog";
-import { Alert, AlertDescription, AlertTitle } from "@repo/ui/components/alert";
 import { Button } from "@repo/ui/components/button";
 import {
 	DropdownMenu,
@@ -35,14 +34,17 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-import type { Row } from "@tanstack/react-table";
 import type { Url } from "@repo/db/schema";
+import type { Row } from "@tanstack/react-table";
 
-import { deleteUrlbyId, hardDeleteUrlById } from "@/lib/functions/db";
+import { useDeleteUrlById, useHardDeleteUrlById } from "@/lib/query/url";
 
 export function ActionDropdown({ row }: Readonly<{ row: Row<Url> }>) {
-	const queryClient = useQueryClient();
 	const { user } = useRouteContext({ from: "/(app)" });
+
+	const deleteUrlMutation = useDeleteUrlById({ userId: user.id });
+	const hardDeleteUrlMutation = useHardDeleteUrlById({ userId: user.id });
+
 	const url = row.original;
 	const [open, setOpen] = useState(false);
 	const [hardDelete, setHardDelete] = useState(false);
@@ -166,18 +168,13 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<Url> }>) {
 							onClick={async () => {
 								try {
 									if (hardDelete) {
-										await hardDeleteUrlById({ data: url.id });
+										await hardDeleteUrlMutation.mutateAsync({ data: url.id });
 									} else {
-										await deleteUrlbyId({ data: url.id });
+										await deleteUrlMutation.mutateAsync({ data: url.id });
 									}
 									setOpen(false);
 									toast.success("URL deleted successfully");
-									await Promise.all([
-										queryClient.invalidateQueries({ queryKey: [user.id, "urls", "all"] }),
-										queryClient.invalidateQueries({ queryKey: [user.id, "urls", url.id] }),
-									]);
 								} catch (error) {
-									console.log(error);
 									toast.error("Failed to delete URL. Please try again.");
 								}
 							}}

@@ -15,7 +15,6 @@ import {
 	PencilIcon,
 	ShieldCheckIcon,
 	Trash2Icon,
-	Undo2,
 	Undo2Icon,
 } from "lucide-react";
 
@@ -43,14 +42,20 @@ import {
 } from "@repo/ui/components/card";
 import { Separator } from "@repo/ui/components/separator";
 
-import { env } from "@/env";
-import { deleteUrlbyId, hardDeleteUrlById, restoreUrlById } from "@/lib/functions/db";
-import { urlQueryById } from "@/lib/query/url";
 import { EditCreateDialog } from "@/components/edit-create-dialog";
+import { env } from "@/env";
+import {
+	getUrlByIdOptions,
+	useDeleteUrlById,
+	useHardDeleteUrlById,
+	useRestoreUrlById,
+} from "@/lib/query/url";
 
 export const Route = createFileRoute("/(app)/(pages)/list/$id")({
 	loader: ({ context, params }) =>
-		context.queryClient.ensureQueryData(urlQueryById({ id: params.id, userId: context.user.id })),
+		context.queryClient.ensureQueryData(
+			getUrlByIdOptions({ id: params.id, userId: context.user.id }),
+		),
 	component: RouteComponent,
 });
 
@@ -99,11 +104,14 @@ function StatCard({
 }
 
 function RouteComponent() {
+	const navigate = useNavigate();
 	const { user } = Route.useRouteContext();
 	const { id } = Route.useParams();
-	const { data: url } = useSuspenseQuery(urlQueryById({ id: id, userId: user.id }));
-	const queryClient = useQueryClient();
-	const navigate = useNavigate();
+	const { data: url } = useSuspenseQuery(getUrlByIdOptions({ id: id, userId: user.id }));
+
+	const deleteUrlbyIdMutation = useDeleteUrlById({ userId: user.id });
+	const hardDeleteUrlByIdMutation = useHardDeleteUrlById({ userId: user.id });
+	const restoreUrlByIdMutation = useRestoreUrlById({ userId: user.id });
 
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [hardDelete, setHardDelete] = useState(false);
@@ -333,9 +341,8 @@ function RouteComponent() {
 							size="sm"
 							onClick={async () => {
 								try {
-									await restoreUrlById({ data: url.id });
+									await restoreUrlByIdMutation.mutateAsync({ data: url.id });
 									toast.success("URL restored successfully");
-									await queryClient.invalidateQueries({ queryKey: [user.id, "urls"] });
 								} catch (error) {
 									console.error(error);
 									toast.error("Failed to restore URL. Please try again.");
@@ -372,7 +379,6 @@ function RouteComponent() {
 				</CardFooter>
 			</Card>
 
-			{/* Delete Dialog */}
 			<AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
@@ -396,16 +402,12 @@ function RouteComponent() {
 							onClick={async () => {
 								try {
 									if (hardDelete) {
-										await hardDeleteUrlById({ data: url.id });
+										await hardDeleteUrlByIdMutation.mutateAsync({ data: url.id });
 									} else {
-										await deleteUrlbyId({ data: url.id });
+										await deleteUrlbyIdMutation.mutateAsync({ data: url.id });
 									}
 									setDeleteOpen(false);
 									toast.success("URL deleted successfully");
-									await Promise.all([
-										queryClient.invalidateQueries({ queryKey: [user.id, "urls", "all"] }),
-										queryClient.invalidateQueries({ queryKey: [user.id, "urls", url.id] }),
-									]);
 									if (hardDelete) {
 										navigate({ to: "/list" });
 									}
