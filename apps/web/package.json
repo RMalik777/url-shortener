@@ -53,6 +53,7 @@
 		"zod": "catalog:"
 	},
 	"devDependencies": {
+		"@base-ui/react": "^1.2.0",
 		"@better-auth/cli": "catalog:",
 		"@cloudflare/workers-types": "catalog:",
 		"@repo/eslint-config": "workspace:*",
@@ -68,6 +69,7 @@
 		"@types/react-dom": "catalog:",
 		"@vitejs/plugin-react": "catalog:",
 		"babel-plugin-react-compiler": "catalog:",
+		"class-variance-authority": "catalog:",
 		"eslint": "catalog:",
 		"jsdom": "catalog:",
 		"prettier": "^3.8.1",

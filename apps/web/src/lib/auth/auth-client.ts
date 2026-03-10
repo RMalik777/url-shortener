@@ -14,4 +14,8 @@ export const {
 	passkey,
 	getLastUsedLoginMethod,
 	clearLastUsedLoginMethod,
+	updateUser,
+	linkSocial,
+	unlinkAccount,
+	listAccounts,
 } = authClient;
