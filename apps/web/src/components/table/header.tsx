@@ -27,7 +27,7 @@ export function DataTableColumnHeader<TData, TValue>({
 	sorted,
 	title,
 	className,
-}: DataTableColumnHeaderProps<TData, TValue>) {
+}: Readonly<DataTableColumnHeaderProps<TData, TValue>>) {
 	const sortable = column.getCanSort();
 	const hideable = column.getCanHide();
 	if (!sortable && !hideable) {
@@ -39,7 +39,7 @@ export function DataTableColumnHeader<TData, TValue>({
 				<DropdownMenu>
 					<DropdownMenuTrigger
 						render={
-							<Button variant="ghost" size="sm" className="-ml-3 h-8 data-[state=open]:bg-accent">
+							<Button variant="ghost" size="sm" className="-ml-3 data-[state=open]:bg-accent">
 								<span>{title}</span>
 								{sortable ? (
 									sorted === "desc" ? (

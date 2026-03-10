@@ -1,45 +1,45 @@
 import { rankItem } from "@tanstack/match-sorter-utils";
 import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getSortedRowModel,
+	useReactTable,
 } from "@tanstack/react-table";
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeftIcon,
-  ChevronsRightIcon,
-  Settings2Icon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	ChevronsLeftIcon,
+	ChevronsRightIcon,
+	Settings2Icon,
 } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@repo/ui/components/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
 } from "@repo/ui/components/dropdown-menu";
 import { Input } from "@repo/ui/components/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@repo/ui/components/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@repo/ui/components/table";
 
 import type { ColumnDef, FilterFn, SortingState, VisibilityState } from "@tanstack/react-table";

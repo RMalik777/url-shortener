@@ -1,3 +1,5 @@
+import { CheckCircle2Icon, XCircleIcon } from "lucide-react";
+
 import { Checkbox } from "@repo/ui/components/checkbox";
 
 import type { Url } from "@repo/db/schema";
@@ -6,6 +8,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { ActionDropdown } from "@/components/table/action-dropdown";
 import { DataTableColumnHeader } from "@/components/table/header";
+import { CopyButton } from "@/components/copy-button";
+import { env } from "@/env";
 
 const checkboxColumn: Array<ColumnDef<Url>> = [
 	{
@@ -39,6 +43,15 @@ export const urlColumn: Array<ColumnDef<Url>> = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="Short URL" />
 		),
+		cell: ({ row }) => {
+			const shortUrl = `${env.VITE_SHORT_URL}${row.original.urlShort}`;
+			return (
+				<div className="flex items-center gap-2">
+					{shortUrl}
+					<CopyButton value={shortUrl} label="Short URL" />
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: "urlFull",
@@ -46,17 +59,15 @@ export const urlColumn: Array<ColumnDef<Url>> = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="Original URL" />
 		),
-		cell: ({ row }) => {
-			return (
-				<a
-					className="-m-1 p-1 text-left transition duration-200 ease-out hover:bg-muted hover:underline"
-					href={row.original.urlFull}
-					rel="noopener noreferrer"
-				>
-					{row.original.urlFull}
-				</a>
-			);
-		},
+		cell: ({ row }) => (
+			<a
+				className="-m-1 p-1 text-left transition duration-200 ease-out hover:bg-muted hover:underline"
+				href={row.original.urlFull}
+				rel="noopener noreferrer"
+			>
+				{row.original.urlFull}
+			</a>
+		),
 	},
 	...actionColumn,
 ];
@@ -68,9 +79,7 @@ export const fullColumn: Array<ColumnDef<Url>> = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="ID" />
 		),
-		cell: ({ row }) => {
-			return <code className="">{row.original.id}</code>;
-		},
+		cell: ({ row }) => <code className="">{row.original.id}</code>,
 	},
 	...urlColumn.slice(0, -1),
 	{
@@ -82,9 +91,15 @@ export const fullColumn: Array<ColumnDef<Url>> = [
 				title="Intermediary Screen"
 			/>
 		),
-		cell: ({ row }) => {
-			return <>{row.original.intermediaryScreen ? "Yes" : "No"}</>;
-		},
+		cell: ({ row }) => (
+			<div className="flex items-center justify-center">
+				{row.original.intermediaryScreen ? (
+					<CheckCircle2Icon className="h-4 w-4 text-success" />
+				) : (
+					<XCircleIcon className="h-4 w-4 text-destructive" />
+				)}
+			</div>
+		),
 	},
 	{
 		accessorKey: "createdAt",
@@ -104,9 +119,15 @@ export const fullColumn: Array<ColumnDef<Url>> = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="Deleted" />
 		),
-		cell: ({ row }) => {
-			return <>{row.original.isDeleted ? "Yes" : "No"}</>;
-		},
+		cell: ({ row }) => (
+			<div className="flex items-center justify-center">
+				{row.original.isDeleted ? (
+					<CheckCircle2Icon className="h-4 w-4 text-success" />
+				) : (
+					<XCircleIcon className="h-4 w-4 text-destructive" />
+				)}
+			</div>
+		),
 	},
 	{
 		accessorKey: "deletedAt",
@@ -114,7 +135,6 @@ export const fullColumn: Array<ColumnDef<Url>> = [
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="Deleted At" />
 		),
 		cell: ({ row }) => {
-			console.log(row.original.deletedAt, typeof row.original.deletedAt);
 			if (!row.original.deletedAt) {
 				return <div className="text-right">-</div>;
 			}
