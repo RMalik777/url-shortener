@@ -21,6 +21,7 @@ const config = defineConfig({
 		tanstackStart({
 			sitemap: {
 				enabled: true,
+				host: "https://url.raflimalik.com",
 			},
 		}),
 		viteReact({
