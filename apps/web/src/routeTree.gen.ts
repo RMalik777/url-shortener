@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
 import { Route as authSignupRouteImport } from './routes/(auth)/signup'
-import { Route as authSignoutRouteImport } from './routes/(auth)/signout'
 import { Route as authSigninRouteImport } from './routes/(auth)/signin'
 import { Route as apppagesRouteRouteImport } from './routes/(app)/(pages)/route'
 import { Route as apppagesIndexRouteImport } from './routes/(app)/(pages)/index'
@@ -28,11 +27,6 @@ const appRouteRoute = appRouteRouteImport.update({
 const authSignupRoute = authSignupRouteImport.update({
   id: '/(auth)/signup',
   path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const authSignoutRoute = authSignoutRouteImport.update({
-  id: '/(auth)/signout',
-  path: '/signout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authSigninRoute = authSigninRouteImport.update({
@@ -78,7 +72,6 @@ const apppagesListIdRoute = apppagesListIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/signin': typeof authSigninRoute
-  '/signout': typeof authSignoutRoute
   '/signup': typeof authSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/': typeof apppagesIndexRoute
@@ -89,7 +82,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/signin': typeof authSigninRoute
-  '/signout': typeof authSignoutRoute
   '/signup': typeof authSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/': typeof apppagesIndexRoute
@@ -103,7 +95,6 @@ export interface FileRoutesById {
   '/(app)': typeof appRouteRouteWithChildren
   '/(app)/(pages)': typeof apppagesRouteRouteWithChildren
   '/(auth)/signin': typeof authSigninRoute
-  '/(auth)/signout': typeof authSignoutRoute
   '/(auth)/signup': typeof authSignupRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/(app)/(pages)/': typeof apppagesIndexRoute
@@ -116,7 +107,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/signin'
-    | '/signout'
     | '/signup'
     | '/api/auth/$'
     | '/'
@@ -127,7 +117,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/signin'
-    | '/signout'
     | '/signup'
     | '/api/auth/$'
     | '/'
@@ -140,7 +129,6 @@ export interface FileRouteTypes {
     | '/(app)'
     | '/(app)/(pages)'
     | '/(auth)/signin'
-    | '/(auth)/signout'
     | '/(auth)/signup'
     | '/api/auth/$'
     | '/(app)/(pages)/'
@@ -153,7 +141,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   appRouteRoute: typeof appRouteRouteWithChildren
   authSigninRoute: typeof authSigninRoute
-  authSignoutRoute: typeof authSignoutRoute
   authSignupRoute: typeof authSignupRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -172,13 +159,6 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof authSignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/signout': {
-      id: '/(auth)/signout'
-      path: '/signout'
-      fullPath: '/signout'
-      preLoaderRoute: typeof authSignoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/signin': {
@@ -275,7 +255,6 @@ const appRouteRouteWithChildren = appRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   appRouteRoute: appRouteRouteWithChildren,
   authSigninRoute: authSigninRoute,
-  authSignoutRoute: authSignoutRoute,
   authSignupRoute: authSignupRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

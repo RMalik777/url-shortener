@@ -22,15 +22,6 @@ const config = defineConfig({
 			sitemap: {
 				enabled: true,
 			},
-			prerender: {
-				enabled: true,
-				crawlLinks: true,
-				autoStaticPathsDiscovery: true,
-				failOnError: true,
-				filter: (route) => {
-					return !route.path.startsWith("/$code");
-				},
-			},
 		}),
 		viteReact({
 			babel: {
