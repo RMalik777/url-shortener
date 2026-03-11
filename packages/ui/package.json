@@ -28,7 +28,7 @@
 		"@repo/typescript-config": "workspace:*",
 		"@tailwindcss/vite": "catalog:",
 		"@tanstack/react-router": "catalog:",
-		"@turbo/gen": "^2.8.15",
+		"@turbo/gen": "^2.8.16",
 		"@types/node": "catalog:",
 		"@types/react": "catalog:",
 		"@types/react-dom": "catalog:",

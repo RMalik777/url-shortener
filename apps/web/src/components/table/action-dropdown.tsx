@@ -117,7 +117,13 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<Url> }>) {
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
 							<DropdownMenuLabel>Delete</DropdownMenuLabel>
-							<DropdownMenuItem variant="destructive" onClick={() => setOpen(true)}>
+							<DropdownMenuItem
+								variant="destructive"
+								onClick={() => {
+									setHardDelete(false);
+									setOpen(true);
+								}}
+							>
 								<ArchiveXIcon />
 								Soft Delete
 							</DropdownMenuItem>
@@ -175,7 +181,11 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<Url> }>) {
 									setOpen(false);
 									toast.success("URL deleted successfully");
 								} catch (error) {
-									toast.error("Failed to delete URL. Please try again.");
+									toast.error(
+										error instanceof Error
+											? error.message
+											: "Failed to delete URL. Please try again.",
+									);
 								}
 							}}
 						>
