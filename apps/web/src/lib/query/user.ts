@@ -46,7 +46,7 @@ export const useUnlinkAccount = ({ userId }: { userId: User["id"] }) => {
 		mutationFn: async ({ provider }: { provider: string }) =>
 			await unlinkAccount({ providerId: provider }),
 		onSuccess: () => {
-      event("Account Unlinked");
+			event("Account Unlinked");
 			queryClient.invalidateQueries({ queryKey: [userId, "profile", "linkedAccounts"] });
 		},
 	});

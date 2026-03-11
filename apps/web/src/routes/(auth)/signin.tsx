@@ -4,6 +4,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { AlertOctagon } from "lucide-react";
 import { toast } from "sonner";
+import { event } from "onedollarstats";
 
 import { Alert, AlertTitle } from "@repo/ui/components/alert";
 import { Badge } from "@repo/ui/components/badge";
@@ -60,6 +61,7 @@ function RouteComponent() {
 														if (error) {
 															setErrorMessage(error.message);
 														} else {
+															event("signed_in", { method: method.id });
 															toast.success("Successfully signed in!");
 														}
 													}}

@@ -28,6 +28,7 @@
 		"@unpic/react": "catalog:",
 		"drizzle-orm": "catalog:",
 		"lucide-react": "catalog:",
+		"onedollarstats": "catalog:",
 		"react": "catalog:",
 		"react-dom": "catalog:",
 		"tailwindcss": "catalog:",
