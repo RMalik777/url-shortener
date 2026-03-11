@@ -1,6 +1,7 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
+import { event } from "onedollarstats";
 
 import { account as accountTable } from "@repo/db/schema";
 
@@ -45,6 +46,7 @@ export const useUnlinkAccount = ({ userId }: { userId: User["id"] }) => {
 		mutationFn: async ({ provider }: { provider: string }) =>
 			await unlinkAccount({ providerId: provider }),
 		onSuccess: () => {
+      event("Account Unlinked");
 			queryClient.invalidateQueries({ queryKey: [userId, "profile", "linkedAccounts"] });
 		},
 	});
@@ -56,6 +58,7 @@ export const useLinkAccount = ({ userId }: { userId: User["id"] }) => {
 		mutationFn: async ({ provider }: { provider: string }) =>
 			await linkSocial({ provider, callbackURL: "/profile" }),
 		onSuccess: () => {
+			event("Account Linked");
 			queryClient.invalidateQueries({ queryKey: [userId, "profile", "linkedAccounts"] });
 		},
 	});

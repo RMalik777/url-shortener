@@ -1,4 +1,5 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
+import { configure } from "onedollarstats";
 
 import appCss from "@repo/ui/globals.css?url";
 import { ErrorComponent } from "@repo/ui/template/error";
@@ -8,8 +9,8 @@ import { TanStackDevtools } from "@tanstack/react-devtools";
 import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { QueryClient } from "@tanstack/react-query";
-import TanStackQueryDevtools from "@/integrations/tanstack-query/devtools";
-import TanstackFormDevtools from "@/integrations/tanstack-form/devtools";
+import TanStackQueryDevtools from "@/lib/integrations/tanstack-query/devtools";
+import TanstackFormDevtools from "@/lib/integrations/tanstack-form/devtools";
 import { NotFound } from "@/components/not-found";
 
 interface MyRouterContext {
@@ -43,6 +44,12 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
+	useEffect(() => {
+		configure({
+			hostname: "url.raflimalik.com",
+			devmode: true,
+		});
+	}, []);
 	return (
 		<html lang="en">
 			<head>

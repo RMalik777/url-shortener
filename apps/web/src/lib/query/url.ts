@@ -2,6 +2,7 @@ import { keepPreviousData, queryOptions, useMutation, useQueryClient } from "@ta
 import { createServerFn } from "@tanstack/react-start";
 import { and, count, eq } from "drizzle-orm";
 import { createUpdateSchema } from "drizzle-zod";
+import { event } from "onedollarstats";
 
 import { urls } from "@repo/db/schema";
 
@@ -85,7 +86,12 @@ export const useInsertUrl = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: insertUrl,
-		onSuccess: () => {
+		onSuccess: ({ urlId, urlShort, urlLong }) => {
+			event("Url Created", {
+				url_id: urlId,
+				short_url: urlShort,
+				full_url: urlLong,
+			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 		},
 	});
@@ -107,7 +113,7 @@ const insertUrl = createServerFn({ method: "POST" })
 				? data.urlFull
 				: `https://${data.urlFull}`;
 		try {
-			const { urlShort } = await db
+			const { urlId, urlShort, urlLong } = await db
 				.insert(urls)
 				.values({
 					urlFull: parsedUrl,
@@ -115,10 +121,13 @@ const insertUrl = createServerFn({ method: "POST" })
 					intermediaryScreen: data.intermediaryScreen,
 					createdBy: context.id,
 				})
-				.returning({ urlShort: urls.urlShort })
+				.returning({ urlId: urls.id, urlShort: urls.urlShort, urlLong: urls.urlFull })
 				.get();
 			return {
 				shortenedUrl: env.VITE_SHORT_URL + urlShort,
+				urlId,
+				urlShort,
+				urlLong,
 			};
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
@@ -133,7 +142,12 @@ export const useEditUrlById = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: editUrlById,
-		onSuccess: ({ urlId }) => {
+		onSuccess: ({ urlId, shortUrl, fullUrl }) => {
+			event("Url Edited", {
+				url_id: urlId,
+				short_url: shortUrl,
+				full_url: fullUrl,
+			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", urlId] });
 		},
@@ -166,13 +180,13 @@ const editUrlById = createServerFn({ method: "POST" })
 			});
 		}
 		try {
-			const { urlId } = await db
+			const { urlId, shortUrl, fullUrl } = await db
 				.update(urls)
 				.set({ ...updateData })
 				.where(and(eq(urls.id, id)))
-				.returning({ urlId: urls.id })
+				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
 				.get();
-			return { urlId };
+			return { urlId, shortUrl, fullUrl };
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
 				location: "editUrlById",
@@ -186,7 +200,13 @@ export const useDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: deleteUrlbyId,
-		onSuccess: ({ urlId }) => {
+		onSuccess: ({ urlId, shortUrl, fullUrl }) => {
+			event("Url Deleted", {
+				delete: "soft",
+				url_id: urlId,
+				full_url: fullUrl,
+				short_url: shortUrl,
+			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", urlId] });
 		},
@@ -210,13 +230,13 @@ const deleteUrlbyId = createServerFn({ method: "POST" })
 			});
 		}
 		try {
-			const { urlId } = await db
+			const { urlId, shortUrl, fullUrl } = await db
 				.update(urls)
 				.set({ isDeleted: true, deletedAt: new Date() })
 				.where(and(eq(urls.id, data), eq(urls.isDeleted, false)))
-				.returning({ urlId: urls.id })
+				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
 				.get();
-			return { urlId };
+			return { urlId, shortUrl, fullUrl };
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
 				location: "deleteUrlbyId",
@@ -230,7 +250,12 @@ export const useRestoreUrlById = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: restoreUrlById,
-		onSuccess: () => {
+		onSuccess: ({ urlId, fullUrl, shortUrl }) => {
+			event("Url Restored", {
+				url_id: urlId,
+				full_url: fullUrl,
+				short_url: shortUrl,
+			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 		},
 	});
@@ -259,7 +284,13 @@ const restoreUrlById = createServerFn({ method: "POST" })
 			});
 		}
 		try {
-			await db.update(urls).set({ isDeleted: false, deletedAt: null }).where(eq(urls.id, data));
+			const { urlId, shortUrl, fullUrl } = await db
+				.update(urls)
+				.set({ isDeleted: false, deletedAt: null })
+				.where(eq(urls.id, data))
+				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
+				.get();
+			return { urlId, shortUrl, fullUrl };
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
 				location: "restoreUrlById",
@@ -273,7 +304,13 @@ export const useHardDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: hardDeleteUrlById,
-		onSuccess: ({ urlId }) => {
+		onSuccess: ({ urlId, shortUrl, fullUrl }) => {
+			event("Url Deleted", {
+				delete: "hard",
+				url_id: urlId ?? "",
+				full_url: fullUrl ?? "",
+				short_url: shortUrl ?? "",
+			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", urlId] });
 		},
@@ -300,9 +337,9 @@ const hardDeleteUrlById = createServerFn({ method: "POST" })
 			const deleted = await db
 				.delete(urls)
 				.where(eq(urls.id, data))
-				.returning({ urlId: urls.id })
+				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
 				.get();
-			return { urlId: deleted?.urlId };
+			return { urlId: deleted?.urlId, shortUrl: deleted?.shortUrl, fullUrl: deleted?.fullUrl };
 		} catch (error) {
 			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
 				location: "hardDeleteUrlById",
