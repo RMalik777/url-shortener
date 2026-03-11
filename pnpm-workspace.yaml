@@ -4,8 +4,8 @@ packages:
 
 catalog:
   '@better-auth/cli': ^1.4.21
-  '@cloudflare/vite-plugin': ^1.26.1
-  '@cloudflare/workers-types': ^4.20260307.1
+  '@cloudflare/vite-plugin': ^1.27.0
+  '@cloudflare/workers-types': ^4.20260310.1
   '@t3-oss/env-core': ^0.13.10
   '@tailwindcss/vite': ^4.2.1
   '@tanstack/devtools-vite': ^0.5.3
@@ -17,12 +17,12 @@ catalog:
   '@tanstack/react-form-start': ^1.28.4
   '@tanstack/react-query': ^5.90.21
   '@tanstack/react-query-devtools': ^5.91.3
-  '@tanstack/react-router': ^1.166.6
-  '@tanstack/react-router-devtools': ^1.166.6
-  '@tanstack/react-router-ssr-query': ^1.166.6
-  '@tanstack/react-start': ^1.166.6
+  '@tanstack/react-router': ^1.166.7
+  '@tanstack/react-router-devtools': ^1.166.7
+  '@tanstack/react-router-ssr-query': ^1.166.7
+  '@tanstack/react-start': ^1.166.7
   '@tanstack/react-table': ^8.21.3
-  '@tanstack/router-plugin': ^1.166.6
+  '@tanstack/router-plugin': ^1.166.7
   '@testing-library/dom': ^10.4.1
   '@testing-library/react': ^16.3.2
   '@types/node': ^25.4.0
@@ -52,11 +52,11 @@ catalog:
   tsx: ^4.21.0
   typescript: ^5.9.3
   uuid: ^13.0.0
-  vite: npm:rolldown-vite@latest
+  vite: ^7.3.1
   vite-tsconfig-paths: ^6.1.1
   vitest: ^4.0.18
   web-vitals: ^5.1.0
-  wrangler: ^4.71.0
+  wrangler: ^4.72.0
   zod: ^4.3.6
 
 cleanupUnusedCatalogs: true

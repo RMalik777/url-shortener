@@ -7,6 +7,12 @@
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": ["dist/**"]
 		},
+		"preview": {
+			"dependsOn": ["^preview"],
+			"interactive": true,
+			"cache": false,
+			"inputs": ["$TURBO_DEFAULT$", ".env*"]
+		},
 		"format": {
 			"dependsOn": ["^format"]
 		},
