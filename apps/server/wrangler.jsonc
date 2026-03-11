@@ -5,15 +5,15 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "url-shortener-redirector",
-	"compatibility_date": "2025-12-31",
+	"compatibility_date": "2026-03-11",
 	"compatibility_flags": ["nodejs_compat"],
 	"main": "@tanstack/react-start/server-entry",
 	"observability": {
 		"enabled": true,
 	},
 	"vars": {
-		"VITE_SHORT_URL": "https://raf.li",
-		"VITE_LONG_URL": "https://url.raflimalik.com",
+		"VITE_SHORT_URL": "https://raf.li/",
+		"VITE_LONG_URL": "https://url.raflimalik.com/",
 	},
 	"d1_databases": [
 		{
