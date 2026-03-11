@@ -5,7 +5,7 @@ export const Route = createFileRoute("/")({
 	server: {
 		handlers: {
 			GET: () => {
-				return redirect({ href: env.VITE_LONG_URL, statusCode: 307 });
+				return redirect({ href: env.VITE_ROOT_REDIRECT_URL, statusCode: 307 });
 			},
 		},
 	},

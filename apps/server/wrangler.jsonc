@@ -14,6 +14,7 @@
 	"vars": {
 		"VITE_SHORT_URL": "https://raf.li/",
 		"VITE_LONG_URL": "https://url.raflimalik.com/",
+		"VITE_ROOT_REDIRECT_URL": "https://link.raflimalik.com/",
 	},
 	"d1_databases": [
 		{

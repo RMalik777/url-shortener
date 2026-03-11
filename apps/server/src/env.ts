@@ -13,6 +13,7 @@ export const env = createEnv({
 	client: {
 		VITE_SHORT_URL: z.string().min(1),
 		VITE_LONG_URL: z.string().min(1),
+		VITE_ROOT_REDIRECT_URL: z.string().min(1),
 	},
 
 	/**
