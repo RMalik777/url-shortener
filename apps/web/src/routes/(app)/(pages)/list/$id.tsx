@@ -52,6 +52,16 @@ import {
 } from "@/lib/query/url";
 
 export const Route = createFileRoute("/(app)/(pages)/list/$id")({
+	head: () => ({
+		title: "URL Details | URL Shortener",
+		meta: [
+			{ title: "URL Details | URL Shortener" },
+			{
+				name: "description",
+				content: "View and manage the details of your shortened URL.",
+			},
+		],
+	}),
 	loader: ({ context, params }) =>
 		context.queryClient.ensureQueryData(
 			getUrlByIdOptions({ id: params.id, userId: context.user.id }),

@@ -13,6 +13,16 @@ import { EditCreateDialog } from "@/components/edit-create-dialog";
 
 export const Route = createFileRoute("/(app)/(pages)/list/")({
 	component: RouteComponent,
+	head: () => ({
+		title: "URL List | URL Shortener",
+		meta: [
+			{ title: "URL List | URL Shortener" },
+			{
+				name: "description",
+				content: "View and manage all your shortened URLs.",
+			},
+		],
+	}),
 });
 
 function RouteComponent() {
