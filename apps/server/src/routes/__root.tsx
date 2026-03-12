@@ -1,14 +1,20 @@
-import { useEffect } from "react";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router";
+import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { configure } from "onedollarstats";
+import { StrictMode, useEffect } from "react";
 
+import { NotFound } from "@/components/not-found";
+import TanStackQueryDevtools from "@/lib/integrations/tanstack-query/devtools";
 import appCss from "@repo/ui/globals.css?url";
 import { ErrorComponent } from "@repo/ui/template/error";
-import { NotFound } from "@/components/not-found";
+import type { QueryClient } from "@tanstack/react-query";
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+	queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
 		meta: [
 			{
@@ -52,19 +58,22 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 				<HeadContent />
 			</head>
 			<body>
-				{children}
-				<TanStackDevtools
-					config={{
-						position: "bottom-right",
-					}}
-					plugins={[
-						{
-							name: "Tanstack Router",
-							render: <TanStackRouterDevtoolsPanel />,
-						},
-					]}
-				/>
-				<Scripts />
+				<StrictMode>
+					{children}
+					<TanStackDevtools
+						config={{
+							position: "bottom-right",
+						}}
+						plugins={[
+							{
+								name: "Tanstack Router",
+								render: <TanStackRouterDevtoolsPanel />,
+							},
+							TanStackQueryDevtools,
+						]}
+					/>
+					<Scripts />
+				</StrictMode>
 			</body>
 		</html>
 	);

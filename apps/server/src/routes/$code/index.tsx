@@ -1,54 +1,40 @@
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
-
 import { Image } from "@unpic/react";
-
 import { ArrowRightFromLine, ExternalLink, Shield } from "lucide-react";
+import { event } from "onedollarstats";
 
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Card } from "@repo/ui/components/card";
 import { Separator } from "@repo/ui/components/separator";
 
-import { urls } from "@repo/db/schema";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
 import { UrlNotFound } from "@/components/url-not-found";
 import { env } from "@/env";
-import { db } from "@/db";
-
-const schema = z.object({
-	code: z.string().min(1),
-});
-const fetchData = createServerFn({ method: "GET" })
-	.inputValidator((data: string) => {
-		return schema.parse({ code: data });
-	})
-	.handler(async ({ data }) => {
-		const result = await db.select().from(urls).where(eq(urls.urlShort, data.code)).get();
-		return result;
-	});
+import { useUrlData } from "@/lib/query/url";
 
 export const Route = createFileRoute("/$code/")({
 	headers: () => ({
 		"Cache-Control": "private, max-age=1, stale-while-revalidate=5",
 	}),
-	beforeLoad: async ({ params }) => {
-		const result = await fetchData({ data: params.code });
-		return result;
-	},
-	loader: ({ context }) => {
-		if (context?.id) {
-			if (context.isDeleted) {
+	loader: async ({ context, params }) => {
+		const data = await context.queryClient.ensureQueryData(useUrlData({ code: params.code }));
+		if (data?.urlShort) {
+			event("redirect", {
+				params: params.code,
+				id: data.id,
+				urlShort: data.urlShort,
+				urlFull: data.urlFull,
+			});
+			if (data.isDeleted) {
 				throw redirect({
 					href: `${env.VITE_LONG_URL}/link-removed`,
 				});
 			}
-			if (context.intermediaryScreen) {
-				return context;
+			if (data.intermediaryScreen) {
+				return data;
 			}
 			throw redirect({
-				href: context.urlFull,
+				href: data.urlFull,
 				statusCode: 307,
 			});
 		}
@@ -115,7 +101,17 @@ function RouteComponent() {
 								className="flex-1"
 								size="lg"
 								render={
-									<Link to={data.urlFull}>
+									<Link
+										to={data.urlFull}
+										onClick={() =>
+											event("continue_to_destination", {
+												params: data.urlShort,
+												id: data.id,
+												urlShort: data.urlShort,
+												urlFull: data.urlFull,
+											})
+										}
+									>
 										Continue to Destination
 										<ArrowRightFromLine className="ml-2 h-4 w-4" />
 									</Link>
