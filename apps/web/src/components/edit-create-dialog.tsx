@@ -89,6 +89,7 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 					toast.success("URL shortened successfully!");
 				}
 				setOpenDialog(false);
+				form.reset();
 			} catch (error) {
 				if (error instanceof DBError) {
 					if (error.field) {
@@ -107,7 +108,11 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 		},
 	});
 	return (
-		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
+		<Dialog
+			open={openDialog}
+			onOpenChange={setOpenDialog}
+			onOpenChangeComplete={() => form.reset()}
+		>
 			<DialogTrigger render={children} />
 			<DialogContent>
 				<form
