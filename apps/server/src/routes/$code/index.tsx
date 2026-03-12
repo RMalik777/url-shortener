@@ -38,7 +38,10 @@ export const Route = createFileRoute("/$code/")({
 				statusCode: 307,
 			});
 		}
-		throw notFound();
+		throw redirect({
+			href: env.VITE_ROOT_REDIRECT_URL,
+			statusCode: 301,
+		});
 	},
 	head: ({ loaderData }) => ({
 		meta: [

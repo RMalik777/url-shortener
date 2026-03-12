@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createServerFn } from "@tanstack/react-start";
 import { eq, getTableColumns } from "drizzle-orm";
-import { useQuery, queryOptions } from "@tanstack/react-query";
+import { queryOptions } from "@tanstack/react-query";
 
 import { urls } from "@repo/db/schema";
 import { db } from "@/lib/db";
@@ -28,7 +28,7 @@ const fetchData = createServerFn({ method: "GET" })
 				.from(urls)
 				.where(eq(urls.urlShort, data.code))
 				.get();
-			return result;
+			return result ?? null;
 		} catch (error) {
 			throw new Error("Failed to fetch URL data");
 		}
