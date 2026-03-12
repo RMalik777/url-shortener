@@ -43,7 +43,7 @@ function RouteComponent() {
 				pageCount={pageCount}
 				onPageChange={(newPage) => startTransition(() => setPage(newPage))}
 				onPageSizeChange={(newSize) => startTransition(() => setLimit(newSize))}
-			/>{" "}
+			/>
 		</section>
 	);
 }

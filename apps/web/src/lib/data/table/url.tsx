@@ -1,6 +1,7 @@
 import { CheckCircle2Icon, XCircleIcon } from "lucide-react";
 
 import { Checkbox } from "@repo/ui/components/checkbox";
+import { CopyButton } from "@repo/ui/components/custom/copy-button";
 
 import type { Url } from "@repo/db/schema";
 
@@ -8,7 +9,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { ActionDropdown } from "@/components/table/action-dropdown";
 import { DataTableColumnHeader } from "@/components/table/header";
-import { CopyButton } from "@/components/copy-button";
+
 import { env } from "@/env";
 
 const checkboxColumn: Array<ColumnDef<Url>> = [

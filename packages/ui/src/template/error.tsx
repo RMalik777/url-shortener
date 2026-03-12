@@ -1,25 +1,8 @@
-import { AlertOctagonIcon, Copy } from "lucide-react";
-import { toast } from "sonner";
+import { AlertOctagonIcon } from "lucide-react";
 
-import { Button } from "../components/button";
+import { CopyButton } from "../components/custom/copy-button";
+
 import type { ErrorComponentProps } from "@tanstack/react-router";
-
-function CopyButton({ text, desc }: { text: string; desc?: string }) {
-	return (
-		<Button
-			variant="ghost"
-			size="icon-xs"
-			className="absolute top-2 right-2"
-			onClick={() => {
-				navigator.clipboard.writeText(text);
-				toast.success("Copied to clipboard!");
-			}}
-		>
-			<Copy className="size-4" />
-			<div className="sr-only">{desc}</div>
-		</Button>
-	);
-}
 
 export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
 	return (
@@ -47,7 +30,13 @@ export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
 					<section>
 						<h2>Stack Trace</h2>
 						<pre className="relative bg-muted p-4 text-left text-sm break-all whitespace-pre-wrap">
-							<CopyButton text={error.stack ?? ""} desc="Copy stack trace" />
+							<CopyButton
+								size="icon-sm"
+								variant="secondary"
+								label="Copy Error Stack"
+								value={error.stack ?? ""}
+								className="absolute top-0 right-0"
+							/>
 							<code>{error.stack}</code>
 						</pre>
 					</section>
@@ -55,7 +44,13 @@ export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
 						<section>
 							<h2>Component Stack</h2>
 							<pre className="relative bg-muted p-4 text-left text-sm break-all whitespace-pre-wrap">
-								<CopyButton text={info.componentStack} desc="Copy component stack" />
+								<CopyButton
+									size="icon-sm"
+									variant="secondary"
+									label="Copy Component Stack"
+									value={info.componentStack}
+									className="absolute top-0 right-0"
+								/>
 								<code>{info.componentStack}</code>
 							</pre>
 						</section>
