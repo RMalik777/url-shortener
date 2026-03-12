@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { env } from "@/env";
 
 export const Route = createFileRoute("/")({
@@ -6,13 +6,7 @@ export const Route = createFileRoute("/")({
 		handlers: {
 			GET: () => {
 				const url = env.VITE_ROOT_REDIRECT_URL;
-				return new Response(`<html><body><a href="${url}">moved here</a></body></html>`, {
-					status: 301,
-					headers: {
-						Location: url,
-						"Content-Type": "text/html",
-					},
-				});
+				return redirect({ href: url, statusCode: 301 });
 			},
 		},
 	},
