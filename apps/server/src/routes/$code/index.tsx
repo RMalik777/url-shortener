@@ -14,7 +14,7 @@ import { useUrlData } from "@/lib/query/url";
 
 export const Route = createFileRoute("/$code/")({
 	headers: () => ({
-		"Cache-Control": "private, max-age=1, stale-while-revalidate=5",
+		"Cache-Control": "public, max-age=1, stale-while-revalidate=5",
 	}),
 	loader: async ({ context, params }) => {
 		const data = await context.queryClient.ensureQueryData(useUrlData({ code: params.code }));
@@ -34,6 +34,9 @@ export const Route = createFileRoute("/$code/")({
 				return data;
 			}
 			throw redirect({
+				headers: {
+					"Cache-Control": "public, max-age=1, stale-while-revalidate=5",
+				},
 				href: data.urlFull,
 				statusCode: 307,
 			});
