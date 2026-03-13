@@ -1,7 +1,7 @@
 import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { ArrowRightFromLine, ExternalLink, Shield } from "lucide-react";
-import { event } from "onedollarstats";
+import { event, view } from "onedollarstats";
 
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
@@ -28,6 +28,7 @@ export const Route = createFileRoute("/$code/")({
 			if (data.isDeleted) {
 				throw redirect({
 					href: `${env.VITE_LONG_URL}/link-removed`,
+					statusCode: 301,
 				});
 			}
 			if (data.intermediaryScreen) {
@@ -38,7 +39,7 @@ export const Route = createFileRoute("/$code/")({
 					"Cache-Control": "public, max-age=1, stale-while-revalidate=5",
 				},
 				href: data.urlFull,
-				statusCode: 307,
+				statusCode: 301,
 			});
 		}
 		throw redirect({
