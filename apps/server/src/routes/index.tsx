@@ -6,7 +6,11 @@ export const Route = createFileRoute("/")({
 		handlers: {
 			GET: () => {
 				const url = env.VITE_ROOT_REDIRECT_URL;
-				return redirect({ href: url, statusCode: 301 });
+				return redirect({
+					headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" },
+					href: url,
+					statusCode: 301,
+				});
 			},
 		},
 	},
