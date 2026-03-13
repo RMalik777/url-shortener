@@ -30,6 +30,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			{
 				title: "URL Shortener",
 			},
+			{
+				name: "theme-color",
+				content: "oklch(54.94% 0.2913074585707993 298.24104057049317)",
+			},
 		],
 		links: [
 			{
