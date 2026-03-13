@@ -18,6 +18,16 @@ import { getLastUsedLoginMethod } from "@/lib/auth/auth-client";
 import { signInMethods } from "@/lib/auth/method";
 
 export const Route = createFileRoute("/(auth)/signin")({
+	head: () => ({
+		title: "Sign In | URL Shortener",
+		meta: [
+			{ title: "Sign In | URL Shortener" },
+			{
+				name: "description",
+				content: "Sign in to your URL Shortener account to manage and shorten your URLs.",
+			},
+		],
+	}),
 	component: RouteComponent,
 });
 

@@ -36,7 +36,7 @@ import {
 
 export const Route = createFileRoute("/(app)/(pages)/profile/")({
 	head: () => ({
-		title: "Profile",
+		title: "Profile | URL Shortener",
 		meta: [
 			{ title: "Profile | URL Shortener" },
 			{
