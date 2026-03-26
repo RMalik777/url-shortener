@@ -7,7 +7,7 @@ catalog:
   '@cloudflare/vite-plugin': ^1.27.0
   '@cloudflare/workers-types': ^4.20260313.1
   '@t3-oss/env-core': ^0.13.10
-  '@tailwindcss/vite': ^4.2.1
+  '@tailwindcss/vite': ^4.2.2
   '@tanstack/devtools-vite': ^0.5.5
   '@tanstack/eslint-config': ^0.4.0
   '@tanstack/match-sorter-utils': ^8.19.4
