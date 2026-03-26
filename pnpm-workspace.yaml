@@ -11,7 +11,7 @@ catalog:
   '@tanstack/devtools-vite': ^0.5.5
   '@tanstack/eslint-config': ^0.4.0
   '@tanstack/match-sorter-utils': ^8.19.4
-  '@tanstack/react-devtools': ^0.9.13
+  '@tanstack/react-devtools': ^0.10.0
   '@tanstack/react-form': ^1.28.5
   '@tanstack/react-form-devtools': ^0.2.19
   '@tanstack/react-form-start': ^1.28.5
