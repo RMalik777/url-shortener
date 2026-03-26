@@ -47,7 +47,7 @@ catalog:
   react: ^19.2.4
   react-dom: ^19.2.4
   simple-icons: ^16.11.0
-  solid-js: ^1.9.11
+  solid-js: ^1.9.12
   sonner: ^2.0.7
   tailwindcss: ^4.2.1
   tsx: ^4.21.0
