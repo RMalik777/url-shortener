@@ -657,8 +657,8 @@ importers:
         specifier: 'catalog:'
         version: 1.168.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@turbo/gen':
-        specifier: ^2.8.20
-        version: 2.8.20(@types/node@25.5.0)
+        specifier: ^2.8.21
+        version: 2.8.21(@types/node@25.5.0)
       '@types/node':
         specifier: 'catalog:'
         version: 25.5.0
@@ -2964,8 +2964,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@turbo/gen@2.8.20':
-    resolution: {integrity: sha512-SazKn5Pc9mitpc3uc6Pmf+QhkNtvF5t6Ro0V1cuc0QFhblbfw4KwWqFnnfTEmGzgDtb2CZJB3BK8LFMBX52eLg==}
+  '@turbo/gen@2.8.21':
+    resolution: {integrity: sha512-6MIArRRT2Re6Y3xF+Cn/aJY9zZZpsZro3LeDWpIOyTNscAIz0pRNfIHNlvwlwSHEkL9haVxQenuJxogFR3IVEQ==}
     hasBin: true
 
   '@turbo/linux-64@2.8.20':
@@ -8183,7 +8183,7 @@ snapshots:
   '@turbo/darwin-arm64@2.8.20':
     optional: true
 
-  '@turbo/gen@2.8.20(@types/node@25.5.0)':
+  '@turbo/gen@2.8.21(@types/node@25.5.0)':
     dependencies:
       '@inquirer/prompts': 7.10.1(@types/node@25.5.0)
       esbuild: 0.25.12
