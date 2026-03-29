@@ -133,8 +133,8 @@ catalogs:
       specifier: ^0.577.0
       version: 0.577.0
     onedollarstats:
-      specifier: ^0.0.16
-      version: 0.0.16
+      specifier: ^0.0.17
+      version: 0.0.17
     prettier-plugin-tailwindcss:
       specifier: ^0.7.2
       version: 0.7.2
@@ -250,7 +250,7 @@ importers:
         version: 0.577.0(react@19.2.4)
       onedollarstats:
         specifier: 'catalog:'
-        version: 0.0.16
+        version: 0.0.17
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -419,7 +419,7 @@ importers:
         version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       onedollarstats:
         specifier: 'catalog:'
-        version: 0.0.16
+        version: 0.0.17
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -4984,8 +4984,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  onedollarstats@0.0.16:
-    resolution: {integrity: sha512-nv1zZYIiVXW0me4fiFUB6VL0WByJSMMnP2wo/UjYDdihUTBq7PPeWwdpwwoAxG4dIqFYIhFbPX+pS2qIIlHOaw==}
+  onedollarstats@0.0.17:
+    resolution: {integrity: sha512-A2DYWgXVyfuHsRA7gmZoVBQG8GyK0Eivlb7SsW+F6vbLft5o3ifpENKyGds75kYQVhPw5yQ4gRYaOXz61aRIZQ==}
 
   onetime@5.1.2:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
@@ -10001,7 +10001,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  onedollarstats@0.0.16: {}
+  onedollarstats@0.0.17: {}
 
   onetime@5.1.2:
     dependencies:
