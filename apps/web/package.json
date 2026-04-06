@@ -80,7 +80,7 @@
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
-		"vite": "^7.3.1",
+		"vite": "^7.3.2",
 		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "catalog:",
 		"web-vitals": "catalog:",
