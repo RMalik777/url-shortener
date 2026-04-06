@@ -70,7 +70,7 @@
 		"@types/node": "catalog:",
 		"@types/react": "catalog:",
 		"@types/react-dom": "catalog:",
-		"@vitejs/plugin-react": "catalog:",
+		"@vitejs/plugin-react": "^5.2.0",
 		"babel-plugin-react-compiler": "catalog:",
 		"class-variance-authority": "catalog:",
 		"eslint": "catalog:",
@@ -80,7 +80,8 @@
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
-		"vite": "catalog:",
+		"vite": "^7.3.1",
+		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "catalog:",
 		"web-vitals": "catalog:",
 		"wrangler": "catalog:"
