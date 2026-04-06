@@ -6,7 +6,7 @@ catalog:
   '@babel/core': ^7.29.0
   '@better-auth/cli': ^1.4.21
   '@cloudflare/vite-plugin': ^1.31.0
-  '@cloudflare/workers-types': ^4.20260402.1
+  '@cloudflare/workers-types': ^4.20260405.1
   '@rolldown/plugin-babel': ^0.2.2
   '@t3-oss/env-core': ^0.13.11
   '@tailwindcss/vite': ^4.2.2
