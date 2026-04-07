@@ -16,7 +16,7 @@
 		"fix": "prettier --write . && eslint --fix ."
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.5.6",
+		"@better-auth/passkey": "^1.6.0",
 		"@better-auth/utils": "^0.4.0",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@radix-ui/react-slot": "^1.2.4",
@@ -80,7 +80,7 @@
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
-		"vite": "^7.3.1",
+		"vite": "^7.3.2",
 		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "catalog:",
 		"web-vitals": "catalog:",
