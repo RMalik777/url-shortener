@@ -1,5 +1,7 @@
 # shadcn/ui monorepo template
 
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/RMalik777/url-shortener?utm_source=badge)
+
 This template is for creating a monorepo with shadcn/ui.
 
 ## Usage
