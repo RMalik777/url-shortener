@@ -19,12 +19,6 @@ export const Route = createFileRoute("/$code/")({
 	loader: async ({ context, params }) => {
 		const data = await context.queryClient.ensureQueryData(useUrlData({ code: params.code }));
 		if (data?.urlShort) {
-			event("redirect", {
-				params: params.code,
-				id: data.id,
-				urlShort: data.urlShort,
-				urlFull: data.urlFull,
-			});
 			if (data.isDeleted) {
 				throw redirect({
 					href: `${env.VITE_LONG_URL}/link-removed`,
