@@ -77,7 +77,7 @@
 		"class-variance-authority": "catalog:",
 		"eslint": "catalog:",
 		"jsdom": "catalog:",
-		"prettier": "^3.8.1",
+		"prettier": "^3.8.3",
 		"prettier-plugin-tailwindcss": "catalog:",
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
