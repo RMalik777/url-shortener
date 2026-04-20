@@ -337,8 +337,8 @@ importers:
   apps/web:
     dependencies:
       '@better-auth/passkey':
-        specifier: ^1.6.0
-        version: 1.6.0(1e5fe0fad53059c21312c4295beccd79)
+        specifier: ^1.6.5
+        version: 1.6.5(1e5fe0fad53059c21312c4295beccd79)
       '@better-auth/utils':
         specifier: ^0.4.0
         version: 0.4.0
@@ -969,13 +969,13 @@ packages:
       mongodb:
         optional: true
 
-  '@better-auth/passkey@1.6.0':
-    resolution: {integrity: sha512-cEFQw6jOJ7ooZaKYH3ryI85FvscccSblg1uByRBG2QODsLI5NoesNUUJcEfRbpOsj2nBB/3wKVCdlVWikbqFGA==}
+  '@better-auth/passkey@1.6.5':
+    resolution: {integrity: sha512-x9d0Y4eJp6aWMiNcTM4vS9f5NUJyV2fX8ZsbUQdcTGPk8xn6ZF+04B6CamxxJ1ktUx6/r3WGGCeojSfBCBXcjA==}
     peerDependencies:
-      '@better-auth/core': ^1.6.0
+      '@better-auth/core': ^1.6.5
       '@better-auth/utils': 0.4.0
       '@better-fetch/fetch': 1.1.21
-      better-auth: ^1.6.0
+      better-auth: ^1.6.5
       better-call: 1.3.5
       nanostores: ^1.0.1
 
@@ -6790,7 +6790,7 @@ snapshots:
       '@better-auth/core': 1.6.0(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@cloudflare/workers-types@4.20260405.1)(@opentelemetry/api@1.9.1)(better-call@1.3.5(zod@4.3.6))(jose@6.2.2)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.4.0
 
-  '@better-auth/passkey@1.6.0(1e5fe0fad53059c21312c4295beccd79)':
+  '@better-auth/passkey@1.6.5(1e5fe0fad53059c21312c4295beccd79)':
     dependencies:
       '@better-auth/core': 1.6.0(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(@cloudflare/workers-types@4.20260405.1)(@opentelemetry/api@1.9.1)(better-call@1.3.5(zod@4.3.6))(jose@6.2.2)(kysely@0.28.15)(nanostores@1.2.0)
       '@better-auth/utils': 0.4.0
