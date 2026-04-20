@@ -7,4 +7,8 @@ export const navRoutes: Array<NavRoute> = [
 		label: "Home",
 		href: "/",
 	},
+	{
+		label: "List",
+		href: "/list",
+	},
 ];
