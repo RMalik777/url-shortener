@@ -42,10 +42,15 @@ export function Header({ user }: Readonly<{ user: User }>) {
 		<>
 			<header className="fixed bottom-0 z-1 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:inset-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b sm:px-4 lg:px-8">
 				<nav>
-					<ul>
+					<ul className="flex items-center gap-4 text-sm font-medium">
 						{navRoutes.map((route) => (
 							<li key={route.href}>
-								<Link to={route.href}>{route.label}</Link>
+								<Link
+									to={route.href}
+									className="px-2 py-1 duration-200 ease-out hover:bg-foreground hover:text-background hover:underline"
+								>
+									{route.label}
+								</Link>
 							</li>
 						))}
 					</ul>
