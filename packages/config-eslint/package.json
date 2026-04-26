@@ -7,7 +7,7 @@
 		".": "./index.ts"
 	},
 	"devDependencies": {
-		"@eslint/compat": "^2.0.4",
+		"@eslint/compat": "^2.0.5",
 		"@repo/typescript-config": "workspace:*",
 		"@tanstack/eslint-config": "catalog:",
 		"@types/node": "catalog:",
