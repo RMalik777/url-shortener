@@ -45,7 +45,7 @@ catalog:
   eslint: ^10.2.1
   jsdom: ^29.0.2
   lucide-react: ^1.8.0
-  onedollarstats: ^0.0.18
+  onedollarstats: ^0.0.19
   prettier-plugin-tailwindcss: ^0.8.0
   react: ^19.2.5
   react-dom: ^19.2.5
