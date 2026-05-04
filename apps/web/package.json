@@ -58,7 +58,7 @@
 		"@base-ui/react": "^1.4.1",
 		"@better-auth/cli": "catalog:",
 		"@cloudflare/workers-types": "catalog:",
-		"@codspeed/vitest-plugin": "^5.2.0",
+		"@codspeed/vitest-plugin": "^5.4.0",
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
 		"@repo/ui": "workspace:*",
