@@ -154,8 +154,8 @@ catalogs:
       specifier: ^2.0.7
       version: 2.0.7
     tailwindcss:
-      specifier: ^4.2.4
-      version: 4.2.4
+      specifier: ^4.3.0
+      version: 4.3.0
     tsx:
       specifier: ^4.21.0
       version: 4.21.0
@@ -259,7 +259,7 @@ importers:
         version: 19.2.5(react@19.2.5)
       tailwindcss:
         specifier: 'catalog:'
-        version: 4.2.4
+        version: 4.3.0
       zod:
         specifier: 'catalog:'
         version: 4.4.2
@@ -434,7 +434,7 @@ importers:
         version: 2.0.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       tailwindcss:
         specifier: 'catalog:'
-        version: 4.2.4
+        version: 4.3.0
       uuid:
         specifier: 'catalog:'
         version: 14.0.0
@@ -679,7 +679,7 @@ importers:
         version: 10.3.0(jiti@2.6.1)
       tailwindcss:
         specifier: 'catalog:'
-        version: 4.2.4
+        version: 4.3.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -5992,6 +5992,9 @@ packages:
 
   tailwindcss@4.2.4:
     resolution: {integrity: sha512-HhKppgO81FQof5m6TEnuBWCZGgfRAWbaeOaGT00KOy/Pf/j6oUihdvBpA7ltCeAvZpFhW3j0PTclkxsd4IXYDA==}
+
+  tailwindcss@4.3.0:
+    resolution: {integrity: sha512-y6nxMGB1nMW9R6k96e5gdIFzcfL/gTJRNaqGes1YvkLnPVXzWgbqFF2yLC0T8G774n24cx3Pe8XrKoniCOAH+Q==}
 
   tapable@2.3.2:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
@@ -11626,6 +11629,8 @@ snapshots:
   tailwind-merge@3.6.0: {}
 
   tailwindcss@4.2.4: {}
+
+  tailwindcss@4.3.0: {}
 
   tapable@2.3.2: {}
 
