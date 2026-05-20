@@ -2,6 +2,15 @@ packages:
   - apps/*
   - packages/*
 
+allowBuilds:
+  '@prisma/client': false
+  better-sqlite3: false
+  esbuild: true
+  msw: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true
+
 catalog:
   '@babel/core': ^7.29.0
   '@better-auth/cli': ^1.4.21
@@ -68,6 +77,17 @@ ignoredBuiltDependencies:
   - '@prisma/client'
   - better-sqlite3
   - core-js-pure
+
+minimumReleaseAgeExclude:
+  - '@base-ui/react@1.5.0'
+  - '@base-ui/utils@0.2.9'
+  - '@cloudflare/vite-plugin@1.37.2'
+  - '@cloudflare/workers-types@4.20260520.1'
+  - '@types/node@25.9.1'
+  - '@types/react@19.2.15'
+  - miniflare@4.20260518.0
+  - tsx@4.22.3
+  - wrangler@4.93.0
 
 onlyBuiltDependencies:
   - '@swc/core'
