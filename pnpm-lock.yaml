@@ -145,8 +145,8 @@ catalogs:
       specifier: ^19.2.6
       version: 19.2.6
     simple-icons:
-      specifier: ^16.20.0
-      version: 16.20.0
+      specifier: ^16.22.0
+      version: 16.22.0
     solid-js:
       specifier: ^1.9.13
       version: 1.9.13
@@ -428,7 +428,7 @@ importers:
         version: 19.2.6(react@19.2.6)
       simple-icons:
         specifier: 'catalog:'
-        version: 16.20.0
+        version: 16.22.0
       sonner:
         specifier: 'catalog:'
         version: 2.0.7(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -5830,8 +5830,8 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  simple-icons@16.20.0:
-    resolution: {integrity: sha512-2b7Xu+Zy+iwLiuLSAcWuxnM1ETNFy7JmxWSjh0Y/A8P3KGjFFcokbpWbUf/IivMNbR9WuZ/QQlirh5bGh3Q2vA==}
+  simple-icons@16.22.0:
+    resolution: {integrity: sha512-/raPcEWh89R2O2IMmHum6W2dF99NNX3yWikVXKUalkDIWz3Rw/S2S+oDPTgJcIGsRh+25m0y8vj4aBaV/KPz3Q==}
     engines: {node: '>=0.12.18'}
 
   sisteransi@1.0.5:
@@ -11186,7 +11186,7 @@ snapshots:
       once: 1.4.0
       simple-concat: 1.0.1
 
-  simple-icons@16.20.0: {}
+  simple-icons@16.22.0: {}
 
   sisteransi@1.0.5: {}
 
