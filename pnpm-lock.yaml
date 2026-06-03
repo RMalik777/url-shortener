@@ -172,8 +172,8 @@ catalogs:
       specifier: ^4.1.6
       version: 4.1.6
     web-vitals:
-      specifier: ^5.2.0
-      version: 5.2.0
+      specifier: ^5.3.0
+      version: 5.3.0
     wrangler:
       specifier: ^4.95.0
       version: 4.95.0
@@ -329,7 +329,7 @@ importers:
         version: 4.1.6(@types/node@25.9.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.13(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3))
       web-vitals:
         specifier: 'catalog:'
-        version: 5.2.0
+        version: 5.3.0
       wrangler:
         specifier: 'catalog:'
         version: 4.95.0(@cloudflare/workers-types@4.20260527.1)
@@ -537,7 +537,7 @@ importers:
         version: 4.1.6(@types/node@25.9.1)(jsdom@29.1.1(@noble/hashes@2.2.0))(msw@2.14.6(@types/node@25.9.1)(typescript@6.0.3))(vite@8.0.13(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3))
       web-vitals:
         specifier: 'catalog:'
-        version: 5.2.0
+        version: 5.3.0
       wrangler:
         specifier: 'catalog:'
         version: 4.95.0(@cloudflare/workers-types@4.20260527.1)
@@ -6279,8 +6279,8 @@ packages:
     resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
     engines: {node: '>= 8'}
 
-  web-vitals@5.2.0:
-    resolution: {integrity: sha512-i2z98bEmaCqSDiHEDu+gHl/dmR4Q+TxFmG3/13KkMO+o8UxQzCqWaDRCiLgEa41nlO4VpXSI0ASa1xWmO9sBlA==}
+  web-vitals@5.3.0:
+    resolution: {integrity: sha512-q6LWsLatGYZp5VGBIOvbTj6JBV2nOmC8KvWztXBmwJcfFAzhwKwbOxhUH306XY3CcaZDUlSmSuNPBsCn0bFu+g==}
 
   webidl-conversions@8.0.1:
     resolution: {integrity: sha512-BMhLD/Sw+GbJC21C/UgyaZX41nPt8bUTg+jWyDeg7e7YN4xOM05YPSIXceACnXVtqyEw/LMClUQMtMZ+PGGpqQ==}
@@ -11611,7 +11611,7 @@ snapshots:
 
   web-streams-polyfill@3.3.3: {}
 
-  web-vitals@5.2.0: {}
+  web-vitals@5.3.0: {}
 
   webidl-conversions@8.0.1: {}
 
