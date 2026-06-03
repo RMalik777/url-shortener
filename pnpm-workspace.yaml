@@ -12,7 +12,7 @@ allowBuilds:
   workerd: true
 
 catalog:
-  '@babel/core': ^7.29.0
+  '@babel/core': ^7.29.7
   '@better-auth/cli': ^1.4.21
   '@cloudflare/vite-plugin': ^1.37.2
   '@cloudflare/workers-types': ^4.20260527.1
