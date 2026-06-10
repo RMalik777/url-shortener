@@ -103,7 +103,7 @@ catalogs:
       specifier: ^1.0.0
       version: 1.0.0
     better-auth:
-      specifier: ^1.6.2
+      specifier: ^1.6.11
       version: 1.6.11
     class-variance-authority:
       specifier: ^0.7.1
