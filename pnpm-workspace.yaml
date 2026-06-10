@@ -44,7 +44,7 @@ catalog:
   '@unpic/react': ^1.0.2
   '@vitejs/plugin-react': ^6.0.2
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.6.2
+  better-auth: ^1.6.11
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   dompurify: ^3.4.5
