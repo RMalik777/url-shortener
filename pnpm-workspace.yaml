@@ -12,7 +12,7 @@ allowBuilds:
   workerd: true
 
 catalog:
-  '@babel/core': ^7.29.7
+  '@babel/core': ^7.29.6
   '@better-auth/cli': ^1.4.21
   '@cloudflare/vite-plugin': ^1.37.2
   '@cloudflare/workers-types': ^5.20260715.1
@@ -44,10 +44,10 @@ catalog:
   '@unpic/react': ^1.0.2
   '@vitejs/plugin-react': ^6.0.2
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.6.11
+  better-auth: ^1.6.13
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
-  dompurify: ^3.4.5
+  dompurify: ^3.4.11
   dotenv: ^17.4.2
   drizzle-orm: ^0.45.2
   drizzle-zod: ^0.8.3
