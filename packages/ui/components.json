@@ -12,8 +12,8 @@
 	},
 	"iconLibrary": "lucide",
 	"rtl": false,
-	"menuColor": "default",
-	"menuAccent": "bold",
+	"menuColor": "default-translucent",
+	"menuAccent": "subtle",
 	"aliases": {
 		"components": "@repo/ui/components",
 		"utils": "@repo/ui/lib/utils",
