@@ -1,11 +1,4 @@
-import { rankItem } from "@tanstack/match-sorter-utils";
-import {
-	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
+import { flexRender, useTable } from "@tanstack/react-table";
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -42,10 +35,17 @@ import {
 	TableRow,
 } from "@repo/ui/components/table";
 
-import type { ColumnDef, FilterFn, SortingState, VisibilityState } from "@tanstack/react-table";
+import type {
+	ColumnDef,
+	ColumnVisibilityState,
+	RowData,
+	SortingState,
+} from "@tanstack/react-table";
 
-interface DataTableProps<TData, TValue> {
-	columns: Array<ColumnDef<TData, TValue>>;
+import { features } from "@/lib/data/table/features";
+
+interface DataTableProps<TData extends RowData> {
+	columns: Array<ColumnDef<typeof features, TData>>;
 	data: Array<TData>;
 	dataCount: number;
 	pageIndex: number;
@@ -55,7 +55,7 @@ interface DataTableProps<TData, TValue> {
 	onPageSizeChange: (size: number) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
 	columns,
 	data,
 	dataCount,
@@ -64,33 +64,17 @@ export function DataTable<TData, TValue>({
 	pageCount,
 	onPageChange,
 	onPageSizeChange,
-}: Readonly<DataTableProps<TData, TValue>>) {
+}: Readonly<DataTableProps<TData>>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [globalFilter, setGlobalFilter] = useState<any>("");
-	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+	const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>({});
 
-	const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-		// Rank the item
-		const itemRank = rankItem(row.getValue(columnId), value);
-
-		// Store the itemRank info
-		addMeta({ itemRank });
-
-		// Return if the item should be filtered in/out
-		return itemRank.passed;
-	};
-	const table = useReactTable({
+	const table = useTable({
+		features,
 		data,
 		columns,
-		filterFns: {
-			fuzzy: fuzzyFilter,
-		},
-		// @ts-expect-error - fuzzy is custom filter function
 		globalFilterFn: "fuzzy",
-		getCoreRowModel: getCoreRowModel(),
 		onSortingChange: setSorting,
-		getSortedRowModel: getSortedRowModel(),
-		getFilteredRowModel: getFilteredRowModel(),
 		onGlobalFilterChange: setGlobalFilter,
 		onColumnVisibilityChange: setColumnVisibility,
 		manualPagination: true,
@@ -198,13 +182,13 @@ export function DataTable<TData, TValue>({
 					<div className="flex w-full items-center justify-between space-x-2 sm:w-auto">
 						<p className="text-sm font-medium">Show</p>
 						<Select
-							value={`${table.getState().pagination.pageSize}`}
+							value={`${table.state.pagination.pageSize}`}
 							onValueChange={(value) => {
 								table.setPageSize(Number(value));
 							}}
 						>
 							<SelectTrigger className="h-8 w-17.5 font-mono">
-								<SelectValue placeholder={table.getState().pagination.pageSize} />
+								<SelectValue placeholder={table.state.pagination.pageSize} />
 							</SelectTrigger>
 							<SelectContent side="top" className="font-mono">
 								{[5, 10, 20, 25, 30, 40, 50, ...(dataCount > 50 ? [dataCount] : [])].map((size) => (
@@ -220,7 +204,7 @@ export function DataTable<TData, TValue>({
 					</div>
 					<div className="flex w-full flex-row items-center justify-between gap-2 sm:w-fit sm:gap-4">
 						<p className="flex w-auto items-center justify-center gap-1 text-sm font-medium">
-							Page<span className="font-mono">{table.getState().pagination.pageIndex + 1}</span>of
+							Page<span className="font-mono">{table.state.pagination.pageIndex + 1}</span>of
 							{""}
 							<span className="font-mono">{table.getPageCount()}</span>
 						</p>

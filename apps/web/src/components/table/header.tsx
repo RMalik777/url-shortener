@@ -14,15 +14,20 @@ import {
 } from "@repo/ui/components/dropdown-menu";
 import { cn } from "@repo/ui/lib/utils";
 
-import type { Column, SortDirection } from "@tanstack/react-table";
+import type { Column, RowData, SortDirection } from "@tanstack/react-table";
 
-interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
-	column: Column<TData, TValue>;
+import { features } from "@/lib/data/table/features";
+
+interface DataTableColumnHeaderProps<
+	TData extends RowData,
+	TValue,
+> extends React.HTMLAttributes<HTMLDivElement> {
+	column: Column<typeof features, TData, TValue>;
 	sorted: false | SortDirection;
 	title: string;
 }
 
-export function DataTableColumnHeader<TData, TValue>({
+export function DataTableColumnHeader<TData extends RowData, TValue>({
 	column,
 	sorted,
 	title,

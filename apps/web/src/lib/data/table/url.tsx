@@ -11,8 +11,9 @@ import { ActionDropdown } from "@/components/table/action-dropdown";
 import { DataTableColumnHeader } from "@/components/table/header";
 
 import { env } from "@/env";
+import { features } from "@/lib/data/table/features";
 
-const checkboxColumn: Array<ColumnDef<Url>> = [
+const checkboxColumn: Array<ColumnDef<typeof features, Url>> = [
 	{
 		id: "select",
 		header: ({ table }) => (
@@ -31,13 +32,13 @@ const checkboxColumn: Array<ColumnDef<Url>> = [
 		),
 	},
 ];
-const actionColumn: Array<ColumnDef<Url>> = [
+const actionColumn: Array<ColumnDef<typeof features, Url>> = [
 	{
 		id: "actions",
 		cell: ({ row }) => <ActionDropdown row={row} />,
 	},
 ];
-export const urlColumn: Array<ColumnDef<Url>> = [
+export const urlColumn: Array<ColumnDef<typeof features, Url>> = [
 	{
 		accessorKey: "urlShort",
 		enableSorting: true,
@@ -73,7 +74,7 @@ export const urlColumn: Array<ColumnDef<Url>> = [
 	...actionColumn,
 ];
 
-export const fullColumn: Array<ColumnDef<Url>> = [
+export const fullColumn: Array<ColumnDef<typeof features, Url>> = [
 	...checkboxColumn,
 	{
 		accessorKey: "id",

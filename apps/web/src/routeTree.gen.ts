@@ -10,33 +10,33 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as appRouteRouteImport } from './routes/(app)/route'
-import { Route as authSignupRouteImport } from './routes/(auth)/signup'
-import { Route as authSigninRouteImport } from './routes/(auth)/signin'
 import { Route as apppagesRouteRouteImport } from './routes/(app)/(pages)/route'
+import { Route as authSigninRouteImport } from './routes/(auth)/signin'
+import { Route as authSignupRouteImport } from './routes/(auth)/signup'
 import { Route as apppagesIndexRouteImport } from './routes/(app)/(pages)/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as appsplashLinkRemovedIndexRouteImport } from './routes/(app)/(splash)/link-removed/index'
-import { Route as apppagesProfileIndexRouteImport } from './routes/(app)/(pages)/profile/index'
 import { Route as apppagesListIndexRouteImport } from './routes/(app)/(pages)/list/index'
 import { Route as apppagesListIdRouteImport } from './routes/(app)/(pages)/list/$id'
+import { Route as apppagesProfileIndexRouteImport } from './routes/(app)/(pages)/profile/index'
+import { Route as appsplashLinkRemovedIndexRouteImport } from './routes/(app)/(splash)/link-removed/index'
 
 const appRouteRoute = appRouteRouteImport.update({
   id: '/(app)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authSignupRoute = authSignupRouteImport.update({
-  id: '/(auth)/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
+const apppagesRouteRoute = apppagesRouteRouteImport.update({
+  id: '/(pages)',
+  getParentRoute: () => appRouteRoute,
 } as any)
 const authSigninRoute = authSigninRouteImport.update({
   id: '/(auth)/signin',
   path: '/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const apppagesRouteRoute = apppagesRouteRouteImport.update({
-  id: '/(pages)',
-  getParentRoute: () => appRouteRoute,
+const authSignupRoute = authSignupRouteImport.update({
+  id: '/(auth)/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const apppagesIndexRoute = apppagesIndexRouteImport.update({
   id: '/',
@@ -48,17 +48,6 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const appsplashLinkRemovedIndexRoute =
-  appsplashLinkRemovedIndexRouteImport.update({
-    id: '/(splash)/link-removed/',
-    path: '/link-removed/',
-    getParentRoute: () => appRouteRoute,
-  } as any)
-const apppagesProfileIndexRoute = apppagesProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => apppagesRouteRoute,
-} as any)
 const apppagesListIndexRoute = apppagesListIndexRouteImport.update({
   id: '/list/',
   path: '/list/',
@@ -69,6 +58,17 @@ const apppagesListIdRoute = apppagesListIdRouteImport.update({
   path: '/list/$id',
   getParentRoute: () => apppagesRouteRoute,
 } as any)
+const apppagesProfileIndexRoute = apppagesProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => apppagesRouteRoute,
+} as any)
+const appsplashLinkRemovedIndexRoute =
+  appsplashLinkRemovedIndexRouteImport.update({
+    id: '/(splash)/link-removed/',
+    path: '/link-removed/',
+    getParentRoute: () => appRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/signin': typeof authSigninRoute
@@ -154,12 +154,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)/signup': {
-      id: '/(auth)/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof authSignupRouteImport
-      parentRoute: typeof rootRouteImport
+    '/(app)/(pages)': {
+      id: '/(app)/(pages)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof apppagesRouteRouteImport
+      parentRoute: typeof appRouteRoute
     }
     '/(auth)/signin': {
       id: '/(auth)/signin'
@@ -168,12 +168,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSigninRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(app)/(pages)': {
-      id: '/(app)/(pages)'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof apppagesRouteRouteImport
-      parentRoute: typeof appRouteRoute
+    '/(auth)/signup': {
+      id: '/(auth)/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof authSignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(app)/(pages)/': {
       id: '/(app)/(pages)/'
@@ -189,20 +189,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(app)/(splash)/link-removed/': {
-      id: '/(app)/(splash)/link-removed/'
-      path: '/link-removed'
-      fullPath: '/link-removed/'
-      preLoaderRoute: typeof appsplashLinkRemovedIndexRouteImport
-      parentRoute: typeof appRouteRoute
-    }
-    '/(app)/(pages)/profile/': {
-      id: '/(app)/(pages)/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof apppagesProfileIndexRouteImport
-      parentRoute: typeof apppagesRouteRoute
-    }
     '/(app)/(pages)/list/': {
       id: '/(app)/(pages)/list/'
       path: '/list'
@@ -216,6 +202,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/list/$id'
       preLoaderRoute: typeof apppagesListIdRouteImport
       parentRoute: typeof apppagesRouteRoute
+    }
+    '/(app)/(pages)/profile/': {
+      id: '/(app)/(pages)/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof apppagesProfileIndexRouteImport
+      parentRoute: typeof apppagesRouteRoute
+    }
+    '/(app)/(splash)/link-removed/': {
+      id: '/(app)/(splash)/link-removed/'
+      path: '/link-removed'
+      fullPath: '/link-removed/'
+      preLoaderRoute: typeof appsplashLinkRemovedIndexRouteImport
+      parentRoute: typeof appRouteRoute
     }
   }
 }

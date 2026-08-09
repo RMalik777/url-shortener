@@ -6,3 +6,4 @@ yarn.lock
 routeTree.gen.ts
 .agents
 .claude
+skills-lock.json

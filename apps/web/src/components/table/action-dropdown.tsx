@@ -37,9 +37,10 @@ import { toast } from "sonner";
 import type { Url } from "@repo/db/schema";
 import type { Row } from "@tanstack/react-table";
 
+import { features } from "@/lib/data/table/features";
 import { useDeleteUrlById, useHardDeleteUrlById } from "@/lib/query/url";
 
-export function ActionDropdown({ row }: Readonly<{ row: Row<Url> }>) {
+export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url> }>) {
 	const { user } = useRouteContext({ from: "/(app)" });
 
 	const deleteUrlMutation = useDeleteUrlById({ userId: user.id });
