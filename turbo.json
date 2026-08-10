@@ -17,7 +17,11 @@
 			"dependsOn": ["^format"]
 		},
 		"lint": {
-			"dependsOn": ["^format", "^lint"]
+			"dependsOn": ["^lint"]
+		},
+		"test": {
+			"dependsOn": ["^test"],
+			"outputs": []
 		},
 		"fix": {
 			"dependsOn": ["^fix"]

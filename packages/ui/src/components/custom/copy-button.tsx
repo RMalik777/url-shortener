@@ -44,10 +44,15 @@ export function CopyButton({
 			variant={variant}
 			size={size}
 			className={cn("relative", className)}
-			onClick={() => {
-				navigator.clipboard.writeText(value);
+			onClick={async () => {
+				try {
+					await navigator.clipboard.writeText(value);
+				} catch {
+					toast.error(`Could not copy ${label}`);
+					return;
+				}
 				setClicked(true);
-				toast.success(`${label} copied to clipboard!`);
+				toast.success(`${label} copied to clipboard`);
 				if (timeoutRef.current) clearTimeout(timeoutRef.current);
 				timeoutRef.current = setTimeout(() => setClicked(false), duration);
 			}}

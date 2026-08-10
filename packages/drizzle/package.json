@@ -5,6 +5,7 @@
 	"description": "",
 	"license": "AGPL-3.0-only",
 	"scripts": {
+		"check-types": "tsc --noEmit",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
 		"db:auth:cli": "better-auth/cli generate --output ./src/db/auth-schema.ts --config ",

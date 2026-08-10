@@ -4,6 +4,7 @@
 	"type": "module",
 	"private": true,
 	"scripts": {
+		"check-types": "tsc --noEmit",
 		"lint": "eslint . --max-warnings 0"
 	},
 	"dependencies": {
@@ -42,7 +43,6 @@
 		"./postcss.config": "./postcss.config.mjs",
 		"./lib/*": "./src/lib/*.ts",
 		"./components/*": "./src/components/*.tsx",
-		"./hooks/*": "./src/hooks/*.ts",
 		"./template/*": "./src/template/*.tsx"
 	}
 }

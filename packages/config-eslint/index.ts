@@ -8,5 +8,6 @@ const gitignorePath = fileURLToPath(new URL("../../.gitignore", import.meta.url)
 
 export const eslintconfig = [
 	includeIgnoreFile(gitignorePath, "Imported .gitignore patterns"),
+	{ ignores: ["**/worker-configuration.d.ts", "**/routeTree.gen.ts"] },
 	...tanstackConfig,
 ];
