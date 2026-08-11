@@ -3,7 +3,6 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { LinkIcon, UnlinkIcon } from "lucide-react";
-import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -17,15 +16,14 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@repo/ui/components/card";
-import { Field, FieldGroup, FieldLabel } from "@repo/ui/components/field";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
-import { Separator } from "@repo/ui/components/separator";
 import { Spinner } from "@repo/ui/components/spinner";
 
 import G from "@/assets/g_logo.svg";
 import Github from "@/assets/github-mark.svg";
 
-import { linkSocial, updateUser } from "@/lib/auth/auth-client";
+import { PageHeader } from "@/components/page-header";
 import { acronym } from "@/lib/functions/utils";
 import {
 	getLinkedAccountsOptions,
@@ -80,13 +78,11 @@ function ProfilePage() {
 	});
 
 	return (
-		<div className="mx-auto max-w-2xl space-y-6 pb-12">
-			<div>
-				<h1 className="text-2xl font-bold sm:text-3xl">Profile</h1>
-				<p className="text-muted-foreground">
-					Manage your account settings and connected login methods.
-				</p>
-			</div>
+		<div className="mx-auto flex max-w-2xl flex-col gap-6">
+			<PageHeader
+				title="Profile"
+				description="Manage your account settings and connected login methods."
+			/>
 			<Card>
 				<form
 					onSubmit={(e) => {
@@ -119,25 +115,18 @@ function ProfilePage() {
 									const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
 									return (
 										<Field data-invalid={isInvalid}>
-											<FieldLabel
-												htmlFor={field.name}
-												className="mb-2 block text-sm font-medium text-slate-700"
-											>
-												Display Name
-											</FieldLabel>
+											<FieldLabel htmlFor={field.name}>Display Name</FieldLabel>
 											<Input
 												id={field.name}
 												type="text"
 												value={field.state.value}
+												onBlur={field.handleBlur}
 												onChange={(e) => field.setValue(e.target.value)}
+												aria-invalid={isInvalid}
 												placeholder="Your name"
 												autoComplete="name"
 											/>
-											{isInvalid && (
-												<p className="mt-1 text-sm text-red-600">
-													{field.state.meta.errors.join(", ")}
-												</p>
-											)}
+											{isInvalid && <FieldError errors={field.state.meta.errors} />}
 										</Field>
 									);
 								}}
@@ -188,10 +177,13 @@ function SocialAccountRow({
 	totalAccounts: number;
 }>) {
 	const { user } = Route.useRouteContext();
-	const { mutateAsync: unlinkAccountMutateAsync, isPending } = useUnlinkAccount({
+	const { mutateAsync: unlinkAccountMutateAsync, isPending: isUnlinking } = useUnlinkAccount({
 		userId: user.id,
 	});
-	const { mutateAsync: linkAccountMutateAsync } = useLinkAccount({ userId: user.id });
+	const { mutateAsync: linkAccountMutateAsync, isPending: isLinking } = useLinkAccount({
+		userId: user.id,
+	});
+	const isLastMethod = totalAccounts <= 1;
 
 	return (
 		<div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
@@ -214,38 +206,13 @@ function SocialAccountRow({
 				<Button
 					variant="outline"
 					size="sm"
-					disabled={isPending || totalAccounts <= 1}
+					disabled={isUnlinking || isLastMethod}
+					title={
+						isLastMethod ? "Add another login method before disconnecting this one." : undefined
+					}
 					onClick={async () => {
-						try {
-							const { error } = await linkAccountMutateAsync({ provider: provider.id });
-							if (error) {
-								toast.error(error.message ?? `Failed to connect ${provider.name}.`);
-							} else {
-								toast.success(`${provider.name} connected.`);
-							}
-						} catch {
-							toast.error("An unexpected error occurred.");
-						}
-					}}
-				>
-					{isPending ? (
-						<>
-							<Spinner /> Disconnecting...
-						</>
-					) : (
-						<>
-							<UnlinkIcon /> Disconnect
-						</>
-					)}
-				</Button>
-			) : (
-				<Button
-					variant="outline"
-					size="sm"
-					disabled={isPending}
-					onClick={async () => {
-						if (totalAccounts <= 1) {
-							toast.error("Cannot disconnect the only login method. Add another method first.");
+						if (isLastMethod) {
+							toast.error("Add another login method before disconnecting this one.");
 							return;
 						}
 						try {
@@ -262,7 +229,35 @@ function SocialAccountRow({
 						}
 					}}
 				>
-					{isPending ? (
+					{isUnlinking ? (
+						<>
+							<Spinner /> Disconnecting
+						</>
+					) : (
+						<>
+							<UnlinkIcon /> Disconnect
+						</>
+					)}
+				</Button>
+			) : (
+				<Button
+					variant="outline"
+					size="sm"
+					disabled={isLinking}
+					onClick={async () => {
+						try {
+							const { error } = await linkAccountMutateAsync({ provider: provider.id });
+							if (error) {
+								toast.error(error.message ?? `Failed to connect ${provider.name}.`);
+							}
+						} catch (err) {
+							toast.error(
+								err instanceof Error ? err.message : `Failed to connect ${provider.name}.`,
+							);
+						}
+					}}
+				>
+					{isLinking ? (
 						<>
 							<Spinner /> Connecting
 						</>
