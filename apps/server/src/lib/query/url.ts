@@ -9,7 +9,8 @@ import { db } from "@/lib/db";
 const schema = z.object({
 	code: z.string().min(1),
 });
-export const useUrlData = ({ code }: { code: string }) => {
+
+export const urlByCodeOptions = ({ code }: { code: string }) => {
 	return queryOptions({
 		queryKey: ["url", code],
 		queryFn: async () => await fetchData({ data: code }),
@@ -30,6 +31,6 @@ const fetchData = createServerFn({ method: "GET" })
 				.get();
 			return result ?? null;
 		} catch (error) {
-			throw new Error("Failed to fetch URL data");
+			throw new Error("Failed to fetch URL data", { cause: error });
 		}
 	});
