@@ -28,7 +28,6 @@ import {
 	ArchiveXIcon,
 	ArrowUpRightFromSquareIcon,
 	CopyIcon,
-	ListXIcon,
 	MoreHorizontalIcon,
 	Trash2Icon,
 } from "lucide-react";
@@ -37,8 +36,14 @@ import { toast } from "sonner";
 import type { Url } from "@repo/db/schema";
 import type { Row } from "@tanstack/react-table";
 
-import { features } from "@/lib/data/table/features";
+import type { features } from "@/lib/data/table/features";
+import { env } from "@/env";
+import { copyToClipboard } from "@/lib/functions/clipboard";
+import { useCountdown } from "@/lib/hooks/use-countdown";
 import { useDeleteUrlById, useHardDeleteUrlById } from "@/lib/query/url";
+
+/** Seconds the hard-delete confirm button stays disabled. */
+const HARD_DELETE_DELAY = 3;
 
 export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url> }>) {
 	const { user } = useRouteContext({ from: "/(app)" });
@@ -49,62 +54,40 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url
 	const url = row.original;
 	const [open, setOpen] = useState(false);
 	const [hardDelete, setHardDelete] = useState(false);
-	const [countDown, setCountDown] = useState(3);
-	const [disableAction, setDisableAction] = useState(false);
-	function startCountDown() {
-		setDisableAction(true);
-		let counter = 3;
-		function tick() {
-			counter -= 1;
-			setCountDown(counter);
-			if (counter === 0) {
-				setDisableAction(false);
-				clearInterval(interval);
-			}
-		}
+	const { count, active: countingDown, start, reset } = useCountdown(HARD_DELETE_DELAY);
 
-		const interval = setInterval(tick, 1000);
+	const shortUrl = `${env.VITE_SHORT_URL}${url.urlShort}`;
+
+	function closeDialog() {
+		setOpen(false);
+		reset();
 	}
+
 	return (
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger
 					render={
-						<Button variant="ghost" className="h-8 w-8 p-0">
+						<Button variant="ghost" size="icon-sm">
 							<span className="sr-only">Open menu</span>
-							<MoreHorizontalIcon className="h-4 w-4" />
+							<MoreHorizontalIcon />
 						</Button>
 					}
 				/>
 				<DropdownMenuContent align="end" className="w-fit">
 					<DropdownMenuGroup>
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={() => {
-								navigator.clipboard.writeText(url.id);
-								toast.success("Copied URL ID to clipboard");
-							}}
-						>
+						<DropdownMenuItem onClick={() => copyToClipboard(url.id, "URL ID")}>
 							<CopyIcon />
 							Copy URL ID
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => {
-								navigator.clipboard.writeText(url.urlShort);
-								toast.success("Copied Shortened URL to clipboard");
-							}}
-						>
+						<DropdownMenuItem onClick={() => copyToClipboard(shortUrl, "Short URL")}>
 							<CopyIcon />
-							Copy Shortened URL
+							Copy short URL
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => {
-								navigator.clipboard.writeText(url.urlFull);
-								toast.success("Copied Original URL to clipboard");
-							}}
-						>
+						<DropdownMenuItem onClick={() => copyToClipboard(url.urlFull, "Original URL")}>
 							<CopyIcon />
-							Copy Original URL
+							Copy original URL
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem
@@ -122,55 +105,63 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url
 								variant="destructive"
 								onClick={() => {
 									setHardDelete(false);
+									reset();
 									setOpen(true);
 								}}
 							>
 								<ArchiveXIcon />
-								Soft Delete
+								Soft delete
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								variant="destructive"
 								onClick={() => {
 									setHardDelete(true);
 									setOpen(true);
-									setCountDown(3);
-									startCountDown();
+									start();
 								}}
 							>
 								<Trash2Icon />
-								Hard Delete
+								Hard delete
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 					</DropdownMenuGroup>
 				</DropdownMenuContent>
 			</DropdownMenu>
 
-			<AlertDialog open={open} onOpenChange={setOpen}>
+			<AlertDialog
+				open={open}
+				onOpenChange={(next) => {
+					setOpen(next);
+					if (!next) reset();
+				}}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogMedia className="bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-destructive">
-							<ListXIcon />
+						<AlertDialogMedia className="bg-destructive/10 text-destructive">
+							{hardDelete ? <Trash2Icon /> : <ArchiveXIcon />}
 						</AlertDialogMedia>
-						<AlertDialogTitle>Are You Sure You Want to Delete This URL?</AlertDialogTitle>
+						<AlertDialogTitle>
+							{hardDelete ? "Permanently delete this link?" : "Soft delete this link?"}
+						</AlertDialogTitle>
 						<AlertDialogDescription>
 							{hardDelete
-								? "This action cannot be undone. Make sure you really want to proceed."
-								: "This action cannot be undone. This will delete the URL from our servers."}
-							{hardDelete && (
-								<Alert className="max-w-md border-red-200 bg-red-50 text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-50">
-									<AlertTriangleIcon />
-									<AlertTitle>Warning!</AlertTitle>
-									<AlertDescription>
-										Hard delete PERMANENTLY remove data from database.
-									</AlertDescription>
-								</Alert>
-							)}
+								? "This cannot be undone. The link and all its data are removed for good."
+								: "The link stops redirecting and moves to your deleted links. You can restore it later."}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
+					{hardDelete && (
+						<Alert variant="destructive">
+							<AlertTriangleIcon />
+							<AlertTitle>This is permanent</AlertTitle>
+							<AlertDescription>
+								Hard delete removes the row from the database. There is no restore.
+							</AlertDescription>
+						</Alert>
+					)}
 					<AlertDialogFooter>
-						<AlertDialogCancel onClick={() => setOpen(false)}>Cancel</AlertDialogCancel>
+						<AlertDialogCancel onClick={closeDialog}>Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							disabled={hardDelete && disableAction}
+							disabled={hardDelete && countingDown}
 							variant="destructive"
 							onClick={async () => {
 								try {
@@ -179,18 +170,16 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url
 									} else {
 										await deleteUrlMutation.mutateAsync({ data: url.id });
 									}
-									setOpen(false);
-									toast.success("URL deleted successfully");
+									closeDialog();
+									toast.success(hardDelete ? "Link permanently deleted" : "Link deleted");
 								} catch (error) {
 									toast.error(
-										error instanceof Error
-											? error.message
-											: "Failed to delete URL. Please try again.",
+										error instanceof Error ? error.message : "Could not delete this link.",
 									);
 								}
 							}}
 						>
-							Delete{disableAction ? ` (${countDown})` : ""}
+							Delete{hardDelete && countingDown ? ` (${count})` : ""}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

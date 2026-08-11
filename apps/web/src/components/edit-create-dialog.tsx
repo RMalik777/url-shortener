@@ -27,9 +27,9 @@ import {
 import { Input } from "@repo/ui/components/input";
 
 import type { Url } from "@repo/db/schema";
-import type { FullFormSchemaType } from "@/lib/schema/url";
 
 import { env } from "@/env";
+import { withProtocol } from "@/lib/functions/url";
 import { useEditUrlById, useInsertUrl } from "@/lib/query/url";
 import { fullFormOpts, fullFormSchemaServer } from "@/lib/schema/url";
 import { DBError } from "@/lib/types/error";
@@ -57,14 +57,11 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 			: fullFormOpts),
 		validators: {
 			onSubmit: ({ value }) => {
-				const formattedValue: FullFormSchemaType = {
+				// Validate the URL the server will actually store, protocol included.
+				const parsed = fullFormSchemaServer.safeParse({
 					...value,
-					urlFull:
-						value.urlFull.startsWith("http") || value.urlFull.startsWith("https")
-							? value.urlFull
-							: `https://${value.urlFull}`,
-				};
-				const parsed = fullFormSchemaServer.safeParse(formattedValue);
+					urlFull: withProtocol(value.urlFull),
+				});
 				if (!parsed.success) {
 					const flattenedErrors = z.flattenError(parsed.error);
 					return {
@@ -80,13 +77,15 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 			},
 		},
 		onSubmit: async ({ value, formApi }) => {
+			// Send the same normalised URL that was validated above.
+			const data = { ...value, urlFull: withProtocol(value.urlFull) };
 			try {
 				if (action === "edit" && prevData) {
-					await editUrlMutation.mutateAsync({ data: { id: prevData.id, ...value } });
-					toast.success("URL edited successfully!");
+					await editUrlMutation.mutateAsync({ data: { id: prevData.id, ...data } });
+					toast.success("Link updated");
 				} else {
-					await createUrlMutation.mutateAsync({ data: value });
-					toast.success("URL shortened successfully!");
+					await createUrlMutation.mutateAsync({ data });
+					toast.success("Link created");
 				}
 				setOpenDialog(false);
 				form.reset();
@@ -146,7 +145,6 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 											aria-invalid={isInvalid}
 											placeholder="https://example.com/very-long-url"
 											autoComplete="off"
-											className="bg-white"
 										/>
 										{isInvalid && <FieldError errors={field.state.meta.errors} />}
 									</Field>
@@ -171,7 +169,6 @@ export function EditCreateDialog({ children, action = "create", prevData }: Edit
 												aria-invalid={isInvalid}
 												placeholder="ABC"
 												autoComplete="off"
-												className="bg-white"
 											/>
 										</div>
 										{isInvalid && <FieldError errors={field.state.meta.errors} />}
