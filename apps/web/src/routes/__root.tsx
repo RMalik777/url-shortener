@@ -10,7 +10,6 @@ import { HeadContent, Scripts, createRootRouteWithContext } from "@tanstack/reac
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import TanStackQueryDevtools from "@/lib/integrations/tanstack-query/devtools";
-import TanstackFormDevtools from "@/lib/integrations/tanstack-form/devtools";
 import { NotFound } from "@/components/not-found";
 
 interface MyRouterContext {
@@ -51,7 +50,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 	useEffect(() => {
 		configure({
 			hostname: "url.raflimalik.com",
-			devmode: true,
+			devmode: import.meta.env.DEV,
 		});
 	}, []);
 	return (
@@ -63,19 +62,20 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 				<StrictMode>
 					{children}
 					<Toaster />
-					<TanStackDevtools
-						config={{
-							position: "bottom-right",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							TanStackQueryDevtools,
-							// TanstackFormDevtools,
-						]}
-					/>
+					{import.meta.env.DEV && (
+						<TanStackDevtools
+							config={{
+								position: "bottom-right",
+							}}
+							plugins={[
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+								TanStackQueryDevtools,
+							]}
+						/>
+					)}
 					<Scripts />
 				</StrictMode>
 			</body>
