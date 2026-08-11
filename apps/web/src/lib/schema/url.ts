@@ -61,6 +61,10 @@ export const fullFormOpts = formOptions({
 	} satisfies z.infer<typeof fullFormSchema>,
 });
 
-export type SmallFormSchema = z.infer<typeof quickFormSchema>;
-export type SmallFormSchemaServer = z.infer<typeof quickFormSchemaServer>;
+/** Payload accepted by the `editUrlById` server fn — the editable fields plus the target id. */
+export const editUrlSchema = fullFormSchema.extend({
+	id: z.string().min(1, { error: "ID is required" }),
+});
+
 export type FullFormSchemaType = z.infer<typeof fullFormSchema>;
+export type EditUrlSchemaType = z.infer<typeof editUrlSchema>;

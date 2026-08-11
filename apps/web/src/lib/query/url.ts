@@ -1,56 +1,69 @@
-import { keepPreviousData, queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { and, count, eq } from "drizzle-orm";
-import { createUpdateSchema } from "drizzle-zod";
+import { and, desc, eq } from "drizzle-orm";
 import { event } from "onedollarstats";
 
 import { urls } from "@repo/db/schema";
 
-import type { FullFormSchemaType } from "@/lib/schema/url";
+import type { EditUrlSchemaType, FullFormSchemaType } from "@/lib/schema/url";
 import type { Url, User } from "@repo/db/schema";
-import type { z } from "zod";
 
 import { env } from "@/env";
 import { db } from "@/db";
+import { generateRandomString } from "@/lib/functions/generator";
+import { withProtocol } from "@/lib/functions/url";
 import { authMiddleware } from "@/lib/middleware/auth";
 import { DBError } from "@/lib/types/error";
 
-export const getAllUrlsOptions = ({
-	userId,
-	page,
-	limit,
-}: {
-	userId: User["id"];
-	page?: number;
-	limit?: number;
-}) =>
+/**
+ * Restores the honest return type of drizzle's `.get()`.
+ *
+ * drizzle types `.get()` as non-nullable, but the D1 driver returns `undefined` when
+ * the statement matches no rows (`d1/session.js`: `if (!rows[0]) return void 0`). Without
+ * this the `!row` guards below destructure `undefined` and throw a `TypeError` — which is
+ * exactly what happened when soft-deleting an already-deleted URL.
+ */
+function firstRow<T>(row: T): T | undefined {
+	return row;
+}
+
+/** SQLite surfaces short-code collisions as a UNIQUE constraint violation on `url_short`. */
+function isShortCodeConflict(error: unknown) {
+	return error instanceof Error && error.message.includes("urls.url_short");
+}
+
+/**
+ * Wraps an unexpected failure as a 500. Deliberate `DBError`s thrown inside a `try`
+ * are re-thrown untouched — otherwise a considered 404 gets rewritten as a generic 500.
+ */
+function asDBError(error: unknown, location: string) {
+	if (error instanceof DBError) {
+		return error;
+	}
+	return new DBError(error instanceof Error ? error.message : "Unknown error", {
+		location,
+		cause: error,
+		statusCode: 500,
+	});
+}
+
+export const getAllUrlsOptions = ({ userId }: { userId: User["id"] }) =>
 	queryOptions({
-		queryKey: [userId, "urls", "all", limit, page],
-		queryFn: async () => await getAllUrls({ data: { page, limit } }),
+		queryKey: [userId, "urls", "all"],
+		queryFn: async () => await getAllUrls(),
 		staleTime: Infinity,
-		placeholderData: keepPreviousData,
 	});
 const getAllUrls = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator((data: { page?: number; limit?: number }) => data)
-	.handler(async ({ context, data }) => {
+	.handler(async ({ context }) => {
 		try {
-			const baseQuery = db.select().from(urls).where(eq(urls.createdBy, context.id));
-			const [rows, total] = await Promise.all([
-				typeof data.limit === "number" && typeof data.page === "number"
-					? baseQuery.limit(data.limit).offset(data.page * data.limit)
-					: baseQuery,
-				db.select({ total: count() }).from(urls).where(eq(urls.createdBy, context.id)).get(),
-			]);
-			if (total) {
-				return { rows, total: total.total };
-			}
+			return await db
+				.select()
+				.from(urls)
+				.where(eq(urls.createdBy, context.id))
+				.orderBy(desc(urls.createdAt));
 		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "getAllUrls",
-				cause: error,
-				statusCode: 500,
-			});
+			throw asDBError(error, "getAllUrls");
 		}
 	});
 
@@ -72,13 +85,9 @@ const getUrlById = createServerFn({ method: "GET" })
 				.from(urls)
 				.where(and(eq(urls.id, data.id), eq(urls.createdBy, context.id)))
 				.get();
-			return response;
+			return response ?? null;
 		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "getUrlsById",
-				cause: error,
-				statusCode: 500,
-			});
+			throw asDBError(error, "getUrlById");
 		}
 	});
 
@@ -96,46 +105,69 @@ export const useInsertUrl = ({ userId }: { userId: User["id"] }) => {
 		},
 	});
 };
+
+/** Attempts allowed when the caller lets the server pick the short code. */
+const SHORT_CODE_ATTEMPTS = 5;
+
 const insertUrl = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((input: FullFormSchemaType) => input)
+	.inputValidator((input: FullFormSchemaType & { autoShortCode?: boolean }) => input)
 	.handler(async ({ context, data }) => {
-		const isDuplicate = await db.select().from(urls).where(eq(urls.urlShort, data.urlShort)).get();
-		if (isDuplicate) {
-			throw new DBError("Custom short code already in use", {
-				location: "insertUrlWithCode",
-				field: "urlShort",
-				statusCode: 400,
-			});
+		const urlFull = withProtocol(data.urlFull);
+		const attempts = data.autoShortCode ? SHORT_CODE_ATTEMPTS : 1;
+		let urlShort = data.urlShort;
+
+		for (let attempt = 0; attempt < attempts; attempt++) {
+			try {
+				const inserted = firstRow(
+					await db
+						.insert(urls)
+						.values({
+							urlFull,
+							urlShort,
+							intermediaryScreen: data.intermediaryScreen,
+							createdBy: context.id,
+						})
+						.returning({ urlId: urls.id, urlShort: urls.urlShort, urlLong: urls.urlFull })
+						.get(),
+				);
+				if (!inserted) {
+					throw new DBError("Could not save the URL. Please try again.", {
+						location: "insertUrl",
+						statusCode: 500,
+					});
+				}
+				return {
+					shortenedUrl: env.VITE_SHORT_URL + inserted.urlShort,
+					urlId: inserted.urlId,
+					urlShort: inserted.urlShort,
+					urlLong: inserted.urlLong,
+				};
+			} catch (error) {
+				if (error instanceof DBError) {
+					throw error;
+				}
+				if (!isShortCodeConflict(error)) {
+					throw asDBError(error, "insertUrl");
+				}
+				// A caller-supplied code that collides is a user error, not something to retry.
+				if (!data.autoShortCode) {
+					throw new DBError("That short code is already in use.", {
+						location: "insertUrl",
+						field: "urlShort",
+						cause: error,
+						statusCode: 409,
+					});
+				}
+				urlShort = generateRandomString(6);
+			}
 		}
-		const parsedUrl =
-			data.urlFull.startsWith("http") || data.urlFull.startsWith("https")
-				? data.urlFull
-				: `https://${data.urlFull}`;
-		try {
-			const { urlId, urlShort, urlLong } = await db
-				.insert(urls)
-				.values({
-					urlFull: parsedUrl,
-					urlShort: data.urlShort,
-					intermediaryScreen: data.intermediaryScreen,
-					createdBy: context.id,
-				})
-				.returning({ urlId: urls.id, urlShort: urls.urlShort, urlLong: urls.urlFull })
-				.get();
-			return {
-				shortenedUrl: env.VITE_SHORT_URL + urlShort,
-				urlId,
-				urlShort,
-				urlLong,
-			};
-		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "insertUrlWithCode",
-				cause: error,
-				statusCode: 500,
-			});
-		}
+
+		throw new DBError("Could not generate an unused short code. Please try again.", {
+			location: "insertUrl",
+			field: "urlShort",
+			statusCode: 409,
+		});
 	});
 
 export const useEditUrlById = ({ userId }: { userId: User["id"] }) => {
@@ -153,19 +185,11 @@ export const useEditUrlById = ({ userId }: { userId: User["id"] }) => {
 		},
 	});
 };
-const updateUrlSchema = createUpdateSchema(urls);
-type UpdateUrlData = z.infer<typeof updateUrlSchema>;
 const editUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((data: UpdateUrlData) => data)
+	.inputValidator((data: EditUrlSchemaType) => data)
 	.handler(async ({ data, context }) => {
-		if (!data.id) {
-			throw new DBError("ID is required", {
-				location: "id",
-				statusCode: 400,
-			});
-		}
-		const { id, ...updateData } = data;
+		const { id } = data;
 		const toBeUpdated = await db.select().from(urls).where(eq(urls.id, id)).get();
 		if (!toBeUpdated || toBeUpdated.createdBy !== context.id) {
 			throw new DBError("URL not found", {
@@ -180,19 +204,38 @@ const editUrlById = createServerFn({ method: "POST" })
 			});
 		}
 		try {
-			const { urlId, shortUrl, fullUrl } = await db
-				.update(urls)
-				.set({ ...updateData })
-				.where(and(eq(urls.id, id)))
-				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
-				.get();
-			return { urlId, shortUrl, fullUrl };
+			// Only the editable columns are written, so createdBy/isDeleted/timestamps stay
+			// server-owned. Re-scoping the WHERE closes the gap between the check above and
+			// this write.
+			const updated = firstRow(
+				await db
+					.update(urls)
+					.set({
+						urlFull: withProtocol(data.urlFull),
+						urlShort: data.urlShort,
+						intermediaryScreen: data.intermediaryScreen,
+					})
+					.where(and(eq(urls.id, id), eq(urls.createdBy, context.id), eq(urls.isDeleted, false)))
+					.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
+					.get(),
+			);
+			if (!updated) {
+				throw new DBError("URL not found", {
+					location: "id",
+					statusCode: 404,
+				});
+			}
+			return updated;
 		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "editUrlById",
-				cause: error,
-				statusCode: 500,
-			});
+			if (isShortCodeConflict(error)) {
+				throw new DBError("That short code is already in use.", {
+					location: "editUrlById",
+					field: "urlShort",
+					cause: error,
+					statusCode: 409,
+				});
+			}
+			throw asDBError(error, "editUrlById");
 		}
 	});
 
@@ -229,20 +272,30 @@ const deleteUrlbyId = createServerFn({ method: "POST" })
 				statusCode: 404,
 			});
 		}
-		try {
-			const { urlId, shortUrl, fullUrl } = await db
-				.update(urls)
-				.set({ isDeleted: true, deletedAt: new Date() })
-				.where(and(eq(urls.id, data), eq(urls.isDeleted, false)))
-				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
-				.get();
-			return { urlId, shortUrl, fullUrl };
-		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "deleteUrlbyId",
-				cause: error,
-				statusCode: 500,
+		if (toBeDeleted.isDeleted) {
+			throw new DBError("This URL is already deleted", {
+				location: "id",
+				statusCode: 409,
 			});
+		}
+		try {
+			const deleted = firstRow(
+				await db
+					.update(urls)
+					.set({ isDeleted: true, deletedAt: new Date() })
+					.where(and(eq(urls.id, data), eq(urls.createdBy, context.id), eq(urls.isDeleted, false)))
+					.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
+					.get(),
+			);
+			if (!deleted) {
+				throw new DBError("URL not found", {
+					location: "id",
+					statusCode: 404,
+				});
+			}
+			return deleted;
+		} catch (error) {
+			throw asDBError(error, "deleteUrlbyId");
 		}
 	});
 
@@ -257,6 +310,7 @@ export const useRestoreUrlById = ({ userId }: { userId: User["id"] }) => {
 				short_url: shortUrl,
 			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
+			queryClient.invalidateQueries({ queryKey: [userId, "urls", urlId] });
 		},
 	});
 };
@@ -284,19 +338,23 @@ const restoreUrlById = createServerFn({ method: "POST" })
 			});
 		}
 		try {
-			const { urlId, shortUrl, fullUrl } = await db
-				.update(urls)
-				.set({ isDeleted: false, deletedAt: null })
-				.where(eq(urls.id, data))
-				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
-				.get();
-			return { urlId, shortUrl, fullUrl };
+			const restored = firstRow(
+				await db
+					.update(urls)
+					.set({ isDeleted: false, deletedAt: null })
+					.where(and(eq(urls.id, data), eq(urls.createdBy, context.id)))
+					.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
+					.get(),
+			);
+			if (!restored) {
+				throw new DBError("URL not found", {
+					location: "id",
+					statusCode: 404,
+				});
+			}
+			return restored;
 		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "restoreUrlById",
-				cause: error,
-				statusCode: 500,
-			});
+			throw asDBError(error, "restoreUrlById");
 		}
 	});
 
@@ -307,9 +365,9 @@ export const useHardDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 		onSuccess: ({ urlId, shortUrl, fullUrl }) => {
 			event("Url Deleted", {
 				delete: "hard",
-				url_id: urlId ?? "",
-				full_url: fullUrl ?? "",
-				short_url: shortUrl ?? "",
+				url_id: urlId,
+				full_url: fullUrl,
+				short_url: shortUrl,
 			});
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", "all"] });
 			queryClient.invalidateQueries({ queryKey: [userId, "urls", urlId] });
@@ -319,7 +377,7 @@ export const useHardDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 const hardDeleteUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
 	.inputValidator((urlId: Url["id"]) => urlId)
-	.handler(async ({ data }) => {
+	.handler(async ({ data, context }) => {
 		if (!data) {
 			throw new DBError("URL ID is required", {
 				location: "id",
@@ -327,24 +385,28 @@ const hardDeleteUrlById = createServerFn({ method: "POST" })
 			});
 		}
 		const toBeDeleted = await db.select().from(urls).where(eq(urls.id, data)).get();
-		if (!toBeDeleted) {
+		if (!toBeDeleted || toBeDeleted.createdBy !== context.id) {
 			throw new DBError("URL not found", {
 				location: "id",
 				statusCode: 404,
 			});
 		}
 		try {
-			const deleted = await db
-				.delete(urls)
-				.where(eq(urls.id, data))
-				.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
-				.get();
-			return { urlId: deleted?.urlId, shortUrl: deleted?.shortUrl, fullUrl: deleted?.fullUrl };
+			const deleted = firstRow(
+				await db
+					.delete(urls)
+					.where(and(eq(urls.id, data), eq(urls.createdBy, context.id)))
+					.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
+					.get(),
+			);
+			if (!deleted) {
+				throw new DBError("URL not found", {
+					location: "id",
+					statusCode: 404,
+				});
+			}
+			return deleted;
 		} catch (error) {
-			throw new DBError(error instanceof Error ? error.message : "Unknown error", {
-				location: "hardDeleteUrlById",
-				cause: error,
-				statusCode: 500,
-			});
+			throw asDBError(error, "hardDeleteUrlById");
 		}
 	});
