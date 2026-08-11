@@ -38,36 +38,40 @@ import {
 import type {
 	ColumnDef,
 	ColumnVisibilityState,
+	PaginationState,
 	RowData,
 	SortingState,
 } from "@tanstack/react-table";
 
 import { features } from "@/lib/data/table/features";
 
+const PAGE_SIZES = [5, 10, 20, 25, 30, 40, 50];
+
 interface DataTableProps<TData extends RowData> {
 	columns: Array<ColumnDef<typeof features, TData>>;
 	data: Array<TData>;
-	dataCount: number;
-	pageIndex: number;
-	pageSize: number;
-	pageCount: number;
-	onPageChange: (page: number) => void;
-	onPageSizeChange: (size: number) => void;
+	/** Rows per page on first render. The user can change it from the pager. */
+	initialPageSize?: number;
+	/** Show the selection summary. Only pass this for column sets that include a checkbox column. */
+	enableRowSelection?: boolean;
+	/** Placeholder for the search box, so each table can name what it searches. */
+	searchPlaceholder?: string;
 }
 
 export function DataTable<TData extends RowData>({
 	columns,
 	data,
-	dataCount,
-	pageIndex,
-	pageSize,
-	pageCount,
-	onPageChange,
-	onPageSizeChange,
+	initialPageSize = 10,
+	enableRowSelection = false,
+	searchPlaceholder = "Search",
 }: Readonly<DataTableProps<TData>>) {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [globalFilter, setGlobalFilter] = useState<any>("");
+	const [globalFilter, setGlobalFilter] = useState("");
 	const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>({});
+	const [pagination, setPagination] = useState<PaginationState>({
+		pageIndex: 0,
+		pageSize: initialPageSize,
+	});
 
 	const table = useTable({
 		features,
@@ -77,27 +81,33 @@ export function DataTable<TData extends RowData>({
 		onSortingChange: setSorting,
 		onGlobalFilterChange: setGlobalFilter,
 		onColumnVisibilityChange: setColumnVisibility,
-		manualPagination: true,
-		pageCount,
-		onPaginationChange: (updater) => {
-			const next = typeof updater === "function" ? updater({ pageIndex, pageSize }) : updater;
-			if (next.pageIndex !== pageIndex) onPageChange(next.pageIndex);
-			if (next.pageSize !== pageSize) onPageSizeChange(next.pageSize);
-		},
+		onPaginationChange: setPagination,
 		state: {
 			sorting,
 			globalFilter,
 			columnVisibility,
-			pagination: { pageIndex, pageSize },
+			pagination,
 		},
 	});
 
+	// Reflects the active search, not the raw row count.
+	const filteredCount = table.getFilteredRowModel().rows.length;
+	// Offer the presets that actually page this dataset, plus an "everything" option.
+	// The current size is always included so the Select never falls back to its placeholder.
+	const pageSizeOptions = [
+		...new Set([
+			...PAGE_SIZES.filter((size) => size < data.length),
+			pagination.pageSize,
+			Math.max(data.length, PAGE_SIZES[0]),
+		]),
+	].sort((a, b) => a - b);
+
 	return (
-		<div>
-			<div className="flex items-center py-4">
+		<div className="flex flex-col gap-3">
+			<div className="flex items-center gap-2">
 				<Input
 					type="search"
-					placeholder="Search Contents"
+					placeholder={searchPlaceholder}
 					value={globalFilter}
 					onChange={(e) => table.setGlobalFilter(String(e.target.value))}
 					className="max-w-sm"
@@ -118,44 +128,39 @@ export function DataTable<TData extends RowData>({
 							{table
 								.getAllColumns()
 								.filter((column) => column.accessorFn !== undefined && column.getCanHide())
-								.map((column) => {
-									const isVisible = column.getIsVisible();
-									return (
-										<DropdownMenuCheckboxItem
-											key={column.id}
-											className="capitalize"
-											checked={isVisible}
-											onCheckedChange={(value) => column.toggleVisibility(!!value)}
-										>
-											{column.id}
-										</DropdownMenuCheckboxItem>
-									);
-								})}
+								.map((column) => (
+									<DropdownMenuCheckboxItem
+										key={column.id}
+										className="capitalize"
+										checked={column.getIsVisible()}
+										onCheckedChange={(value) => column.toggleVisibility(!!value)}
+									>
+										{column.id}
+									</DropdownMenuCheckboxItem>
+								))}
 						</DropdownMenuGroup>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
 			<div className="overflow-hidden border">
 				<Table>
-					<TableHeader className="">
+					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
 							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(header.column.columnDef.header, header.getContext())}
-										</TableHead>
-									);
-								})}
+								{headerGroup.headers.map((header) => (
+									<TableHead key={header.id}>
+										{header.isPlaceholder
+											? null
+											: flexRender(header.column.columnDef.header, header.getContext())}
+									</TableHead>
+								))}
 							</TableRow>
 						))}
 					</TableHeader>
 					<TableBody>
 						{table.getRowModel().rows.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+								<TableRow key={row.id} data-state={row.getIsSelected() ? "selected" : undefined}>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell key={cell.id}>
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -166,32 +171,33 @@ export function DataTable<TData extends RowData>({
 						) : (
 							<TableRow>
 								<TableCell colSpan={columns.length} className="h-24 text-center">
-									No results.
+									{globalFilter ? `No links match “${globalFilter}”.` : "No links yet."}
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</div>
-			<div className="mt-2 flex flex-col items-stretch justify-start gap-1 px-2">
-				<div className="flex-1 text-sm text-muted-foreground">
-					{table.getFilteredSelectedRowModel().rows.length} of{" "}
-					{table.getFilteredRowModel().rows.length} row(s) selected.
-				</div>
-				<div className="flex flex-col items-start justify-between gap-2 space-x-6 sm:flex-row sm:items-center lg:space-x-8">
-					<div className="flex w-full items-center justify-between space-x-2 sm:w-auto">
+			<div className="flex flex-col items-stretch justify-start gap-2 px-2">
+				{enableRowSelection && (
+					<div className="flex-1 text-sm text-muted-foreground">
+						{table.getFilteredSelectedRowModel().rows.length} of {filteredCount} row(s) selected.
+					</div>
+				)}
+				<div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+					<div className="flex w-full items-center justify-between gap-2 sm:w-auto">
 						<p className="text-sm font-medium">Show</p>
 						<Select
-							value={`${table.state.pagination.pageSize}`}
+							value={`${pagination.pageSize}`}
 							onValueChange={(value) => {
 								table.setPageSize(Number(value));
 							}}
 						>
 							<SelectTrigger className="h-8 w-17.5 font-mono">
-								<SelectValue placeholder={table.state.pagination.pageSize} />
+								<SelectValue placeholder={pagination.pageSize} />
 							</SelectTrigger>
 							<SelectContent side="top" className="font-mono">
-								{[5, 10, 20, 25, 30, 40, 50, ...(dataCount > 50 ? [dataCount] : [])].map((size) => (
+								{pageSizeOptions.map((size) => (
 									<SelectItem key={size} value={`${size}`}>
 										{size}
 									</SelectItem>
@@ -199,16 +205,15 @@ export function DataTable<TData extends RowData>({
 							</SelectContent>
 						</Select>
 						<p className="text-sm font-medium">
-							from <span className="font-mono">{dataCount}</span> data
+							of <span className="font-mono">{filteredCount}</span>
 						</p>
 					</div>
 					<div className="flex w-full flex-row items-center justify-between gap-2 sm:w-fit sm:gap-4">
 						<p className="flex w-auto items-center justify-center gap-1 text-sm font-medium">
-							Page<span className="font-mono">{table.state.pagination.pageIndex + 1}</span>of
-							{""}
-							<span className="font-mono">{table.getPageCount()}</span>
+							Page <span className="font-mono">{pagination.pageIndex + 1}</span> of{" "}
+							<span className="font-mono">{Math.max(table.getPageCount(), 1)}</span>
 						</p>
-						<div className="flex items-center space-x-2">
+						<div className="flex items-center gap-2">
 							<Button
 								variant="outline"
 								size="icon"

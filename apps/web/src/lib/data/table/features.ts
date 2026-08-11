@@ -3,6 +3,7 @@ import {
 	columnFilteringFeature,
 	columnVisibilityFeature,
 	createFilteredRowModel,
+	createPaginatedRowModel,
 	createSortedRowModel,
 	globalFilteringFeature,
 	rowPaginationFeature,
@@ -13,23 +14,25 @@ import {
 	tableFeatures,
 } from "@tanstack/react-table";
 
-import type { FilterFn } from "@tanstack/react-table";
-
-const fuzzyFilter: FilterFn<any, any> = (row, columnId, value, addMeta) => {
-	const itemRank = rankItem(row.getValue(columnId), value);
-	addMeta?.({ itemRank });
-	return itemRank.passed;
-};
-
 export const features = tableFeatures({
 	columnFilteringFeature,
 	globalFilteringFeature,
 	filteredRowModel: createFilteredRowModel(),
-	filterFns: { fuzzy: fuzzyFilter },
+	filterFns: {
+		// Declared inline so the callback is contextually typed by tableFeatures.
+		fuzzy: (row, columnId, value, addMeta) => {
+			const itemRank = rankItem(row.getValue(columnId), value);
+			addMeta?.({ itemRank });
+			return itemRank.passed;
+		},
+	},
 	rowSortingFeature,
 	sortedRowModel: createSortedRowModel(),
 	sortFns: { alphanumeric: sortFn_alphanumeric, datetime: sortFn_datetime },
 	rowSelectionFeature,
 	columnVisibilityFeature,
 	rowPaginationFeature,
+	// Required now that pagination happens in memory — without it getRowModel()
+	// returns every row and the pager controls do nothing.
+	paginatedRowModel: createPaginatedRowModel(),
 });
