@@ -9,7 +9,7 @@ export const Route = createFileRoute("/")({
 				return redirect({
 					headers: {
 						"Cache-Control":
-							"public, s-max-age=31536000, max-age=3600, stale-while-revalidate=86400",
+							"public, s-maxage=31536000, max-age=3600, stale-while-revalidate=86400",
 					},
 					href: url,
 					statusCode: 301,

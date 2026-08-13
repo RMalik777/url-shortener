@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { PlusIcon } from "lucide-react";
-import { useState, useTransition } from "react";
 
 import { Button } from "@repo/ui/components/button";
 
+import { PageHeader } from "@/components/page-header";
 import { DataTable } from "@/components/table/data-table";
 import { fullColumn } from "@/lib/data/table/url";
 import { getAllUrlsOptions } from "@/lib/query/url";
@@ -27,33 +27,28 @@ export const Route = createFileRoute("/(app)/(pages)/list/")({
 
 function RouteComponent() {
 	const { user } = Route.useRouteContext();
-	const [page, setPage] = useState(0);
-	const [limit, setLimit] = useState(10);
-	const [, startTransition] = useTransition();
-
-	const { data: urlList } = useSuspenseQuery(getAllUrlsOptions({ userId: user.id, page, limit }));
-
-	const pageCount = urlList ? Math.ceil(urlList.total / limit) : 0;
+	const { data: urls } = useSuspenseQuery(getAllUrlsOptions({ userId: user.id }));
 
 	return (
-		<section>
-			<h1>All Shortened URLs</h1>
-			<EditCreateDialog action="create">
-				<Button variant="outline">
-					<PlusIcon />
-					Add New URL
-				</Button>
-			</EditCreateDialog>
+		<div className="flex flex-col gap-6">
+			<PageHeader
+				title="All links"
+				description="Search, sort, and manage every link you've created."
+			>
+				<EditCreateDialog action="create">
+					<Button variant="outline">
+						<PlusIcon />
+						Add new link
+					</Button>
+				</EditCreateDialog>
+			</PageHeader>
 			<DataTable
 				columns={fullColumn}
-				data={urlList?.rows ?? []}
-				dataCount={urlList?.total ?? 0}
-				pageIndex={page}
-				pageSize={limit}
-				pageCount={pageCount}
-				onPageChange={(newPage) => startTransition(() => setPage(newPage))}
-				onPageSizeChange={(newSize) => startTransition(() => setLimit(newSize))}
+				data={urls}
+				initialPageSize={10}
+				enableRowSelection
+				searchPlaceholder="Search links"
 			/>
-		</section>
+		</div>
 	);
 }

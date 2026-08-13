@@ -16,7 +16,7 @@ import { cn } from "@repo/ui/lib/utils";
 
 import type { Column, RowData, SortDirection } from "@tanstack/react-table";
 
-import { features } from "@/lib/data/table/features";
+import type { features } from "@/lib/data/table/features";
 
 interface DataTableColumnHeaderProps<
 	TData extends RowData,

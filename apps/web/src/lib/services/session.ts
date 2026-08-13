@@ -11,3 +11,9 @@ export const getSessionFn = createServerFn({ method: "GET" }).handler(async () =
 
 	return session;
 });
+
+/**
+ * The signed-in user as better-auth reports it. Distinct from `@repo/db`'s `User`:
+ * optional fields arrive as `undefined` rather than `null`.
+ */
+export type SessionUser = NonNullable<Awaited<ReturnType<typeof getSessionFn>>>["user"];

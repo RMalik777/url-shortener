@@ -1,27 +1,26 @@
-import { Link, createFileRoute, notFound, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
 import { ArrowRightFromLine, ExternalLink, Shield } from "lucide-react";
-import { event, view } from "onedollarstats";
+import { event } from "onedollarstats";
 
 import { Badge } from "@repo/ui/components/badge";
 import { Button } from "@repo/ui/components/button";
 import { Card } from "@repo/ui/components/card";
 import { Separator } from "@repo/ui/components/separator";
 
-import { UrlNotFound } from "@/components/url-not-found";
 import { env } from "@/env";
-import { useUrlData } from "@/lib/query/url";
+import { urlByCodeOptions } from "@/lib/query/url";
 
 export const Route = createFileRoute("/$code/")({
 	headers: () => ({
 		"Cache-Control": "public, max-age=1, stale-while-revalidate=5",
 	}),
 	loader: async ({ context, params }) => {
-		const data = await context.queryClient.ensureQueryData(useUrlData({ code: params.code }));
+		const data = await context.queryClient.ensureQueryData(urlByCodeOptions({ code: params.code }));
 		if (data?.urlShort) {
 			if (data.isDeleted) {
 				throw redirect({
-					href: `${env.VITE_LONG_URL}/link-removed`,
+					href: new URL("/link-removed", env.VITE_LONG_URL).toString(),
 					statusCode: 301,
 				});
 			}
@@ -49,7 +48,6 @@ export const Route = createFileRoute("/$code/")({
 		],
 	}),
 	component: RouteComponent,
-	notFoundComponent: UrlNotFound,
 });
 
 function RouteComponent() {
@@ -101,9 +99,11 @@ function RouteComponent() {
 							<Button
 								className="flex-1"
 								size="lg"
+								nativeButton={false}
 								render={
-									<Link
-										to={data.urlFull}
+									<a
+										href={data.urlFull}
+										rel="noopener noreferrer"
 										onClick={() =>
 											event("continue_to_destination", {
 												params: data.urlShort,
@@ -115,7 +115,7 @@ function RouteComponent() {
 									>
 										Continue to Destination
 										<ArrowRightFromLine className="ml-2 h-4 w-4" />
-									</Link>
+									</a>
 								}
 							/>
 						</div>

@@ -7,11 +7,11 @@ import type { Url } from "@repo/db/schema";
 
 import type { ColumnDef } from "@tanstack/react-table";
 
+import type { features } from "@/lib/data/table/features";
 import { ActionDropdown } from "@/components/table/action-dropdown";
 import { DataTableColumnHeader } from "@/components/table/header";
 
 import { env } from "@/env";
-import { features } from "@/lib/data/table/features";
 
 const checkboxColumn: Array<ColumnDef<typeof features, Url>> = [
 	{
@@ -48,7 +48,7 @@ export const urlColumn: Array<ColumnDef<typeof features, Url>> = [
 		cell: ({ row }) => {
 			const shortUrl = `${env.VITE_SHORT_URL}${row.original.urlShort}`;
 			return (
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-2 whitespace-nowrap">
 					{shortUrl}
 					<CopyButton value={shortUrl} label="Short URL" />
 				</div>
@@ -63,8 +63,10 @@ export const urlColumn: Array<ColumnDef<typeof features, Url>> = [
 		),
 		cell: ({ row }) => (
 			<a
-				className="-m-1 p-1 text-left transition duration-200 ease-out hover:bg-muted hover:underline"
+				className="block max-w-[28rem] truncate text-left underline-offset-4 transition duration-200 ease-out hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 				href={row.original.urlFull}
+				title={row.original.urlFull}
+				target="_blank"
 				rel="noopener noreferrer"
 			>
 				{row.original.urlFull}
@@ -81,7 +83,7 @@ export const fullColumn: Array<ColumnDef<typeof features, Url>> = [
 		header: ({ column }) => (
 			<DataTableColumnHeader column={column} sorted={column.getIsSorted()} title="ID" />
 		),
-		cell: ({ row }) => <code className="">{row.original.id}</code>,
+		cell: ({ row }) => <code className="font-mono text-xs">{row.original.id}</code>,
 	},
 	...urlColumn.slice(0, -1),
 	{

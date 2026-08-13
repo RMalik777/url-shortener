@@ -24,10 +24,12 @@ function RouteComponent() {
 	const { user } = Route.useRouteContext();
 
 	return (
-		<>
+		// pb-24 clears the floating bottom nav on mobile; at sm+ the bar moves to the
+		// top and the page shell reserves space for it instead.
+		<div className="flex min-h-svh flex-col pb-24 sm:pb-0">
 			<Header user={user} />
 			<Outlet />
 			<Footer />
-		</>
+		</div>
 	);
 }

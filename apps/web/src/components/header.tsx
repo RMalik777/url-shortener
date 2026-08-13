@@ -27,27 +27,33 @@ import {
 
 import { cn } from "@repo/ui/lib/utils";
 
-import type { User } from "@repo/db/schema";
+import type { SessionUser } from "@/lib/services/session";
 
 import { signOut } from "@/lib/auth/auth-client";
 import { navRoutes } from "@/lib/const/nav";
 import { acronym } from "@/lib/functions/utils";
 
-export function Header({ user }: Readonly<{ user: User }>) {
+export function Header({ user }: Readonly<{ user: SessionUser }>) {
 	const navigate = useNavigate();
 	const [openDropdown, setOpenDropdown] = useState(false);
 	const [openAlert, setOpenAlert] = useState(false);
 
 	return (
 		<>
-			<header className="fixed bottom-0 z-1 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:inset-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b sm:px-4 lg:px-8">
+			<header className="fixed bottom-0 z-30 m-4 flex h-fit w-[calc(100%-2rem)] items-center justify-between rounded-md bg-background/80 p-2 backdrop-blur-sm transition-all duration-200 ease-out max-sm:border sm:top-0 sm:right-0 sm:bottom-auto sm:left-0 sm:m-0 sm:w-full sm:rounded-none sm:border-b sm:px-4 lg:px-8">
 				<nav>
-					<ul className="flex items-center gap-4 text-sm font-medium">
+					<ul className="flex items-center gap-2 text-sm font-medium">
 						{navRoutes.map((route) => (
 							<li key={route.href}>
 								<Link
 									to={route.href}
-									className="px-2 py-1 duration-200 ease-out hover:bg-foreground hover:text-background hover:underline"
+									// Without exact, "/" also matches "/list" and both items read as active.
+									activeOptions={{ exact: route.href === "/" }}
+									activeProps={{
+										className: "bg-foreground text-background",
+										"aria-current": "page",
+									}}
+									className="px-2 py-1 duration-200 ease-out hover:bg-foreground hover:text-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
 								>
 									{route.label}
 								</Link>

@@ -4,11 +4,11 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { configure } from "onedollarstats";
 import { StrictMode, useEffect } from "react";
 
-import { NotFound } from "@/components/not-found";
-import TanStackQueryDevtools from "@/lib/integrations/tanstack-query/devtools";
 import appCss from "@repo/ui/globals.css?url";
 import { ErrorComponent } from "@repo/ui/template/error";
 import type { QueryClient } from "@tanstack/react-query";
+import TanStackQueryDevtools from "@/lib/integrations/tanstack-query/devtools";
+import { NotFound } from "@/components/not-found";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -48,7 +48,7 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 	useEffect(() => {
 		configure({
 			hostname: "raf.li",
-			devmode: true,
+			devmode: import.meta.env.DEV,
 		});
 	}, []);
 
@@ -60,18 +60,20 @@ function RootDocument({ children }: Readonly<{ children: React.ReactNode }>) {
 			<body>
 				<StrictMode>
 					{children}
-					<TanStackDevtools
-						config={{
-							position: "bottom-right",
-						}}
-						plugins={[
-							{
-								name: "Tanstack Router",
-								render: <TanStackRouterDevtoolsPanel />,
-							},
-							TanStackQueryDevtools,
-						]}
-					/>
+					{import.meta.env.DEV && (
+						<TanStackDevtools
+							config={{
+								position: "bottom-right",
+							}}
+							plugins={[
+								{
+									name: "Tanstack Router",
+									render: <TanStackRouterDevtoolsPanel />,
+								},
+								TanStackQueryDevtools,
+							]}
+						/>
+					)}
 					<Scripts />
 				</StrictMode>
 			</body>

@@ -43,7 +43,7 @@ function RouteComponent() {
 							<div className="p-6 md:p-8">
 								<FieldGroup className="gap-4">
 									<div className="flex flex-col items-center gap-2 text-center">
-										<h1 className="text-2xl font-bold">Welcome back</h1>
+										<h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
 										<p className="text-balance text-muted-foreground">
 											Login to your URL Shortener account
 										</p>

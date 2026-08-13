@@ -61,6 +61,13 @@ export const fullFormOpts = formOptions({
 	} satisfies z.infer<typeof fullFormSchema>,
 });
 
-export type SmallFormSchema = z.infer<typeof quickFormSchema>;
-export type SmallFormSchemaServer = z.infer<typeof quickFormSchemaServer>;
-export type FullFormSchemaType = z.infer<typeof fullFormSchema>;
+/** Payload accepted by the `insertUrl` server fn. Runtime-parsed at the HTTP boundary. */
+export const insertUrlSchema = fullFormSchemaServer.extend({
+	/** Let the server retry on a generated-code collision instead of failing the caller's choice. */
+	autoShortCode: z.boolean().optional(),
+});
+
+/** Payload accepted by the `editUrlById` server fn — the editable fields plus the target id. */
+export const editUrlSchema = fullFormSchemaServer.extend({
+	id: z.string().min(1, { error: "ID is required" }),
+});

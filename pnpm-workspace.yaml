@@ -21,7 +21,7 @@ catalog:
   '@babel/core': ^8.0.1
   '@better-auth/cli': ^1.4.21
   '@cloudflare/vite-plugin': ^1.51.1
-  '@cloudflare/workers-types': ^5.20260809.1
+  '@cloudflare/workers-types': ^5.20260810.1
   '@rolldown/plugin-babel': ^0.2.3
   '@t3-oss/env-core': ^0.13.11
   '@tailwindcss/vite': ^4.3.3
@@ -33,12 +33,12 @@ catalog:
   '@tanstack/react-form-start': ^1.33.4
   '@tanstack/react-query': ^5.101.4
   '@tanstack/react-query-devtools': ^5.101.4
-  '@tanstack/react-router': ^1.170.24
+  '@tanstack/react-router': ^1.170.25
   '@tanstack/react-router-devtools': ^1.167.1
   '@tanstack/react-router-ssr-query': ^1.167.1
-  '@tanstack/react-start': ^1.168.41
+  '@tanstack/react-start': ^1.168.42
   '@tanstack/react-table': ^9.1.2
-  '@tanstack/router-plugin': ^1.168.28
+  '@tanstack/router-plugin': ^1.168.29
   '@testing-library/dom': ^10.4.1
   '@testing-library/react': ^16.3.2
   '@types/babel__core': ^7.20.5
@@ -64,7 +64,7 @@ catalog:
   solid-js: ^1.9.14
   sonner: ^2.0.8
   tailwindcss: ^4.3.3
-  tsx: ^4.23.11
+  tsx: ^4.23.12
   typescript: ^6.0.3
   uuid: ^14.0.1
   vite: ^8.2.1
