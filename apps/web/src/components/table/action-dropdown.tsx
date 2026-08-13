@@ -161,7 +161,11 @@ export function ActionDropdown({ row }: Readonly<{ row: Row<typeof features, Url
 					<AlertDialogFooter>
 						<AlertDialogCancel onClick={closeDialog}>Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							disabled={hardDelete && countingDown}
+							disabled={
+								(hardDelete && countingDown) ||
+								deleteUrlMutation.isPending ||
+								hardDeleteUrlMutation.isPending
+							}
 							variant="destructive"
 							onClick={async () => {
 								try {

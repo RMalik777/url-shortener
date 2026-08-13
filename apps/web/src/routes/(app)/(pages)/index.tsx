@@ -71,8 +71,12 @@ function App() {
 					},
 				});
 				form.reset();
-				await navigator.clipboard.writeText(response.shortenedUrl);
-				toast.success(`Shortened to ${response.shortenedUrl} and copied to clipboard`);
+				try {
+					await navigator.clipboard.writeText(response.shortenedUrl);
+					toast.success(`Shortened to ${response.shortenedUrl} and copied to clipboard`);
+				} catch {
+					toast.success(`Shortened to ${response.shortenedUrl}`);
+				}
 			} catch (error) {
 				toast.error(
 					error instanceof Error ? error.message : "Could not shorten that URL. Please try again.",

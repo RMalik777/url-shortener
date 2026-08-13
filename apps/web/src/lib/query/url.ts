@@ -5,7 +5,6 @@ import { event } from "onedollarstats";
 
 import { urls } from "@repo/db/schema";
 
-import type { EditUrlSchemaType, FullFormSchemaType } from "@/lib/schema/url";
 import type { Url, User } from "@repo/db/schema";
 
 import { env } from "@/env";
@@ -13,6 +12,7 @@ import { db } from "@/db";
 import { generateRandomString } from "@/lib/functions/generator";
 import { withProtocol } from "@/lib/functions/url";
 import { authMiddleware } from "@/lib/middleware/auth";
+import { editUrlSchema, insertUrlSchema } from "@/lib/schema/url";
 import { DBError } from "@/lib/types/error";
 
 /**
@@ -111,7 +111,7 @@ const SHORT_CODE_ATTEMPTS = 5;
 
 const insertUrl = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((input: FullFormSchemaType & { autoShortCode?: boolean }) => input)
+	.inputValidator((input: unknown) => insertUrlSchema.parse(input))
 	.handler(async ({ context, data }) => {
 		const urlFull = withProtocol(data.urlFull);
 		const attempts = data.autoShortCode ? SHORT_CODE_ATTEMPTS : 1;
@@ -187,7 +187,7 @@ export const useEditUrlById = ({ userId }: { userId: User["id"] }) => {
 };
 const editUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((data: EditUrlSchemaType) => data)
+	.inputValidator((data: unknown) => editUrlSchema.parse(data))
 	.handler(async ({ data, context }) => {
 		const { id } = data;
 		const toBeUpdated = await db.select().from(urls).where(eq(urls.id, id)).get();
@@ -342,7 +342,7 @@ const restoreUrlById = createServerFn({ method: "POST" })
 				await db
 					.update(urls)
 					.set({ isDeleted: false, deletedAt: null })
-					.where(and(eq(urls.id, data), eq(urls.createdBy, context.id)))
+					.where(and(eq(urls.id, data), eq(urls.createdBy, context.id), eq(urls.isDeleted, true)))
 					.returning({ urlId: urls.id, shortUrl: urls.urlShort, fullUrl: urls.urlFull })
 					.get(),
 			);

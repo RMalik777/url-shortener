@@ -401,7 +401,11 @@ function RouteComponent() {
 					<AlertDialogFooter>
 						<AlertDialogCancel onClick={closeDialog}>Cancel</AlertDialogCancel>
 						<AlertDialogAction
-							disabled={hardDelete && countingDown}
+							disabled={
+								(hardDelete && countingDown) ||
+								deleteUrlbyIdMutation.isPending ||
+								hardDeleteUrlByIdMutation.isPending
+							}
 							variant="destructive"
 							onClick={async () => {
 								try {
