@@ -48,7 +48,6 @@
 	"devDependencies": {
 		"@babel/core": "catalog:",
 		"@base-ui/react": "^1.7.0",
-		"@better-auth/cli": "catalog:",
 		"@cloudflare/workers-types": "catalog:",
 		"@codspeed/vitest-plugin": "^5.7.1",
 		"@repo/eslint-config": "workspace:*",
