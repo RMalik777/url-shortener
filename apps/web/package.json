@@ -18,7 +18,7 @@
 		"bench": "vitest bench --config vitest.config.bench.ts"
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.6.26",
+		"@better-auth/passkey": "^1.6.27",
 		"@better-auth/utils": "^0.5.0",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@repo/db": "workspace:*",
@@ -47,9 +47,6 @@
 	},
 	"devDependencies": {
 		"@babel/core": "catalog:",
-		"@tanstack/react-devtools": "catalog:",
-		"@tanstack/react-query-devtools": "catalog:",
-		"@tanstack/react-router-devtools": "catalog:",
 		"@base-ui/react": "^1.7.0",
 		"@better-auth/cli": "catalog:",
 		"@cloudflare/workers-types": "catalog:",
@@ -61,6 +58,9 @@
 		"@tailwindcss/vite": "catalog:",
 		"@tanstack/devtools-vite": "catalog:",
 		"@tanstack/eslint-config": "catalog:",
+		"@tanstack/react-devtools": "catalog:",
+		"@tanstack/react-query-devtools": "catalog:",
+		"@tanstack/react-router-devtools": "catalog:",
 		"@testing-library/dom": "catalog:",
 		"@testing-library/react": "catalog:",
 		"@types/babel__core": "catalog:",

@@ -20,25 +20,25 @@ allowBuilds:
 catalog:
   '@babel/core': ^8.0.1
   '@better-auth/cli': ^1.4.21
-  '@cloudflare/vite-plugin': ^1.51.1
-  '@cloudflare/workers-types': ^5.20260810.1
+  '@cloudflare/vite-plugin': ^1.51.3
+  '@cloudflare/workers-types': ^5.20260812.1
   '@rolldown/plugin-babel': ^0.2.3
   '@t3-oss/env-core': ^0.13.11
   '@tailwindcss/vite': ^4.3.3
   '@tanstack/devtools-vite': ^0.8.3
   '@tanstack/eslint-config': ^0.4.0
   '@tanstack/match-sorter-utils': ^9.1.2
-  '@tanstack/react-devtools': ^0.10.9
-  '@tanstack/react-form': ^1.33.4
-  '@tanstack/react-form-start': ^1.33.4
+  '@tanstack/react-devtools': ^0.10.10
+  '@tanstack/react-form': ^1.33.5
+  '@tanstack/react-form-start': ^1.33.5
   '@tanstack/react-query': ^5.101.4
   '@tanstack/react-query-devtools': ^5.101.4
-  '@tanstack/react-router': ^1.170.25
+  '@tanstack/react-router': ^1.170.27
   '@tanstack/react-router-devtools': ^1.167.1
   '@tanstack/react-router-ssr-query': ^1.167.1
-  '@tanstack/react-start': ^1.168.42
+  '@tanstack/react-start': ^1.168.44
   '@tanstack/react-table': ^9.1.2
-  '@tanstack/router-plugin': ^1.168.29
+  '@tanstack/router-plugin': ^1.168.30
   '@testing-library/dom': ^10.4.1
   '@testing-library/react': ^16.3.2
   '@types/babel__core': ^7.20.5
@@ -48,7 +48,7 @@ catalog:
   '@unpic/react': ^1.0.2
   '@vitejs/plugin-react': ^6.0.5
   babel-plugin-react-compiler: ^1.0.0
-  better-auth: ^1.6.26
+  better-auth: ^1.6.27
   class-variance-authority: ^0.7.1
   clsx: ^2.1.1
   dotenv: ^17.4.2
@@ -70,7 +70,7 @@ catalog:
   vite: ^8.2.1
   vitest: ^4.1.10
   web-vitals: ^6.1.0
-  wrangler: ^4.120.0
+  wrangler: ^4.121.0
   zod: ^4.4.3
 
 cleanupUnusedCatalogs: true
