@@ -26,7 +26,7 @@
 		"@repo/ui": "workspace:*",
 		"prettier": "^3.9.6",
 		"prettier-plugin-tailwindcss": "catalog:",
-		"turbo": "^2.10.9"
+		"turbo": "^2.10.11"
 	},
 	"packageManager": "pnpm@11.20.0",
 	"engines": {
