@@ -19,7 +19,7 @@ allowBuilds:
 
 catalog:
   '@babel/core': ^8.0.1
-  '@cloudflare/vite-plugin': ^1.51.3
+  '@cloudflare/vite-plugin': ^1.53.1
   '@cloudflare/workers-types': ^5.20260812.1
   '@rolldown/plugin-babel': ^0.2.3
   '@t3-oss/env-core': ^0.13.11
