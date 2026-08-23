@@ -87,6 +87,9 @@ catalogs:
     '@unpic/react':
       specifier: ^1.0.2
       version: 1.0.2
+    '@vitejs/plugin-react':
+      specifier: ^6.0.5
+      version: 6.0.5
     babel-plugin-react-compiler:
       specifier: ^1.0.0
       version: 1.0.0
@@ -96,6 +99,12 @@ catalogs:
     class-variance-authority:
       specifier: ^0.7.1
       version: 0.7.1
+    clsx:
+      specifier: ^2.1.1
+      version: 2.1.1
+    dotenv:
+      specifier: ^17.4.2
+      version: 17.4.2
     drizzle-orm:
       specifier: ^0.45.2
       version: 0.45.2
@@ -109,8 +118,8 @@ catalogs:
       specifier: ^30.0.1
       version: 30.0.1
     lucide-react:
-      specifier: ^1.31.0
-      version: 1.31.0
+      specifier: ^1.33.0
+      version: 1.33.0
     onedollarstats:
       specifier: ^0.0.23
       version: 0.0.23
@@ -141,6 +150,9 @@ catalogs:
     uuid:
       specifier: ^14.0.1
       version: 14.0.1
+    vite:
+      specifier: ^8.2.1
+      version: 8.2.1
     vitest:
       specifier: ^4.1.10
       version: 4.1.10
@@ -214,7 +226,7 @@ importers:
         version: 0.45.2(@cloudflare/workers-types@5.20260812.1)(@prisma/client@5.22.0)(@types/pg@8.21.0)(better-sqlite3@12.11.1)(kysely@0.29.4)(pg@8.22.0)
       lucide-react:
         specifier: 'catalog:'
-        version: 1.31.0(react@19.2.8)
+        version: 1.33.0(react@19.2.8)
       onedollarstats:
         specifier: 'catalog:'
         version: 0.0.23(react@19.2.8)
@@ -368,7 +380,7 @@ importers:
         version: 0.8.3(drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260812.1)(@prisma/client@5.22.0)(@types/pg@8.21.0)(better-sqlite3@12.11.1)(kysely@0.29.4)(pg@8.22.0))(zod@4.4.3)
       lucide-react:
         specifier: 'catalog:'
-        version: 1.31.0(react@19.2.8)
+        version: 1.33.0(react@19.2.8)
       onedollarstats:
         specifier: 'catalog:'
         version: 0.0.23(react@19.2.8)
@@ -579,7 +591,7 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: 'catalog:'
-        version: 1.31.0(react@19.2.8)
+        version: 1.33.0(react@19.2.8)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4732,8 +4744,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@1.31.0:
-    resolution: {integrity: sha512-G8u2eEtoHUnUa9f8lbvqDhCiORMnYLdUEo06EEG9MQvHQrInKcX3Pa2TH39MM5qyzRcWETxB0+aOwAPI1g1kEg==}
+  lucide-react@1.33.0:
+    resolution: {integrity: sha512-MTRwMy0ZlL8Ur/vOAiJ9XGHE+kFPC7brq6MxAm0GiGXEBj0qy0jA/pG4N675oSzciO/UCdX8T+5yUQdmDeTLxg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -9729,7 +9741,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@1.31.0(react@19.2.8):
+  lucide-react@1.33.0(react@19.2.8):
     dependencies:
       react: 19.2.8
 
