@@ -67,7 +67,7 @@ catalog:
   typescript: ^6.0.3
   uuid: ^14.0.1
   vite: ^8.2.1
-  vitest: ^4.1.10
+  vitest: ^4.1.11
   web-vitals: ^6.1.0
   wrangler: ^4.121.0
   zod: ^4.4.3
