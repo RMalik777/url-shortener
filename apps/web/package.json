@@ -18,7 +18,7 @@
 		"bench": "vitest bench --config vitest.config.bench.ts"
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.6.27",
+		"@better-auth/passkey": "^1.7.2",
 		"@better-auth/utils": "^0.5.0",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@repo/db": "workspace:*",
@@ -66,7 +66,7 @@
 		"@types/node": "catalog:",
 		"@types/react": "catalog:",
 		"@types/react-dom": "catalog:",
-		"@vitejs/plugin-react": "^6.0.5",
+		"@vitejs/plugin-react": "catalog:",
 		"babel-plugin-react-compiler": "catalog:",
 		"class-variance-authority": "catalog:",
 		"eslint": "catalog:",
@@ -76,7 +76,7 @@
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
-		"vite": "^8.2.1",
+		"vite": "catalog:",
 		"vite-tsconfig-paths": "^6.1.1",
 		"vitest": "catalog:",
 		"web-vitals": "catalog:",
