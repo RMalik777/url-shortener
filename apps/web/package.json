@@ -18,7 +18,7 @@
 		"bench": "vitest bench --config vitest.config.bench.ts"
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.7.2",
+		"@better-auth/passkey": "^1.7.4",
 		"@better-auth/utils": "^0.5.0",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@repo/db": "workspace:*",
