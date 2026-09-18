@@ -24,9 +24,9 @@
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
 		"@repo/ui": "workspace:*",
-		"prettier": "^3.9.6",
+		"prettier": "^3.9.7",
 		"prettier-plugin-tailwindcss": "catalog:",
-		"turbo": "^2.10.12"
+		"turbo": "^2.10.13"
 	},
 	"packageManager": "pnpm@11.24.0",
 	"engines": {

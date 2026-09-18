@@ -18,7 +18,7 @@
 		"bench": "vitest bench --config vitest.config.bench.ts"
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.7.2",
+		"@better-auth/passkey": "^1.7.5",
 		"@better-auth/utils": "^0.5.0",
 		"@cloudflare/vite-plugin": "catalog:",
 		"@repo/db": "workspace:*",
@@ -47,7 +47,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "catalog:",
-		"@base-ui/react": "^1.7.0",
+		"@base-ui/react": "catalog:",
 		"@cloudflare/workers-types": "catalog:",
 		"@codspeed/vitest-plugin": "^5.7.1",
 		"@repo/eslint-config": "workspace:*",
@@ -71,7 +71,7 @@
 		"class-variance-authority": "catalog:",
 		"eslint": "catalog:",
 		"jsdom": "catalog:",
-		"prettier": "^3.9.6",
+		"prettier": "^3.9.7",
 		"prettier-plugin-tailwindcss": "catalog:",
 		"solid-js": "catalog:",
 		"tsx": "catalog:",
