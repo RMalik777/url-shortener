@@ -17,7 +17,7 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
-		"drizzle-kit": "^0.31.10",
+		"drizzle-kit": "^0.31.11",
 		"drizzle-orm": "catalog:",
 		"uuid": "catalog:"
 	},
