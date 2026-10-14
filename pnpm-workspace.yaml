@@ -27,7 +27,7 @@ catalog:
   '@tailwindcss/vite': ^4.3.3
   '@tanstack/devtools-vite': ^0.8.5
   '@tanstack/eslint-config': ^0.4.0
-  '@tanstack/match-sorter-utils': ^9.1.2
+  '@tanstack/match-sorter-utils': ^9.2.6
   '@tanstack/react-devtools': ^0.10.13
   '@tanstack/react-form': ^1.33.5
   '@tanstack/react-form-start': ^1.33.5
