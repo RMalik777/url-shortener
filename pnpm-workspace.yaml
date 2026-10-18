@@ -18,7 +18,7 @@ allowBuilds:
   workerd: true
 
 catalog:
-  '@babel/core': ^8.0.6
+  '@babel/core': ^8.0.7
   '@base-ui/react': ^1.8.0
   '@cloudflare/vite-plugin': ^1.62.5
   '@cloudflare/workers-types': ^5.20261010.1
