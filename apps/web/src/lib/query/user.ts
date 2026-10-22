@@ -43,8 +43,7 @@ const getUserLinkedAccounts = createServerFn({ method: "GET" })
 export const useUnlinkAccount = ({ userId }: { userId: User["id"] }) => {
 	const queryClient = useQueryClient();
 	return useMutation({
-		mutationFn: async ({ provider }: { provider: string }) =>
-			await unlinkAccount({ providerId: provider }),
+		mutationFn: async ({ accountId }: { accountId: string }) => await unlinkAccount({ accountId }),
 		onSuccess: () => {
 			event("Account Unlinked");
 			queryClient.invalidateQueries({ queryKey: [userId, "profile", "linkedAccounts"] });

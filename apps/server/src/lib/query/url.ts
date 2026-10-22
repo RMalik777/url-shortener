@@ -18,7 +18,7 @@ export const urlByCodeOptions = ({ code }: { code: string }) => {
 	});
 };
 const fetchData = createServerFn({ method: "GET" })
-	.inputValidator((data: string) => {
+	.validator((data: string) => {
 		return schema.parse({ code: data });
 	})
 	.handler(async ({ data }) => {

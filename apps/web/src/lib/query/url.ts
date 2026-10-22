@@ -75,7 +75,7 @@ export const getUrlByIdOptions = ({ id, userId }: { id: string; userId: User["id
 	});
 const getUrlById = createServerFn({ method: "GET" })
 	.middleware([authMiddleware])
-	.inputValidator((data: { id: Url["id"] }) => {
+	.validator((data: { id: Url["id"] }) => {
 		return { ...data };
 	})
 	.handler(async ({ data, context }) => {
@@ -111,7 +111,7 @@ const SHORT_CODE_ATTEMPTS = 5;
 
 const insertUrl = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((input: unknown) => insertUrlSchema.parse(input))
+	.validator((input: unknown) => insertUrlSchema.parse(input))
 	.handler(async ({ context, data }) => {
 		const urlFull = withProtocol(data.urlFull);
 		const attempts = data.autoShortCode ? SHORT_CODE_ATTEMPTS : 1;
@@ -187,7 +187,7 @@ export const useEditUrlById = ({ userId }: { userId: User["id"] }) => {
 };
 const editUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((data: unknown) => editUrlSchema.parse(data))
+	.validator((data: unknown) => editUrlSchema.parse(data))
 	.handler(async ({ data, context }) => {
 		const { id } = data;
 		const toBeUpdated = await db.select().from(urls).where(eq(urls.id, id)).get();
@@ -257,7 +257,7 @@ export const useDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 };
 const deleteUrlbyId = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((urlId: Url["id"]) => urlId)
+	.validator((urlId: Url["id"]) => urlId)
 	.handler(async ({ data, context }) => {
 		if (!data) {
 			throw new DBError("URL ID is required", {
@@ -316,7 +316,7 @@ export const useRestoreUrlById = ({ userId }: { userId: User["id"] }) => {
 };
 const restoreUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((urlId: Url["id"]) => urlId)
+	.validator((urlId: Url["id"]) => urlId)
 	.handler(async ({ data, context }) => {
 		if (!data) {
 			throw new DBError("URL ID is required", {
@@ -376,7 +376,7 @@ export const useHardDeleteUrlById = ({ userId }: { userId: User["id"] }) => {
 };
 const hardDeleteUrlById = createServerFn({ method: "POST" })
 	.middleware([authMiddleware])
-	.inputValidator((urlId: Url["id"]) => urlId)
+	.validator((urlId: Url["id"]) => urlId)
 	.handler(async ({ data, context }) => {
 		if (!data) {
 			throw new DBError("URL ID is required", {
