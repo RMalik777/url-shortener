@@ -1,8 +1,10 @@
+import { useState } from "react";
+
 import { useForm } from "@tanstack/react-form-start";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Image } from "@unpic/react";
-import { LinkIcon, UnlinkIcon } from "lucide-react";
+import { FingerprintPattern, LinkIcon, PlusIcon, Trash2Icon, UnlinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -10,13 +12,30 @@ import { Avatar, AvatarFallback, AvatarImage } from "@repo/ui/components/avatar"
 import { Button } from "@repo/ui/components/button";
 import {
 	Card,
+	CardAction,
 	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@repo/ui/components/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@repo/ui/components/field";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@repo/ui/components/dialog";
+import {
+	Field,
+	FieldDescription,
+	FieldError,
+	FieldGroup,
+	FieldLabel,
+} from "@repo/ui/components/field";
 import { Input } from "@repo/ui/components/input";
 import { Spinner } from "@repo/ui/components/spinner";
 
@@ -27,6 +46,9 @@ import { PageHeader } from "@/components/page-header";
 import { acronym } from "@/lib/functions/utils";
 import {
 	getLinkedAccountsOptions,
+	getPasskeysOptions,
+	useAddPasskey,
+	useDeletePasskey,
 	useLinkAccount,
 	useUnlinkAccount,
 	useUpdateUserName,
@@ -44,7 +66,10 @@ export const Route = createFileRoute("/(app)/(pages)/profile/")({
 		],
 	}),
 	loader: ({ context }) =>
-		context.queryClient.ensureQueryData(getLinkedAccountsOptions({ userId: context.user.id })),
+		Promise.all([
+			context.queryClient.ensureQueryData(getLinkedAccountsOptions({ userId: context.user.id })),
+			context.queryClient.ensureQueryData(getPasskeysOptions({ userId: context.user.id })),
+		]),
 	component: ProfilePage,
 });
 
@@ -52,6 +77,8 @@ const socialProviders = [
 	{ id: "google", name: "Google", logo: G },
 	{ id: "github", name: "GitHub", logo: Github },
 ] as const;
+
+const passkeyDateFormat = new Intl.DateTimeFormat("en-ID", { dateStyle: "medium" });
 
 const formSchema = z.object({
 	name: z.string().min(1, "Name cannot be empty."),
@@ -163,6 +190,170 @@ function ProfilePage() {
 					</div>
 				</CardContent>
 			</Card>
+			<PasskeysCard />
+		</div>
+	);
+}
+
+function PasskeysCard() {
+	const { user } = Route.useRouteContext();
+	const { data: passkeys } = useSuspenseQuery(getPasskeysOptions({ userId: user.id }));
+	const { mutateAsync: addPasskeyMutateAsync, isPending: isAdding } = useAddPasskey({
+		userId: user.id,
+	});
+	const [open, setOpen] = useState(false);
+	const [name, setName] = useState("");
+
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Passkeys</CardTitle>
+				<CardDescription>
+					Sign in with your fingerprint, face, screen lock, or a security key.
+				</CardDescription>
+				<CardAction>
+					<Dialog open={open} onOpenChange={setOpen} onOpenChangeComplete={() => setName("")}>
+						<DialogTrigger
+							render={
+								<Button variant="outline" size="sm">
+									<PlusIcon /> Add
+								</Button>
+							}
+						/>
+						<DialogContent>
+							<form
+								className="contents"
+								onSubmit={async (e) => {
+									e.preventDefault();
+									try {
+										const { error } = await addPasskeyMutateAsync({
+											name: name.trim() || undefined,
+										});
+										if (error) {
+											toast.error(error.message ?? "Failed to add passkey.");
+										} else {
+											setOpen(false);
+											toast.success("Passkey added.");
+										}
+									} catch (err) {
+										toast.error(err instanceof Error ? err.message : "Failed to add passkey.");
+									}
+								}}
+							>
+								<DialogHeader>
+									<DialogTitle>Add a passkey</DialogTitle>
+									<DialogDescription>
+										Your browser will ask you to confirm with your device or security key.
+									</DialogDescription>
+								</DialogHeader>
+								<Field>
+									<FieldLabel htmlFor="passkey-name">Name</FieldLabel>
+									<Input
+										id="passkey-name"
+										value={name}
+										onChange={(e) => setName(e.target.value)}
+										placeholder="e.g. MacBook Touch ID"
+										maxLength={64}
+										autoComplete="off"
+									/>
+									<FieldDescription>Optional. Helps you tell your passkeys apart.</FieldDescription>
+								</Field>
+								<DialogFooter>
+									<DialogClose render={<Button variant="outline" disabled={isAdding} />}>
+										Cancel
+									</DialogClose>
+									<Button type="submit" disabled={isAdding}>
+										{isAdding && <Spinner />}Continue
+									</Button>
+								</DialogFooter>
+							</form>
+						</DialogContent>
+					</Dialog>
+				</CardAction>
+			</CardHeader>
+			<CardContent>
+				{passkeys.length === 0 ? (
+					<div className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-4 py-8 text-center">
+						<div className="flex size-10 items-center justify-center rounded-lg border bg-background">
+							<FingerprintPattern className="size-5 text-muted-foreground" />
+						</div>
+						<p className="text-sm font-medium">No passkeys yet</p>
+						<p className="max-w-xs text-xs text-balance text-muted-foreground">
+							Add a passkey to sign in without Google or GitHub.
+						</p>
+					</div>
+				) : (
+					<div className="divide-y">
+						{passkeys.map((pk) => (
+							<PasskeyRow key={pk.id} passkey={pk} />
+						))}
+					</div>
+				)}
+			</CardContent>
+		</Card>
+	);
+}
+
+function PasskeyRow({
+	passkey,
+}: Readonly<{
+	passkey: {
+		id: string;
+		name: string | null;
+		deviceType: string;
+		backedUp: boolean;
+		createdAt: Date | null;
+	};
+}>) {
+	const { user } = Route.useRouteContext();
+	const { mutateAsync: deletePasskeyMutateAsync, isPending: isDeleting } = useDeletePasskey({
+		userId: user.id,
+	});
+	const details = [
+		passkey.backedUp ? "Synced" : "Device-bound",
+		passkey.createdAt && `Added ${passkeyDateFormat.format(new Date(passkey.createdAt))}`,
+	]
+		.filter(Boolean)
+		.join(" · ");
+
+	return (
+		<div className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+			<div className="flex items-center gap-3">
+				<div className="flex size-10 items-center justify-center rounded-lg border bg-background">
+					<FingerprintPattern className="size-5" />
+				</div>
+				<div>
+					<p className="text-sm font-medium">{passkey.name || "Passkey"}</p>
+					<p className="text-xs text-muted-foreground">{details}</p>
+				</div>
+			</div>
+			<Button
+				variant="outline"
+				size="sm"
+				disabled={isDeleting}
+				onClick={async () => {
+					try {
+						const { error } = await deletePasskeyMutateAsync({ id: passkey.id });
+						if (error) {
+							toast.error(error.message ?? "Failed to remove passkey.");
+						} else {
+							toast.success("Passkey removed.");
+						}
+					} catch (err) {
+						toast.error(err instanceof Error ? err.message : "Failed to remove passkey.");
+					}
+				}}
+			>
+				{isDeleting ? (
+					<>
+						<Spinner /> Removing
+					</>
+				) : (
+					<>
+						<Trash2Icon /> Remove
+					</>
+				)}
+			</Button>
 		</div>
 	);
 }

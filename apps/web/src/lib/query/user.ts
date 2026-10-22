@@ -1,14 +1,14 @@
 import { queryOptions, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createServerFn } from "@tanstack/react-start";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { event } from "onedollarstats";
 
-import { account as accountTable } from "@repo/db/schema";
+import { account as accountTable, passkey as passkeyTable } from "@repo/db/schema";
 
 import type { User } from "@repo/db/schema";
 
 import { db } from "@/db";
-import { linkSocial, unlinkAccount, updateUser } from "@/lib/auth/auth-client";
+import { linkSocial, passkey, unlinkAccount, updateUser } from "@/lib/auth/auth-client";
 import { authMiddleware } from "@/lib/middleware/auth";
 
 export const useUpdateUserName = ({ userId }: { userId: User["id"] }) => {
@@ -59,6 +59,53 @@ export const useLinkAccount = ({ userId }: { userId: User["id"] }) => {
 		onSuccess: () => {
 			event("Account Linked");
 			queryClient.invalidateQueries({ queryKey: [userId, "profile", "linkedAccounts"] });
+		},
+	});
+};
+
+export const getPasskeysOptions = ({ userId }: { userId: User["id"] }) =>
+	queryOptions({
+		queryKey: [userId, "profile", "passkeys"],
+		queryFn: async () => await getUserPasskeys(),
+		staleTime: Infinity,
+	});
+const getUserPasskeys = createServerFn({ method: "GET" })
+	.middleware([authMiddleware])
+	.handler(async ({ context }) => {
+		const passkeys = await db
+			.select({
+				id: passkeyTable.id,
+				name: passkeyTable.name,
+				deviceType: passkeyTable.deviceType,
+				backedUp: passkeyTable.backedUp,
+				createdAt: passkeyTable.createdAt,
+			})
+			.from(passkeyTable)
+			.where(eq(passkeyTable.userId, context.id))
+			.orderBy(desc(passkeyTable.createdAt));
+		return passkeys;
+	});
+
+export const useAddPasskey = ({ userId }: { userId: User["id"] }) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async ({ name }: { name?: string }) => await passkey.addPasskey({ name }),
+		onSuccess: ({ error }) => {
+			if (error) return;
+			event("Passkey Added");
+			queryClient.invalidateQueries({ queryKey: [userId, "profile", "passkeys"] });
+		},
+	});
+};
+
+export const useDeletePasskey = ({ userId }: { userId: User["id"] }) => {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: async ({ id }: { id: string }) => await passkey.deletePasskey({ id }),
+		onSuccess: ({ error }) => {
+			if (error) return;
+			event("Passkey Deleted");
+			queryClient.invalidateQueries({ queryKey: [userId, "profile", "passkeys"] });
 		},
 	});
 };

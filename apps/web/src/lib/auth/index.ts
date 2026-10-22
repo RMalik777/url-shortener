@@ -32,5 +32,10 @@ export const auth = betterAuth({
 			clientSecret: env.GITHUB_CLIENT_SECRET,
 		},
 	},
-	plugins: [lastLoginMethod(), passkey(), tanstackStartCookies()],
+	plugins: [
+		lastLoginMethod(),
+		// rpID defaults to the hostname of baseURL, so it matches in every environment.
+		passkey({ rpName: "URL Shortener" }),
+		tanstackStartCookies(),
+	],
 });
