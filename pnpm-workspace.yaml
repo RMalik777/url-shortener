@@ -24,7 +24,7 @@ catalog:
   '@better-auth/utils': ^0.5.0
   '@cloudflare/vite-plugin': ^1.64.0
   '@cloudflare/workers-types': ^5.20261021.1
-  '@codspeed/vitest-plugin': ^5.7.1
+  '@codspeed/vitest-plugin': ^6.1.0
   '@eslint/compat': ^2.1.1
   '@rolldown/plugin-babel': ^0.2.4
   '@t3-oss/env-core': ^0.13.11
@@ -72,7 +72,7 @@ catalog:
   typescript: ^6.0.3
   uuid: ^14.0.3
   vite: ^8.3.4
-  vitest: ^4.1.12
+  vitest: ^5.0.5
   web-vitals: ^6.2.3
   wrangler: ^4.151.3
   zod: ^4.6.7

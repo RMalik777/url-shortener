@@ -1,28 +1,40 @@
-import { bench, describe } from "vitest";
+import { describe, test } from "vitest";
 import { acronym } from "./utils";
 
 describe("acronym", () => {
-	bench("returns default for undefined input", () => {
-		acronym();
+	test("returns default for undefined input", async ({ bench }) => {
+		await bench("returns default for undefined input", () => {
+			acronym();
+		}).run();
 	});
 
-	bench("returns default for empty string", () => {
-		acronym("");
+	test("returns default for empty string", async ({ bench }) => {
+		await bench("returns default for empty string", () => {
+			acronym("");
+		}).run();
 	});
 
-	bench("returns uppercase for short name", () => {
-		acronym("AB");
+	test("returns uppercase for short name", async ({ bench }) => {
+		await bench("returns uppercase for short name", () => {
+			acronym("AB");
+		}).run();
 	});
 
-	bench("generates acronym from two words", () => {
-		acronym("John Doe");
+	test("generates acronym from two words", async ({ bench }) => {
+		await bench("generates acronym from two words", () => {
+			acronym("John Doe");
+		}).run();
 	});
 
-	bench("generates acronym from multiple words", () => {
-		acronym("International Business Machines Corporation");
+	test("generates acronym from multiple words", async ({ bench }) => {
+		await bench("generates acronym from multiple words", () => {
+			acronym("International Business Machines Corporation");
+		}).run();
 	});
 
-	bench("generates acronym with custom length", () => {
-		acronym("International Business Machines Corporation", 4);
+	test("generates acronym with custom length", async ({ bench }) => {
+		await bench("generates acronym with custom length", () => {
+			acronym("International Business Machines Corporation", 4);
+		}).run();
 	});
 });
