@@ -34,6 +34,7 @@ export const Route = createFileRoute("/(auth)/signin")({
 function RouteComponent() {
 	const [errorMessage, setErrorMessage] = useState<string | undefined>();
 	const lastUsedLoginMethod = getLastUsedLoginMethod();
+	const navigate = Route.useNavigate();
 	return (
 		<div className="flex h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
 			<div className="w-full max-w-sm md:max-w-4xl">
@@ -73,6 +74,8 @@ function RouteComponent() {
 														} else {
 															event("signed_in", { method: method.id });
 															toast.success("Successfully signed in!");
+															// Social sign-in redirects on its own; passkey sign-in resolves in place.
+															if (method.id === "passkey") await navigate({ to: "/" });
 														}
 													}}
 												>

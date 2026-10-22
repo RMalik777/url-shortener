@@ -21,9 +21,7 @@ export const signInMethods = [
 		id: "passkey",
 		name: "Passkey",
 		logo: FingerprintPattern,
-		onclick: async () =>
-			await signIn.passkey({
-				autoFill: true,
-			}),
+		// No autoFill: conditional UI needs an <input autocomplete="webauthn">, and this is a button.
+		onclick: async () => await signIn.passkey(),
 	},
 ];
