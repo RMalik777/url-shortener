@@ -216,7 +216,7 @@ function SocialAccountRow({
 							return;
 						}
 						try {
-							const { error } = await unlinkAccountMutateAsync({ provider: provider.id });
+							const { error } = await unlinkAccountMutateAsync({ accountId: linked.id });
 							if (error) {
 								toast.error(error.message ?? `Failed to disconnect ${provider.name}.`);
 							} else {
