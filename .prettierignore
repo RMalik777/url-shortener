@@ -4,6 +4,8 @@ pnpm-workspace.yaml
 yarn.lock
 .turbo
 routeTree.gen.ts
+worker-configuration.d.ts
+packages/db/drizzle
 .agents
 .claude
 skills-lock.json

@@ -16,3 +16,6 @@ todos.json
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# Better Auth CLI output (`pnpm auth:generate`), merged by hand into auth-schema.ts
+auth-schema.generated.ts

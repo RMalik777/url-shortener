@@ -2,13 +2,12 @@
 	"name": "@repo/db",
 	"version": "0.1.0",
 	"type": "module",
-	"description": "",
 	"license": "AGPL-3.0-only",
 	"scripts": {
 		"check-types": "tsc --noEmit",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"db:auth:cli": "better-auth/cli generate --output ./src/db/auth-schema.ts --config ",
+		"clean": "rimraf .turbo",
 		"db:check": "drizzle-kit check",
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
@@ -17,13 +16,12 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
-		"drizzle-kit": "^0.31.11",
 		"drizzle-orm": "catalog:",
 		"uuid": "catalog:"
 	},
 	"exports": {
-		".": "./db/index.ts",
-		"./schema": "./db/schema.ts"
+		".": "./src/index.ts",
+		"./schema": "./src/schema.ts"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "catalog:",
@@ -31,8 +29,10 @@
 		"@repo/typescript-config": "workspace:*",
 		"@types/node": "catalog:",
 		"dotenv": "catalog:",
+		"drizzle-kit": "catalog:",
 		"eslint": "catalog:",
-		"typescript": "catalog:",
-		"vite": "catalog:"
-	}
+		"rimraf": "catalog:",
+		"typescript": "catalog:"
+	},
+	"private": true
 }

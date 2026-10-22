@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"include": ["**/*.ts", "**/*.tsx", "eslint.config.js", "prettier.config.js", "vite.config.js"],
+	"display": "Base",
 	"compilerOptions": {
 		"target": "ES2022",
 		"jsx": "react-jsx",
@@ -19,6 +19,5 @@
 		"noUnusedParameters": true,
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
-	},
-	"exclude": ["node_modules"]
+	}
 }
