@@ -25,7 +25,7 @@ jobs:
       VITE_SHORT_URL: https://raf.li/
       VITE_ROOT_REDIRECT_URL: https://link.raflimalik.com/
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
