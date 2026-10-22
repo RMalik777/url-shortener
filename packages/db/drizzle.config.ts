@@ -5,7 +5,7 @@ config();
 
 export default defineConfig({
 	out: "./drizzle",
-	schema: "./db/schema.ts",
+	schema: "./src/schema.ts",
 	dialect: "sqlite",
 	driver: "d1-http",
 	dbCredentials: {

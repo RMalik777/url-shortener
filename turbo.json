@@ -2,64 +2,79 @@
 	"$schema": "https://turborepo.dev/schema.json",
 	"ui": "tui",
 	"tasks": {
+		"transit": {
+			"dependsOn": ["^transit"]
+		},
 		"build": {
 			"dependsOn": ["^build"],
-			"inputs": ["$TURBO_DEFAULT$", ".env*"],
+			"inputs": ["$TURBO_DEFAULT$", ".env*", "!**/*.bench.ts", "!README.md"],
 			"outputs": ["dist/**"]
 		},
-		"preview": {
-			"dependsOn": ["^preview"],
-			"interactive": true,
-			"cache": false,
-			"inputs": ["$TURBO_DEFAULT$", ".env*"]
-		},
-		"format": {
-			"dependsOn": ["^format"]
+		"check-types": {
+			"dependsOn": ["transit"]
 		},
 		"lint": {
-			"dependsOn": ["^lint"]
+			"dependsOn": ["transit"],
+			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.gitignore"]
+		},
+		"lint:fix": {
+			"dependsOn": ["transit"],
+			"cache": false
 		},
 		"test": {
-			"dependsOn": ["^test"],
+			"dependsOn": ["transit"],
 			"outputs": []
 		},
-		"fix": {
-			"dependsOn": ["^fix"]
-		},
-		"check-types": {
-			"dependsOn": ["^check-types"]
+		"bench": {
+			"cache": false
 		},
 		"dev": {
-			"dependsOn": ["^dev"],
 			"cache": false,
 			"persistent": true
 		},
-		"db:auth:cli": {
-			"dependsOn": ["^db:auth:cli"]
+		"preview": {
+			"dependsOn": ["build"],
+			"cache": false,
+			"persistent": true
 		},
-		"db:check": {
-			"dependsOn": ["^db:check"]
+		"deploy": {
+			"dependsOn": ["build"],
+			"cache": false,
+			"passThroughEnv": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"]
+		},
+		"cf-typegen": {
+			"inputs": ["wrangler.jsonc", ".env*", ".dev.vars*"],
+			"outputs": ["worker-configuration.d.ts"]
+		},
+		"clean": {
+			"cache": false
 		},
 		"db:generate": {
-			"dependsOn": ["^db:generate"],
+			"cache": false,
 			"interactive": true,
-			"cache": false
-		},
-		"db:migrate": {
-			"dependsOn": ["^db:migrate"],
-			"interactive": true,
-			"cache": false
+			"passThroughEnv": ["CLOUDFLARE_*"]
 		},
 		"db:push": {
-			"dependsOn": ["^db:push"],
+			"cache": false,
 			"interactive": true,
-			"cache": false
+			"passThroughEnv": ["CLOUDFLARE_*"]
+		},
+		"db:migrate": {
+			"cache": false,
+			"passThroughEnv": ["CLOUDFLARE_*"]
 		},
 		"db:pull": {
-			"dependsOn": ["^db:pull"]
+			"cache": false,
+			"passThroughEnv": ["CLOUDFLARE_*"]
+		},
+		"db:check": {
+			"cache": false,
+			"passThroughEnv": ["CLOUDFLARE_*"]
 		},
 		"db:studio": {
-			"dependsOn": ["^db:studio"]
+			"cache": false,
+			"persistent": true,
+			"passThroughEnv": ["CLOUDFLARE_*"]
 		}
 	}
 }

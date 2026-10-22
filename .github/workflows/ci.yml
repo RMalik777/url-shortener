@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Lint, type check, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Public build-time values (same as wrangler.jsonc vars). Secrets are not needed to build.
+      VITE_APP_URL: https://url.raflimalik.com/
+      VITE_LONG_URL: https://url.raflimalik.com/
+      VITE_SHORT_URL: https://raf.li/
+      VITE_ROOT_REDIRECT_URL: https://link.raflimalik.com/
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint, type check, test, build
+        run: pnpm turbo run lint check-types test build --ui=stream

@@ -1,0 +1,2 @@
+# Keep LF in the working tree on all platforms (Prettier uses endOfLine "lf").
+* text=auto eol=lf
