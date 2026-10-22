@@ -121,7 +121,7 @@ export function DataTable<TData extends RowData>({
 							</Button>
 						}
 					/>
-					<DropdownMenuContent align="end" className="w-37.5">
+					<DropdownMenuContent align="end" className="w-fit">
 						<DropdownMenuGroup>
 							<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
 							<DropdownMenuSeparator />
