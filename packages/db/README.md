@@ -50,4 +50,4 @@ Run these from the repository root (`pnpm db:<command>`) or in this folder:
 | `pnpm db:pull`     | Get the schema from D1.                    |
 | `pnpm db:studio`   | Open Drizzle Studio.                       |
 
-> **CAUTION:** `db:migrate` and `db:push` change the production database. Make a backup first.
+> **CAUTION:** `db:migrate` and `db:push` change the production database. Make a backup first. Refer to the root README for the command.

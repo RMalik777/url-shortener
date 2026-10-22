@@ -139,7 +139,13 @@ Other commands:
 - `pnpm db:studio` opens Drizzle Studio.
 - `pnpm db:push` and `pnpm db:pull` sync the schema without a migration file.
 
-> **CAUTION:** `db:migrate` and `db:push` change the production D1 database. Make a backup before you run them: `wrangler d1 export url-shortener --remote --output backup.sql`.
+> **CAUTION:** `db:migrate` and `db:push` change the production D1 database. Make a backup before you run them:
+>
+> ```bash
+> pnpm --filter web exec wrangler d1 export url-shortener --remote --output "$HOME/url-shortener-backup.sql"
+> ```
+>
+> The backup contains user data. Keep it outside the repository, and do not commit it.
 
 ## Auth schema
 
