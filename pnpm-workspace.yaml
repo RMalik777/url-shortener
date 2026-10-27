@@ -74,7 +74,7 @@ catalog:
   vite: ^8.3.5
   vitest: ^5.0.5
   web-vitals: ^6.2.3
-  wrangler: ^4.151.3
+  wrangler: ^4.152.0
   zod: ^4.6.7
 
 cleanupUnusedCatalogs: true
