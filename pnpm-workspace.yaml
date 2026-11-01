@@ -18,7 +18,7 @@ allowBuilds:
   workerd: true
 
 catalog:
-  '@babel/core': ^8.0.7
+  '@babel/core': ^8.0.10
   '@base-ui/react': ^1.9.0
   '@better-auth/passkey': ^1.7.12
   '@better-auth/utils': ^0.5.0
