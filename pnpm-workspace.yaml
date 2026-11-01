@@ -22,7 +22,7 @@ catalog:
   '@base-ui/react': ^1.9.0
   '@better-auth/passkey': ^1.7.12
   '@better-auth/utils': ^0.5.0
-  '@cloudflare/vite-plugin': ^1.64.0
+  '@cloudflare/vite-plugin': ^1.66.0
   '@cloudflare/workers-types': ^5.20261022.1
   '@codspeed/vitest-plugin': ^6.1.0
   '@eslint/compat': ^2.1.1
