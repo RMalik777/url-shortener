@@ -31,11 +31,11 @@
 	"devDependencies": {
 		"@repo/eslint-config": "workspace:*",
 		"@repo/typescript-config": "workspace:*",
-		"prettier": "^3.9.10",
+		"prettier": "^3.10.1",
 		"prettier-plugin-tailwindcss": "catalog:",
-		"turbo": "^2.11.10"
+		"turbo": "^2.11.13"
 	},
-	"packageManager": "pnpm@12.14.0",
+	"packageManager": "pnpm@12.21.0",
 	"engines": {
 		"node": ">=24"
 	}
